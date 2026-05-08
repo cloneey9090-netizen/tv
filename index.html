@@ -6,7 +6,6 @@
     <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        /* ORGANIZAÇÃO GERAL */
         body { 
             background: #000; 
             color: #fff; 
@@ -18,14 +17,16 @@
             overflow: hidden; 
         }
 
-        /* 1. BANNER NO TOPO (Sua Propaganda) */
         header { 
             background: #000; 
             padding: 0; 
             text-align: center; 
             border-bottom: 2px solid #ff9900; 
-            height: 100px; /* Altura fixa para o banner respirar */
+            height: 100px; 
             flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         #banner-container { 
@@ -41,7 +42,6 @@
             height: 100%; 
             width: auto; 
             max-width: 100%;
-            /* O SEGREDO: contain garante que o telefone NÃO corte */
             object-fit: contain; 
             display: none; 
             animation: fade 1s; 
@@ -49,17 +49,16 @@
 
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        /* 2. ÁREA CENTRAL (Player e Canais) */
         #main { 
             display: flex; 
             flex: 1; 
             overflow: hidden; 
-            flex-direction: column; /* No celular, o player fica em cima da lista */
+            flex-direction: column; 
         }
 
         #player { 
             width: 100%; 
-            aspect-ratio: 16 / 9; /* Mantém o formato de TV */
+            aspect-ratio: 16 / 9; 
             background: #000; 
             flex-shrink: 0;
         }
@@ -79,11 +78,10 @@
 
         .canal:hover { background: #ff9900; color: #000; }
 
-        /* AJUSTE PARA SMART TV OU PC (Telas Grandes) */
         @media (min-width: 800px) {
-            #main { flex-direction: row; } /* Player e Lista lado a lado na TV */
+            #main { flex-direction: row; } 
             #canais { width: 300px; }
-            header { height: 130px; } /* Banner maior na TV */
+            header { height: 130px; } 
         }
     </style>
 </head>
@@ -94,42 +92,46 @@
 </header>
 
 <div id="main">
-    <div id="player"></div> <div id="canais"></div> </div>
+    <div id="player"></div> 
+    <div id="canais"></div> 
+</div>
 
 <script>
-    const urlLista = "lista.txt";
-    // Iniciamos o player vazio
+    // IMPORTANTE: Para o PC funcionar, pegue o link do botão "RAW" no seu GitHub
+    // Exemplo: https://raw.githubusercontent.com/seu-usuario/seu-repo/main/lista.txt
+    const urlLista = "lista.txt"; 
+
     var player = new Clappr.Player({ parentId: "#player", source: "", width: '100%', height: '100%', autoPlay: true });
     let imagens = [];
     let slideIndex = 0;
 
     async function carregarTV() {
         try {
-            const res = await fetch(urlLista);
+            // No PC, forçamos a limpeza do cache com o timestamp (?t=...)
+            const res = await fetch(urlLista + '?t=' + new Date().getTime());
             const data = await res.text();
-            const linhas = data.split('\n');
+            
             const menu = document.getElementById('canais');
             const container = document.getElementById('banner-container');
+            menu.innerHTML = ""; // Limpa para não duplicar no PC
             
+            const linhas = data.split('\n');
             let nome = "Canal sem nome";
 
             linhas.forEach(l => {
                 const linha = l.trim();
                 
-                // Se for imagem de propaganda
                 if(linha.startsWith('IMG=')) {
                     const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '');
+                    img.src = linha.replace('IMG=', '').trim();
                     img.className = 'promo-slide';
                     container.appendChild(img);
                     imagens.push(img);
                 }
                 
-                // Se for nome do canal
                 if(linha.includes("#EXTINF")) { 
                     nome = linha.split(',')[1] || "Canal"; 
                 }
-                // Se for link do canal
                 else if(linha.startsWith("http")) {
                     const div = document.createElement('div');
                     div.className = 'canal';
@@ -137,15 +139,17 @@
                     div.onclick = () => { 
                         player.load(linha); 
                         player.play(); 
-                        // Scroll suave para o player ao clicar no canal (bom para celular)
                         document.getElementById('player').scrollIntoView({behavior: "smooth"});
                     };
                     menu.appendChild(div);
                 }
             });
-            showSlides();
+            
+            if (imagens.length > 0) showSlides();
+
         } catch (error) {
             console.error("Erro ao carregar lista:", error);
+            document.getElementById('canais').innerHTML = "<p style='padding:20px'>Erro ao carregar lista. Verifique se o arquivo lista.txt está no GitHub.</p>";
         }
     }
 
@@ -155,8 +159,6 @@
         slideIndex++;
         if (slideIndex > imagens.length) {slideIndex = 1}
         imagens[slideIndex-1].style.display = "block";
-        
-        // TEMPO: 20 segundos (20000ms) para carregar bem e o povo ler o telefone
         setTimeout(showSlides, 20000); 
     }
 
