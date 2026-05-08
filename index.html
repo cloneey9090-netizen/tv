@@ -3,53 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV COMUNIDADE CACHOEIRO</title>
+    <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        header { background: #ff9900; color: #000; padding: 12px; text-align: center; font-weight: bold; border-bottom: 2px solid #fff; }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        header { background: #000; padding: 5px; text-align: center; border-bottom: 2px solid #ff9900; min-height: 60px; }
+        
+        /* Estilo do Slide de Propaganda */
+        #banner-container { position: relative; max-width: 100%; height: 80px; margin: 0 auto; overflow: hidden; }
+        .promo-slide { height: 100%; display: none; margin: 0 auto; border-radius: 5px; animation: fade 1s; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
         #main { display: flex; flex: 1; overflow: hidden; }
-        #canais { width: 30%; max-width: 250px; background: #111; overflow-y: auto; border-right: 1px solid #333; }
-        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 14px; }
-        .canal:hover { background: #333; color: #ff9900; border-left: 5px solid #ff9900; }
+        #canais { width: 30%; max-width: 250px; background: #111; overflow-y: auto; }
+        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
+        .canal:hover { background: #ff9900; color: #000; }
         #player { flex: 1; background: #000; }
+
+        @media (max-width: 600px) { #main { flex-direction: column; } #canais { width: 100%; height: 45%; } }
     </style>
 </head>
 <body>
-<header id="banner">📢 BEM-VINDO À TV COMUNIDADE CACHOEIRO</header>
+
+<header>
+    <div id="banner-container">
+        </div>
+</header>
+
 <div id="main">
     <div id="canais"></div>
     <div id="player"></div>
 </div>
+
 <script>
-    const urlLista = "lista.txt"; 
-    var player = new Clappr.Player({
-        parentId: "#player", source: "", width: '100%', height: '100%', autoPlay: true
-    });
-    async function ligarTV() {
-        try {
-            const res = await fetch(urlLista);
-            const data = await res.text();
-            const linhas = data.split('\n');
-            const menu = document.getElementById('canais');
-            const topo = document.getElementById('banner');
-            menu.innerHTML = '';
-            let nome = "";
-            linhas.forEach(l => {
-                const linha = l.trim();
-                if(linha.startsWith('###')) topo.innerText = "📢 " + linha.replace('###', '');
-                else if(linha.includes("#EXTINF")) nome = linha.split(',')[1] || "Canal";
-                else if(linha.startsWith("http")) {
-                    const div = document.createElement('div');
-                    div.className = 'canal';
-                    div.innerText = "📺 " + nome;
-                    div.onclick = () => { player.load(linha); player.play(); };
-                    menu.appendChild(div);
-                }
-            });
-        } catch (e) { console.log("Erro no sinal"); }
+    const urlLista = "lista.txt";
+    var player = new Clappr.Player({ parentId: "#player", source: "", width: '100%', height: '100%', autoPlay: true });
+    let imagens = [];
+    let slideIndex = 0;
+
+    async function carregarTV() {
+        const res = await fetch(urlLista);
+        const data = await res.text();
+        const linhas = data.split('\n');
+        const menu = document.getElementById('canais');
+        const container = document.getElementById('banner-container');
+        
+        linhas.forEach(l => {
+            const linha = l.trim();
+            // Se a linha começar com IMG=, adiciona ao carrossel
+            if(linha.startsWith('IMG=')) {
+                const img = document.createElement('img');
+                img.src = linha.replace('IMG=', '');
+                img.className = 'promo-slide';
+                container.appendChild(img);
+                imagens.push(img);
+            }
+            // Lógica dos canais
+            if(linha.includes("#EXTINF")) { nome = linha.split(',')[1]; }
+            else if(linha.startsWith("http")) {
+                const div = document.createElement('div');
+                div.className = 'canal';
+                div.innerHTML = "▶️ " + nome;
+                div.onclick = () => { player.load(linha); player.play(); };
+                menu.appendChild(div);
+            }
+        });
+        showSlides();
     }
-    ligarTV();
+
+    function showSlides() {
+        if (imagens.length === 0) return;
+        imagens.forEach(img => img.style.display = "none");
+        slideIndex++;
+        if (slideIndex > imagens.length) {slideIndex = 1}
+        imagens[slideIndex-1].style.display = "block";
+        setTimeout(showSlides, 5000); // Muda a cada 5 segundos
+    }
+    carregarTV();
 </script>
 </body>
 </html>
