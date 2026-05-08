@@ -6,93 +6,45 @@
     <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        /* ORGANIZAÇÃO GERAL - Blindada para PC e Celular */
+        /* ESTRUTURA BLINDADA */
         body, html { 
-            background: #000; 
-            color: #fff; 
-            font-family: sans-serif; 
-            margin: 0; 
-            padding: 0;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* 1. BANNER NO TOPO (Sua Propaganda) */
-        header { 
-            background: #000; 
-            text-align: center; 
-            border-bottom: 2px solid #ff9900; 
-            height: 100px; /* Altura fixa para o banner */
-            flex-shrink: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-        
-        #banner-container { 
-            width: 100%; 
-            height: 100%; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .promo-slide { 
-            max-height: 100%; 
-            width: auto; 
-            max-width: 100%;
-            object-fit: contain; /* Garante que o telefone NUNCA corte */
-            display: none; 
-        }
-
-        /* 2. ÁREA CENTRAL (Player e Canais) */
-        #main { 
-            display: flex; 
-            flex: 1; 
-            flex-direction: column; /* Celular: Empilhado */
+            background: #000; color: #fff; font-family: sans-serif; 
+            margin: 0; padding: 0; height: 100%; display: flex; flex-direction: column; 
             overflow: hidden;
         }
 
-        #player { 
-            width: 100%; 
-            aspect-ratio: 16 / 9; 
-            background: #000; 
-            flex-shrink: 0;
+        /* BANNER NO TOPO */
+        header { 
+            background: #000; border-bottom: 2px solid #ff9900; 
+            height: 100px; flex-shrink: 0; display: flex;
+            justify-content: center; align-items: center; width: 100%;
+        }
+        
+        #banner-container { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+
+        .promo-slide { 
+            max-height: 100%; width: auto; max-width: 100%;
+            object-fit: contain; display: none; 
         }
 
-        #canais { 
-            flex: 1; 
-            background: #111; 
-            overflow-y: auto; /* Permite rolar os canais */
-            padding-bottom: 20px;
-        }
+        /* ÁREA CENTRAL (Player e Canais) */
+        #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; }
+
+        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
+
+        #canais { flex: 1; background: #111; overflow-y: auto; padding-bottom: 20px; }
 
         .canal { 
-            padding: 18px; 
-            border-bottom: 1px solid #222; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 1.1rem;
-            transition: 0.3s;
+            padding: 18px; border-bottom: 1px solid #222; cursor: pointer; 
+            font-weight: bold; font-size: 1.1rem; transition: 0.3s;
         }
-
         .canal:hover { background: #ff9900; color: #000; }
 
-        /* AJUSTE PARA SMART TV OU PC (Telas Grandes) */
+        /* AJUSTE PARA PC / TV */
         @media (min-width: 900px) {
-            #main { 
-                flex-direction: row; /* Lado a lado no PC */
-            } 
-            #canais { 
-                width: 350px; 
-                flex: none; 
-                border-left: 1px solid #222;
-            }
-            header { 
-                height: 140px; /* Banner maior na TV */
-            } 
+            #main { flex-direction: row; } 
+            #canais { width: 350px; flex: none; border-left: 1px solid #222; }
+            header { height: 140px; } 
         }
     </style>
 </head>
@@ -108,14 +60,12 @@
 </div>
 
 <script>
-    const urlLista = "lista.txt";
+    // SEU LINK RAW DO GITHUB APLICADO
+    const urlLista = "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/lista.txt";
+    
     var player = new Clappr.Player({ 
-        parentId: "#player", 
-        source: "", 
-        width: '100%', 
-        height: '100%', 
-        autoPlay: true,
-        mute: false 
+        parentId: "#player", source: "", 
+        width: '100%', height: '100%', autoPlay: true 
     });
     
     let imagens = [];
@@ -123,18 +73,19 @@
 
     async function carregarTV() {
         try {
-            const res = await fetch(urlLista);
+            // O código abaixo adiciona um número aleatório no final do link 
+            // para o PC sempre baixar a lista nova (evita o erro que vimos na foto)
+            const res = await fetch(urlLista + "?v=" + Math.random());
             const data = await res.text();
             const linhas = data.split('\n');
             const menu = document.getElementById('canais');
             const container = document.getElementById('banner-container');
             
-            let nome = "Canal sem nome";
+            let nome = "Canal";
 
             linhas.forEach(l => {
                 const linha = l.trim();
                 
-                // Imagens de propaganda
                 if(linha.startsWith('IMG=')) {
                     const img = document.createElement('img');
                     img.src = linha.replace('IMG=', '');
@@ -143,11 +94,9 @@
                     imagens.push(img);
                 }
                 
-                // Nomes dos canais
                 if(linha.includes("#EXTINF")) { 
                     nome = linha.split(',')[1] || "Canal"; 
                 }
-                // Links M3U
                 else if(linha.startsWith("http")) {
                     const div = document.createElement('div');
                     div.className = 'canal';
@@ -155,7 +104,6 @@
                     div.onclick = () => { 
                         player.load(linha); 
                         player.play(); 
-                        // No celular, sobe pro player ao clicar
                         if(window.innerWidth < 900) {
                             document.getElementById('player').scrollIntoView({behavior: "smooth"});
                         }
@@ -167,20 +115,16 @@
             if (imagens.length > 0) showSlides();
             
         } catch (error) {
-            console.error("Erro ao carregar lista:", error);
+            console.error("Erro fatal:", error);
         }
     }
 
     function showSlides() {
         if (imagens.length === 0) return;
-        for (let i = 0; i < imagens.length; i++) {
-            imagens[i].style.display = "none";
-        }
+        for (let i = 0; i < imagens.length; i++) { imagens[i].style.display = "none"; }
         slideIndex++;
         if (slideIndex > imagens.length) {slideIndex = 1}
         imagens[slideIndex-1].style.display = "block";
-        
-        // 20 Segundos para cada propaganda
         setTimeout(showSlides, 20000); 
     }
 
