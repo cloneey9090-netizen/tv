@@ -24,8 +24,11 @@
             padding: 0; 
             text-align: center; 
             border-bottom: 2px solid #ff9900; 
-            height: 100px; /* Altura fixa para o banner respirar */
+            height: 90px; /* Altura ideal para o banner no celular */
             flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         #banner-container { 
@@ -41,7 +44,7 @@
             height: 100%; 
             width: auto; 
             max-width: 100%;
-            /* O SEGREDO: contain garante que o telefone NÃO corte */
+            /* contain garante que o telefone NÃO corte mesmo em telas diferentes */
             object-fit: contain; 
             display: none; 
             animation: fade 1s; 
@@ -54,12 +57,12 @@
             display: flex; 
             flex: 1; 
             overflow: hidden; 
-            flex-direction: column; /* No celular, o player fica em cima da lista */
+            flex-direction: column; /* Celular: Player em cima da lista */
         }
 
         #player { 
             width: 100%; 
-            aspect-ratio: 16 / 9; /* Mantém o formato de TV */
+            aspect-ratio: 16 / 9; 
             background: #000; 
             flex-shrink: 0;
         }
@@ -68,6 +71,7 @@
             flex: 1; 
             background: #111; 
             overflow-y: auto; 
+            min-height: 200px; /* Garante que a lista não suma no PC */
         }
 
         .canal { 
@@ -75,15 +79,16 @@
             border-bottom: 1px solid #222; 
             cursor: pointer; 
             font-weight: bold; 
+            transition: 0.3s;
         }
 
         .canal:hover { background: #ff9900; color: #000; }
 
         /* AJUSTE PARA SMART TV OU PC (Telas Grandes) */
         @media (min-width: 800px) {
-            #main { flex-direction: row; } /* Player e Lista lado a lado na TV */
-            #canais { width: 300px; }
-            header { height: 130px; } /* Banner maior na TV */
+            #main { flex-direction: row; } /* Na TV/PC fica lado a lado */
+            #canais { width: 350px; flex: none; }
+            header { height: 130px; } /* Banner ganha mais destaque na TV */
         }
     </style>
 </head>
@@ -94,7 +99,9 @@
 </header>
 
 <div id="main">
-    <div id="player"></div> <div id="canais"></div> </div>
+    <div id="player"></div> 
+    <div id="canais"></div> 
+</div>
 
 <script>
     const urlLista = "lista.txt";
@@ -137,8 +144,10 @@
                     div.onclick = () => { 
                         player.load(linha); 
                         player.play(); 
-                        // Scroll suave para o player ao clicar no canal (bom para celular)
-                        document.getElementById('player').scrollIntoView({behavior: "smooth"});
+                        // No celular, volta pro topo para ver o vídeo
+                        if(window.innerWidth < 800) {
+                            document.getElementById('player').scrollIntoView({behavior: "smooth"});
+                        }
                     };
                     menu.appendChild(div);
                 }
@@ -156,7 +165,7 @@
         if (slideIndex > imagens.length) {slideIndex = 1}
         imagens[slideIndex-1].style.display = "block";
         
-        // TEMPO: 20 segundos (20000ms) para carregar bem e o povo ler o telefone
+        // TEMPO: 20 segundos (20000ms)
         setTimeout(showSlides, 20000); 
     }
 
