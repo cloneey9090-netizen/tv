@@ -62,40 +62,64 @@
     let imagens = [];
     let slideIndex = 0;
 
-    async function carregarTV() {
-        try {
-            const res = await fetch(urlLista);
-            const data = await res.text();
-            const linhas = data.split('\n');
-            const menu = document.getElementById('canais');
-            const container = document.getElementById('banner-container');
-            let nome = "Canal Sem Nome";
-            
-            linhas.forEach(l => {
-                const linha = l.trim();
+   async function carregarTV() {
+    try {
+        const res = await fetch(urlLista);
+        const dados = await res.text();
+        const linhas = dados.split('\n');
+        const menu = document.getElementById('canais');
+        const recipiente = document.getElementById('banner-container');
+        
+        let nomeAtual = "Canal";
+        let logoAtual = "";
+
+        linhas.forEach(linha => {
+            const l = linha.trim();
+
+            // Carrossel de Propaganda
+            if (l.startsWith('IMG=')) {
+                const imgUrl = l.replace('IMG=', '');
+                const imagem = document.createElement('img');
+                imagem.src = imgUrl;
+                imagem.className = 'promo-slide';
+                recipiente.appendChild(imagem);
+            } 
+            // Lógica das Logos e Nomes
+            else if (l.includes('#EXTINF:')) {
+                const logoMatch = l.match(/tvg-logo="([^"]+)"/);
+                logoAtual = logoMatch ? logoMatch[1] : '';
+                const partes = l.split(',');
+                nomeAtual = partes[partes.length - 1].trim();
+            } 
+            // Criação do Canal
+            else if (l.startsWith('http')) {
+                const div = document.createElement('div');
+                div.className = 'canal';
                 
-                // Se a linha começar com IMG=, adiciona ao carrossel
-                if(linha.startsWith('IMG=')) {
-                    const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '');
-                    img.className = 'promo-slide';
-                    container.appendChild(img);
-                    imagens.push(img);
-                }
+                const imgTag = logoAtual ? `<img src="${logoAtual}" style="width:30px; height:30px; margin-right:10px; vertical-align:middle; border-radius:4px;">` : '';
                 
-                // Lógica dos canais
-                if(linha.includes("#EXTINF")) { 
-                    if(linha.split(',')[1]) nome = linha.split(',')[1]; 
-                }
-                else if(linha.startsWith("http")) {
-                    const div = document.createElement('div');
-                    div.className = 'canal';
-                    div.innerHTML = "▶️ " + nome;
-                    const linkFinal = linha;
-                    div.onclick = () => { player.load(linkFinal); player.play(); };
-                    menu.appendChild(div);
-                }
-            });
+                div.innerHTML = `${imgTag} <span>${nomeAtual}</span>`;
+                
+                const linkFinal = l;
+                div.onclick = () => {
+                    if (player) {
+                        player.load({source: linkFinal});
+                        player.play();
+                    }
+                };
+                menu.appendChild(div);
+
+                // Reseta para o próximo
+                nomeAtual = "Canal";
+                logoAtual = "";
+            }
+        });
+
+        iniciarCarrossel();
+    } catch (erro) {
+        console.error("Erro ao carregar lista:", erro);
+    }
+}
             
             if (imagens.length > 0) showSlides();
         } catch (e) {
