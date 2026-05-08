@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,82 +7,30 @@
     <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        body { 
-            background: #000; 
-            color: #fff; 
-            font-family: sans-serif; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
-        }
-
-        header { 
-            background: #000; 
-            padding: 0; 
-            text-align: center; 
-            border-bottom: 2px solid #ff9900; 
-            height: 100px; 
-            flex-shrink: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        /* BASE DO SEU PRIMEIRO CÓDIGO */
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
         
-        #banner-container { 
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .promo-slide { 
-            height: 100%; 
-            width: auto; 
-            max-width: 100%;
-            object-fit: contain; 
-            display: none; 
-            animation: fade 1s; 
-        }
-
+        header { background: #000; padding: 5px; text-align: center; border-bottom: 2px solid #ff9900; height: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        
+        #banner-container { width: 100%; height: 100%; overflow: hidden; }
+        .promo-slide { height: 100%; max-width: 100%; display: none; margin: 0 auto; object-fit: contain; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        #main { 
-            display: flex; 
-            flex: 1; 
-            overflow: hidden; 
-            flex-direction: column; 
-        }
-
-        #player { 
-            width: 100%; 
-            aspect-ratio: 16 / 9; 
-            background: #000; 
-            flex-shrink: 0;
-        }
-
-        #canais { 
-            flex: 1; 
-            background: #111; 
-            overflow-y: auto; 
-        }
-
-        .canal { 
-            padding: 15px; 
-            border-bottom: 1px solid #222; 
-            cursor: pointer; 
-            font-weight: bold; 
-        }
-
+        /* AQUI ESTÁ A MUDANÇA PARA A VIEW SUBIR NO CELULAR */
+        #main { display: flex; flex: 1; flex-direction: column; } /* Padrão Celular: Tudo um embaixo do outro */
+        
+        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
+        
+        #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
+        
+        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
         .canal:hover { background: #ff9900; color: #000; }
 
+        /* AJUSTE PARA PC (Lado a lado como no seu original) */
         @media (min-width: 800px) {
-            #main { flex-direction: row; } 
-            #canais { width: 300px; }
-            header { height: 130px; } 
+            #main { flex-direction: row; overflow: hidden; height: calc(100vh - 100px); }
+            #canais { width: 300px; flex-shrink: 0; }
+            #player { flex: 1; height: 100%; }
         }
     </style>
 </head>
@@ -92,43 +41,36 @@
 </header>
 
 <div id="main">
-    <div id="player"></div> 
-    <div id="canais"></div> 
-</div>
+    <div id="player"></div> <div id="canais"></div> </div>
 
 <script>
-    // IMPORTANTE: Para o PC funcionar, pegue o link do botão "RAW" no seu GitHub
-    // Exemplo: https://raw.githubusercontent.com/seu-usuario/seu-repo/main/lista.txt
+    // Se o PC der erro, troque "lista.txt" pelo link completo do GitHub
     const urlLista = "lista.txt"; 
-
+    
     var player = new Clappr.Player({ parentId: "#player", source: "", width: '100%', height: '100%', autoPlay: true });
     let imagens = [];
     let slideIndex = 0;
 
     async function carregarTV() {
         try {
-            // No PC, forçamos a limpeza do cache com o timestamp (?t=...)
-            const res = await fetch(urlLista + '?t=' + new Date().getTime());
+            // Adicionei o timestamp (?t=...) para o PC não viciar em erro
+            const res = await fetch(urlLista + "?t=" + new Date().getTime());
             const data = await res.text();
-            
+            const linhas = data.split('\n');
             const menu = document.getElementById('canais');
             const container = document.getElementById('banner-container');
-            menu.innerHTML = ""; // Limpa para não duplicar no PC
             
-            const linhas = data.split('\n');
-            let nome = "Canal sem nome";
+            let nome = "Canal";
 
             linhas.forEach(l => {
                 const linha = l.trim();
-                
                 if(linha.startsWith('IMG=')) {
                     const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '').trim();
+                    img.src = linha.replace('IMG=', '');
                     img.className = 'promo-slide';
                     container.appendChild(img);
                     imagens.push(img);
                 }
-                
                 if(linha.includes("#EXTINF")) { 
                     nome = linha.split(',')[1] || "Canal"; 
                 }
@@ -139,17 +81,17 @@
                     div.onclick = () => { 
                         player.load(linha); 
                         player.play(); 
-                        document.getElementById('player').scrollIntoView({behavior: "smooth"});
+                        // Sobe para o vídeo no celular
+                        if(window.innerWidth < 800) {
+                            window.scrollTo({top: 0, behavior: 'smooth'});
+                        }
                     };
                     menu.appendChild(div);
                 }
             });
-            
-            if (imagens.length > 0) showSlides();
-
-        } catch (error) {
-            console.error("Erro ao carregar lista:", error);
-            document.getElementById('canais').innerHTML = "<p style='padding:20px'>Erro ao carregar lista. Verifique se o arquivo lista.txt está no GitHub.</p>";
+            if(imagens.length > 0) showSlides();
+        } catch(e) {
+            console.error("Erro na carga:", e);
         }
     }
 
@@ -159,9 +101,8 @@
         slideIndex++;
         if (slideIndex > imagens.length) {slideIndex = 1}
         imagens[slideIndex-1].style.display = "block";
-        setTimeout(showSlides, 20000); 
+        setTimeout(showSlides, 20000); // 20 segundos para a propaganda de montagem
     }
-
     carregarTV();
 </script>
 </body>
