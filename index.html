@@ -11,7 +11,13 @@
         
         /* Estilo do Slide de Propaganda */
         #banner-container { position: relative; max-width: 100%; height: 80px; margin: 0 auto; overflow: hidden; }
-        .promo-slide { height: 100%; display: none; margin: 0 auto; border-radius: 5px; animation: fade 1s; }
+        .promo-slide { 
+    width: 100%;           /* Ocupa toda a largura disponível */
+    height: 100%;          /* Ocupa toda a altura (80px) */
+    object-fit: cover;     /* Faz a imagem preencher o espaço sem sobrar bordas pretas */
+    display: none; 
+    border-radius: 5px; 
+    animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
         #main { display: flex; flex: 1; overflow: hidden; }
@@ -77,7 +83,7 @@
         slideIndex++;
         if (slideIndex > imagens.length) {slideIndex = 1}
         imagens[slideIndex-1].style.display = "block";
-        setTimeout(showSlides, 5000); // Muda a cada 5 segundos
+        setTimeout(showSlides, 10000); // Muda a cada 5 segundos
     }
     carregarTV();
 </script>
