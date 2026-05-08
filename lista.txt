@@ -1,4 +1,4 @@
-IMG=https://i.postimg.cc/kgWHX661/lv-0-20260508142851.gif
+IMG=https://i.postimg.cc/hjSx7jDL/teste.gif
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png
 IMG=https://link-da-sua-foto-de-montador.jpg
 IMG=https://link-da-padaria-do-vizinho.jpg
