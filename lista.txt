@@ -1,4 +1,11 @@
-#EXTM3U x-tvg-url="https://www.bevy.be/bevyfiles/brazil.xml,https://www.bevy.be/bevyfiles/portugal.xml,https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/PlutoTV/all.xml,https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/Plex/all.xml,https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/SamsungTVPlus/all.xml,https://raw.githubusercontent.com/helenfernanda/gratis/main/distrotv.xml,https://www.bevy.be/bevyfiles/mexicopremium.xml"
+IMG=https://link-da-sua-foto-de-montador.jpg
+IMG=https://link-da-padaria-do-vizinho.jpg
+IMG=https://link-do-seu-banner-gospel.gif
+#EXTM3U
+#EXTINF:-1, Canal 01
+http://link-do-canal.m3u8
+#EXTM3U x-tvg-
+url="https://www.bevy.be/bevyfiles/brazil.xml,https://www.bevy.be/bevyfiles/portugal.xml,https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/PlutoTV/all.xml,https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/Plex/all.xml,https://raw.githubusercontent.com/matthuisman/i.mjh.nz/master/SamsungTVPlus/all.xml,https://raw.githubusercontent.com/helenfernanda/gratis/main/distrotv.xml,https://www.bevy.be/bevyfiles/mexicopremium.xml"
 ## 📺 TV Meu Tédio
 ## 👩🏽‍💻 Editora: Helen Fernanda | Brasília | Brasil 🇧🇷
 ## 🔗 Dicas de EPG e apps: www.meutedio.com.br/iptv
