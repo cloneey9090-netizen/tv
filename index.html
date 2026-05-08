@@ -6,75 +6,147 @@
     <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        header { background: #000; padding: 5px; text-align: center; border-bottom: 2px solid #ff9900; min-height: 60px; }
+        /* ORGANIZAÇÃO GERAL */
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* 1. BANNER NO TOPO (Sua Propaganda) */
+        header { 
+            background: #000; 
+            padding: 0; 
+            text-align: center; 
+            border-bottom: 2px solid #ff9900; 
+            height: 100px; /* Altura fixa para o banner respirar */
+            flex-shrink: 0;
+        }
         
-        /* Estilo do Slide de Propaganda */
-        #banner-container { position: relative; max-width: 100%; height: 100px; margin: 0 auto; overflow: hidden; }
+        #banner-container { 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .promo-slide { 
-    width: 100%;           /* Ocupa toda a largura disponível */
-    height: 100%;          /* Ocupa toda a altura (80px) */
-    object-fit: cover;     /* Faz a imagem preencher o espaço sem sobrar bordas pretas */
-    display: none; 
-    border-radius: 5px; 
-    animation: fade 1s; }
+            height: 100%; 
+            width: auto; 
+            max-width: 100%;
+            /* O SEGREDO: contain garante que o telefone NÃO corte */
+            object-fit: contain; 
+            display: none; 
+            animation: fade 1s; 
+        }
+
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        #main { display: flex; flex: 1; overflow: hidden; }
-        #canais { width: 30%; max-width: 250px; background: #111; overflow-y: auto; }
-        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
-        .canal:hover { background: #ff9900; color: #000; }
-        #player { flex: 1; background: #000; }
+        /* 2. ÁREA CENTRAL (Player e Canais) */
+        #main { 
+            display: flex; 
+            flex: 1; 
+            overflow: hidden; 
+            flex-direction: column; /* No celular, o player fica em cima da lista */
+        }
 
-        @media (max-width: 600px) { #main { flex-direction: column; } #canais { width: 100%; height: 45%; } }
+        #player { 
+            width: 100%; 
+            aspect-ratio: 16 / 9; /* Mantém o formato de TV */
+            background: #000; 
+            flex-shrink: 0;
+        }
+
+        #canais { 
+            flex: 1; 
+            background: #111; 
+            overflow-y: auto; 
+        }
+
+        .canal { 
+            padding: 15px; 
+            border-bottom: 1px solid #222; 
+            cursor: pointer; 
+            font-weight: bold; 
+        }
+
+        .canal:hover { background: #ff9900; color: #000; }
+
+        /* AJUSTE PARA SMART TV OU PC (Telas Grandes) */
+        @media (min-width: 800px) {
+            #main { flex-direction: row; } /* Player e Lista lado a lado na TV */
+            #canais { width: 300px; }
+            header { height: 130px; } /* Banner maior na TV */
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div id="banner-container">
-        </div>
+    <div id="banner-container"></div>
 </header>
 
 <div id="main">
-    <div id="canais"></div>
-    <div id="player"></div>
-</div>
+    <div id="player"></div> <div id="canais"></div> </div>
 
 <script>
     const urlLista = "lista.txt";
+    // Iniciamos o player vazio
     var player = new Clappr.Player({ parentId: "#player", source: "", width: '100%', height: '100%', autoPlay: true });
     let imagens = [];
     let slideIndex = 0;
 
     async function carregarTV() {
-        const res = await fetch(urlLista);
-        const data = await res.text();
-        const linhas = data.split('\n');
-        const menu = document.getElementById('canais');
-        const container = document.getElementById('banner-container');
-        
-        linhas.forEach(l => {
-            const linha = l.trim();
-            // Se a linha começar com IMG=, adiciona ao carrossel
-            if(linha.startsWith('IMG=')) {
-                const img = document.createElement('img');
-                img.src = linha.replace('IMG=', '');
-                img.className = 'promo-slide';
-                container.appendChild(img);
-                imagens.push(img);
-            }
-            // Lógica dos canais
-            if(linha.includes("#EXTINF")) { nome = linha.split(',')[1]; }
-            else if(linha.startsWith("http")) {
-                const div = document.createElement('div');
-                div.className = 'canal';
-                div.innerHTML = "▶️ " + nome;
-                div.onclick = () => { player.load(linha); player.play(); };
-                menu.appendChild(div);
-            }
-        });
-        showSlides();
+        try {
+            const res = await fetch(urlLista);
+            const data = await res.text();
+            const linhas = data.split('\n');
+            const menu = document.getElementById('canais');
+            const container = document.getElementById('banner-container');
+            
+            let nome = "Canal sem nome";
+
+            linhas.forEach(l => {
+                const linha = l.trim();
+                
+                // Se for imagem de propaganda
+                if(linha.startsWith('IMG=')) {
+                    const img = document.createElement('img');
+                    img.src = linha.replace('IMG=', '');
+                    img.className = 'promo-slide';
+                    container.appendChild(img);
+                    imagens.push(img);
+                }
+                
+                // Se for nome do canal
+                if(linha.includes("#EXTINF")) { 
+                    nome = linha.split(',')[1] || "Canal"; 
+                }
+                // Se for link do canal
+                else if(linha.startsWith("http")) {
+                    const div = document.createElement('div');
+                    div.className = 'canal';
+                    div.innerHTML = "▶️ " + nome;
+                    div.onclick = () => { 
+                        player.load(linha); 
+                        player.play(); 
+                        // Scroll suave para o player ao clicar no canal (bom para celular)
+                        document.getElementById('player').scrollIntoView({behavior: "smooth"});
+                    };
+                    menu.appendChild(div);
+                }
+            });
+            showSlides();
+        } catch (error) {
+            console.error("Erro ao carregar lista:", error);
+        }
     }
 
     function showSlides() {
@@ -83,8 +155,11 @@
         slideIndex++;
         if (slideIndex > imagens.length) {slideIndex = 1}
         imagens[slideIndex-1].style.display = "block";
-        setTimeout(showSlides, 10000); // Muda a cada 5 segundos
+        
+        // TEMPO: 20 segundos (20000ms) para carregar bem e o povo ler o telefone
+        setTimeout(showSlides, 20000); 
     }
+
     carregarTV();
 </script>
 </body>
