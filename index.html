@@ -6,54 +6,31 @@
     <title>Minha TV Online</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        body { background-color: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        body { background-color: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; }
         
-        /* Estilo do Banner de Propaganda */
+        /* Banner de 80px que o senhor aprovou */
         #banner-container { 
-            position: relative; 
             width: 100%; 
             height: 80px; 
             background-color: #000; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden;
+            overflow: hidden; 
+            display: flex;
+            justify-content: center;
         }
-        .promo-slide { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            display: none; 
-            animation: fade 1s; 
-        }
+        .promo-slide { width: 100%; height: 100%; object-fit: contain; display: none; }
 
-        /* Player de Vídeo */
         #player { width: 100%; height: 60vh; background: #111; }
 
-        /* Lista de Canais */
-        #canais { 
-            padding: 15px; 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-            gap: 10px; 
-            max-height: 30vh; 
-            overflow-y: auto; 
-        }
+        #canais { padding: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
         .canal { 
             background: #222; 
-            padding: 10px; 
-            border-radius: 8px; 
+            padding: 15px; 
+            border-radius: 5px; 
             cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            transition: 0.3s;
-            border: 1px solid #333;
+            min-width: 120px; 
+            text-align: center;
         }
-        .canal:hover { background: #333; border-color: #deff9a; }
-        .canal img { width: 30px; height: 30px; margin-right: 10px; border-radius: 4px; object-fit: cover; }
-        .canal span { font-size: 14px; font-weight: bold; }
-
-        @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
+        .canal:hover { background: #444; }
     </style>
 </head>
 <body>
@@ -63,90 +40,59 @@
     <div id="canais"></div>
 
     <script>
-        // --- CONFIGURAÇÃO ---
-        const urlLista = "https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPOSITORIO/main/lista.txt"; 
-        // 🚨 ATENÇÃO: Substitua o link acima pelo seu link "Raw" do GitHub!
+        // Use o seu link RAW do GitHub aqui
+        const urlLista = "SUA_URL_AQUI"; 
 
         let player = new Clappr.Player({
             parentId: "#player",
-            source: "", // Começa vazio
+            source: "",
             width: "100%",
-            height: "100%",
-            autoPlay: false
+            height: "100%"
         });
 
         async function carregarTV() {
             try {
-                const res = await fetch(urlLista);
-                const dados = await res.text();
-                const linhas = dados.split('\n');
+                const response = await fetch(urlLista);
+                const data = await response.text();
+                const lines = data.split('\n');
                 const menu = document.getElementById('canais');
-                const recipiente = document.getElementById('banner-container');
+                const container = document.getElementById('banner-container');
                 
-                let nomeAtual = "";
-                let logoAtual = "";
+                let canalNome = "";
 
-                linhas.forEach(linha => {
-                    const l = linha.trim();
+                lines.forEach(line => {
+                    const l = line.trim();
 
-                    // 1. Carrega Imagens do Carrossel (IMG=...)
                     if (l.startsWith('IMG=')) {
-                        const imgUrl = l.replace('IMG=', '');
-                        const imagem = document.createElement('img');
-                        imagem.src = imgUrl;
-                        imagem.className = 'promo-slide';
-                        recipiente.appendChild(imagem);
-                    } 
-                    // 2. Lê Info do Canal (#EXTINF)
-                    else if (l.startsWith('#EXTINF:')) {
-                        const logoMatch = l.match(/tvg-logo="([^"]+)"/);
-                        logoAtual = logoMatch ? logoMatch[1] : "";
-                        const partes = l.split(',');
-                        nomeAtual = partes[partes.length - 1].trim();
-                    } 
-                    // 3. Cria botão do Canal (Link HTTP)
-                    else if (l.startsWith('http')) {
-                        const div = document.createElement('div');
-                        div.className = 'canal';
-                        
-                        const imgTag = logoAtual ? `<img src="${logoAtual}">` : `<img src="https://cdn-icons-png.flaticon.com/512/716/716429.png">`;
-                        
-                        div.innerHTML = `${imgTag} <span>${nomeAtual || "Canal"}</span>`;
-                        
-                        const linkVideo = l;
-                        div.onclick = () => {
-                            player.load({source: linkVideo});
+                        const img = document.createElement('img');
+                        img.src = l.replace('IMG=', '');
+                        img.className = 'promo-slide';
+                        container.appendChild(img);
+                    } else if (l.startsWith('#EXTINF:')) {
+                        canalNome = l.split(',')[1] || "Canal";
+                    } else if (l.startsWith('http')) {
+                        const btn = document.createElement('div');
+                        btn.className = 'canal';
+                        btn.innerText = canalNome;
+                        btn.onclick = () => {
+                            player.load({source: l});
                             player.play();
                         };
-                        menu.appendChild(div);
-
-                        // Reseta para o próximo da lista
-                        nomeAtual = "";
-                        logoAtual = "";
+                        menu.appendChild(btn);
                     }
                 });
-
                 iniciarCarrossel();
-            } catch (erro) {
-                console.error("Erro na missão:", erro);
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // Lógica do Carrossel
-        let slideIndex = 0;
+        let slideIdx = 0;
         function iniciarCarrossel() {
             const slides = document.getElementsByClassName("promo-slide");
-            if (slides.length === 0) return;
-            
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            
-            slideIndex++;
-            if (slideIndex > slides.length) { slideIndex = 1; }
-            
-            slides[slideIndex - 1].style.display = "block";
-            setTimeout(iniciarCarrossel, 10000); // Troca a cada 10 segundos
+            for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+            slideIdx++;
+            if (slideIdx > slides.length) slideIdx = 1;
+            if (slides[slideIdx-1]) slides[slideIdx-1].style.display = "block";
+            setTimeout(iniciarCarrossel, 10000);
         }
 
         carregarTV();
