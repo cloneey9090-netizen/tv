@@ -6,7 +6,8 @@
     <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+        /* BASE DO SEU PRIMEIRO CÓDIGO (MANTIDA 100%) */
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
         
         header { background: #000; padding: 5px; text-align: center; border-bottom: 2px solid #ff9900; height: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         
@@ -14,21 +15,20 @@
         .promo-slide { height: 100%; max-width: 100%; display: none; margin: 0 auto; object-fit: contain; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        #main { display: flex; flex: 1; flex-direction: row; overflow: hidden; height: calc(100vh - 100px); background: #000; }
+        #main { display: flex; flex: 1; flex-direction: column; } 
         
-        /* PLAYER: Adicionei o z-index para ele não sumir */
-        #player { flex: 1; height: 100%; background: #000; cursor: pointer; position: relative; z-index: 10; }
+        /* O Player agora aceita o clique para ampliar */
+        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; }
         
-        #canais { width: 250px; flex-shrink: 0; background: #111; overflow-y: auto; border-left: 1px solid #222; z-index: 5; }
+        #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         
-        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
         .canal:hover { background: #ff9900; color: #000; }
 
-        @media (max-width: 800px) {
-            #main { flex-direction: column; overflow-y: auto; height: auto; }
-            #player { width: 100%; aspect-ratio: 16 / 9; flex: none; }
-            #canais { width: 100%; height: auto; flex: 1; border-left: none; }
-            body { overflow: auto; }
+        @media (min-width: 800px) {
+            #main { flex-direction: row; overflow: hidden; height: calc(100vh - 100px); }
+            #canais { width: 300px; flex-shrink: 0; }
+            #player { flex: 1; height: 100%; }
         }
     </style>
 </head>
@@ -46,23 +46,16 @@
 <script>
     const urlLista = "lista.txt"; 
     
-    var player = new Clappr.Player({ 
-        parentId: "#player", 
-        source: "", 
-        width: '100%', 
-        height: '100%', 
-        autoPlay: true,
-        playInline: true
-    });
+    var player = new Clappr.Player({ parentId: "#player", source: "", width: '100%', height: '100%', autoPlay: true });
 
-    // Função para ampliar ao clicar no vídeo
+    // FUNÇÃO PARA AMPLIAR (A SOLDA PARA A TV)
     function toggleFullScreen() {
-        const playerElement = document.querySelector('#player');
+        const p = document.getElementById('player');
         if (!document.fullscreenElement) {
-            if (playerElement.requestFullscreen) { playerElement.requestFullscreen(); }
-            else if (playerElement.webkitRequestFullscreen) { playerElement.webkitRequestFullscreen(); }
+            if (p.requestFullscreen) p.requestFullscreen();
+            else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen();
         } else {
-            if (document.exitFullscreen) { document.exitFullscreen(); }
+            if (document.exitFullscreen) document.exitFullscreen();
         }
     }
 
@@ -96,9 +89,12 @@
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nome;
                     div.onclick = (e) => { 
-                        e.stopPropagation(); 
+                        e.stopPropagation(); // Não amplia ao clicar no nome do canal
                         player.load(linha); 
                         player.play(); 
+                        if(window.innerWidth < 800) {
+                            window.scrollTo({top: 0, behavior: 'smooth'});
+                        }
                     };
                     menu.appendChild(div);
                 }
