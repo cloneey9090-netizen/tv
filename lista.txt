@@ -6,7 +6,7 @@ IMG=https://link-do-seu-banner-gospel.gif
 EXTM3U # TV 
 
 #EXTINF:-1, 
-propaganda.mp4
+https://archive.org/download/propaganda_202605/propaganda.mp4
 
 #EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta",SBT
 https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8
