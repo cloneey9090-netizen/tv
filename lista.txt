@@ -5,8 +5,8 @@ IMG=https://link-da-padaria-do-vizinho.jpg
 IMG=https://link-do-seu-banner-gospel.gif
 EXTM3U # TV 
 
-#EXTINF:-1, ▶️ VÍDEO DO DRIVE TESTE
-https://drive.google.com/uc?export=download&id=1z2SChpFIi_TnLXz2nX3NDEkp_g4bHS-W
+#EXTINF:-1, 
+propaganda.mp4
 
 #EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta",SBT
 https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8
