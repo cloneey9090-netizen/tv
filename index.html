@@ -38,16 +38,35 @@
     const urlLista = "lista.txt"; 
     let imagens = [];
     let slideIndex = 0;
-    let primeiroCanal = ""; 
+    
+    // Variáveis para a Sequência Automática
+    let listaDeVideos = [];
+    let indiceAtual = 0;
 
-    // PLAYER COM MUTE PARA FORÇAR O AUTOPLAY
     var player = new Clappr.Player({ 
         parentId: "#player", 
         source: "", 
         width: '100%', 
         height: '100%', 
         autoPlay: true,
-        mute: true // OBRIGATÓRIO para rodar sozinho
+        mute: true 
+    });
+
+    // O VIGIA: Quando o vídeo acaba, ele decide o que fazer
+    player.on(Clappr.Events.PLAYER_ENDED, function() {
+        let canalAtual = listaDeVideos[indiceAtual];
+        
+        // SEPARADOR: Se o nome do canal tiver "AUTO", ele pula pro próximo
+        if (canalAtual.nome.toUpperCase().includes("AUTO")) {
+            indiceAtual++;
+            if (indiceAtual >= listaDeVideos.length) indiceAtual = 0; // Volta pro início se acabar
+            
+            player.load(listaDeVideos[indiceAtual].link);
+            player.play();
+        } else {
+            // Se for canal comum, ele apenas repete o mesmo vídeo (loop individual)
+            player.play();
+        }
     });
 
     function toggleFullScreen() {
@@ -68,7 +87,7 @@
             const menu = document.getElementById('canais');
             const container = document.getElementById('banner-container');
             
-            let nome = "Canal";
+            let nomeTemp = "Canal";
 
             linhas.forEach(l => {
                 const linha = l.trim();
@@ -80,38 +99,32 @@
                     imagens.push(img);
                 }
                 if(linha.includes("#EXTINF")) { 
-                    nome = linha.split(',')[1] || "Canal"; 
+                    nomeTemp = linha.split(',')[1] || "Canal"; 
                 }
                 else if(linha.startsWith("http")) {
                     
-                    if (primeiroCanal === "") {
-                        primeiroCanal = linha;
-                        // CONFIGURAÇÃO DE LOOP E MUTE NO INÍCIO
-                        player.load({source: primeiroCanal, loop: true, mute: true});
+                    // Guarda o canal na memória para a sequência
+                    let infoCanal = { nome: nomeTemp, link: linha };
+                    listaDeVideos.push(infoCanal);
+                    let meuIndice = listaDeVideos.length - 1;
+
+                    // Play automático no primeiro canal da lista
+                    if (meuIndice === 0) {
+                        player.load(linha);
                         player.play();
                     }
 
                     const div = document.createElement('div');
                     div.className = 'canal';
-                    div.innerHTML = "▶️ " + nome;
-                    
-                    const linkDoCanal = linha;
+                    div.innerHTML = "▶️ " + nomeTemp;
 
                     div.onclick = (e) => { 
                         e.stopPropagation();
-                        // QUANDO O USUÁRIO CLICA, ATIVAMOS O SOM
                         player.setVolume(100); 
-
-                        if (linkDoCanal === primeiroCanal) {
-                            player.load({source: linkDoCanal, loop: true, mute: false});
-                        } else {
-                            player.load({source: linkDoCanal, loop: false, mute: false});
-                        }
-
+                        indiceAtual = meuIndice; // Atualiza a posição para a sequência saber onde está
+                        player.load(linha);
                         player.play(); 
-                        if(window.innerWidth < 800) {
-                            window.scrollTo({top: 0, behavior: 'smooth'});
-                        }
+                        if(window.innerWidth < 800) window.scrollTo({top: 0, behavior: 'smooth'});
                     };
                     menu.appendChild(div);
                 }
@@ -126,7 +139,7 @@
         if (imagens.length === 0) return;
         imagens.forEach(img => img.style.display = "none");
         slideIndex++;
-        if (slideIndex > imagens.length) {slideIndex = 1}
+        if (slideIndex > imagens.length) slideIndex = 1;
         imagens[slideIndex-1].style.display = "block";
         setTimeout(showSlides, 20000); 
     }
