@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -46,9 +47,9 @@
     const urlLista = "lista.txt"; 
     let imagens = [];
     let slideIndex = 0;
-    let primeiroCanal = ""; // Guarda o primeiro link para o play automático
+    let primeiroCanal = ""; 
 
-    // Iniciamos o player mudo para garantir o Play Automático na TV
+    // Player inicial
     var player = new Clappr.Player({ 
         parentId: "#player", 
         source: "", 
@@ -91,20 +92,32 @@
                     nome = linha.split(',')[1] || "Canal"; 
                 }
                 else if(linha.startsWith("http")) {
-                    // Guarda o primeiro link encontrado para dar o play automático
+                    
+                    // LÓGICA DO PRIMEIRO CANAL (PROPAGANDAS EM LOOP)
                     if (primeiroCanal === "") {
                         primeiroCanal = linha;
-                        player.load(primeiroCanal);
+                        player.load({source: primeiroCanal, loop: true}); // Ativa Loop no início
                         player.play();
                     }
 
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nome;
+                    
+                    // Captura o link atual para o clique
+                    const linkDoCanal = linha;
+
                     div.onclick = (e) => { 
                         e.stopPropagation();
-                        player.setVolume(100); // Ativa o som ao escolher o canal
-                        player.load(linha); 
+                        player.setVolume(100); 
+
+                        // Se clicar no primeiro link, ativa o loop. Se for outro, desativa.
+                        if (linkDoCanal === primeiroCanal) {
+                            player.load({source: linkDoCanal, loop: true});
+                        } else {
+                            player.load({source: linkDoCanal, loop: false});
+                        }
+
                         player.play(); 
                         if(window.innerWidth < 800) {
                             window.scrollTo({top: 0, behavior: 'smooth'});
