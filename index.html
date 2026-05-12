@@ -58,10 +58,22 @@
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
-        @media (min-width: 800px) {
-            #main { flex-direction: row; overflow: hidden; height: calc(100vh - 120px); }
-            #canais { width: 150px; flex-shrink: 0; border-left: 1px solid #333; }
-            #player { flex: 1; height: 100%; }
+    @media (min-width: 800px) {
+            #main { 
+                flex-direction: row; 
+                overflow: hidden; 
+                height: calc(100vh - 120px); 
+            }
+            #canais { 
+                width: 180px; /* Deixei os botões bem fininhos */
+                flex: none !important; /* Isso obriga os botões a não crescerem */
+                flex-shrink: 0; 
+                border-left: 1px solid #333; 
+            }
+            #player { 
+                flex: 1 !important; /* Isso obriga o PLAYER a ocupar todo o resto */
+                height: 100%; 
+            }
         }
     </style>
 </head>
