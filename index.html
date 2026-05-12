@@ -7,58 +7,16 @@
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
-        
-        /* Cabeçalho dividido em 2 partes */
-        header { 
-            background: #000; 
-            border-bottom: 2px solid #ff9900; 
-            height: 120px; 
-            flex-shrink: 0; 
-            display: flex; 
-            width: 100%;
-            overflow: hidden;
-        }
-
-        /* Lado Esquerdo: Banner dos Clientes (70%) */
-        #banner-container { 
-            width: 50%; 
-            height: 100%; 
-            position: relative;
-            overflow: hidden;
-            border-right: 1px solid #333;
-        }
-
-        /* Lado Direito: Seu Contato Fixo (30%) */
-        #fixo-contato {
-            width: 50%;
-            background: #111;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 5px;
-        }
-
-        .promo-slide { 
-            height: 100%; 
-            width: 100%; 
-            display: none; 
-            position: absolute;
-            top: 0;
-            left: 0;
-            object-fit: fill; /* Preenche o espaço sem sobras */
-            animation: fade 1s; 
-        }
-
+        header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; flex-shrink: 0; display: flex; width: 100%; overflow: hidden; }
+        #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; border-right: 1px solid #333; }
+        #fixo-contato { width: 50%; background: #111; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5px; }
+        .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
-
         #main { display: flex; flex: 1; flex-direction: column; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; }
         #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
-
         @media (min-width: 800px) {
             #main { flex-direction: row; overflow: hidden; height: calc(100vh - 120px); }
             #canais { width: 350px; flex-shrink: 0; border-left: 1px solid #333; }
@@ -83,10 +41,13 @@
 </div>
 
 <script>
-    const urlLista = "lista.txt"; 
+    // --- CONFIGURAÇÃO DO BUNKER PRIVADO ---
+    // Coloquei sua chave mestra aqui para o GitHub deixar você entrar
+    const meuToken = "ghp_gZgeKQaz3ND7m0OQJyyNWKTcM1mru60GwMFG";
+    const urlApi = "https://api.github.com/repos/cloneey9090-netizen/tv/contents/lista.txt";
+
     let imagens = [];
     let slideIndex = 0;
-    
     let listaDeVideos = [];
     let indiceAtual = 0;
 
@@ -99,7 +60,6 @@
         mute: true 
     });
 
-    // VIGIA: Decisão de sequência ou loop
     player.on(Clappr.Events.PLAYER_ENDED, function() {
         let canalAtual = listaDeVideos[indiceAtual];
         if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
@@ -124,7 +84,14 @@
 
     async function carregarTV() {
         try {
-            const res = await fetch(urlLista + "?t=" + new Date().getTime());
+            // Agora o player mostra a "identidade" (Token) para o GitHub liberar a lista
+            const res = await fetch(urlApi, {
+                headers: {
+                    'Authorization': `token ${meuToken}`,
+                    'Accept': 'application/vnd.github.v3.raw'
+                }
+            });
+            
             const data = await res.text();
             const linhas = data.split('\n');
             const menu = document.getElementById('canais');
@@ -134,7 +101,6 @@
 
             linhas.forEach(l => {
                 const linha = l.trim();
-                // Carrega Imagens
                 if(linha.startsWith('IMG=')) {
                     const img = document.createElement('img');
                     img.src = linha.replace('IMG=', '');
@@ -142,7 +108,6 @@
                     container.appendChild(img);
                     imagens.push(img);
                 }
-                // Carrega Canais
                 if(linha.includes("#EXTINF")) { 
                     nomeTemp = linha.split(',')[1] || "Canal"; 
                 }
@@ -173,7 +138,7 @@
             });
             if(imagens.length > 0) showSlides();
         } catch(e) {
-            console.error("Erro:", e);
+            console.error("Erro ao abrir o bunker:", e);
         }
     }
 
