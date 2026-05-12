@@ -52,16 +52,36 @@
 
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
+        /* AJUSTES PARA CELULAR (TELA EM PÉ) */
         #main { display: flex; flex: 1; flex-direction: column; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; }
         #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
-       @media (min-width: 800px) {
-            #main { flex-direction: row; overflow: hidden; height: calc(100vh - 120px); }
-            #canais { width: 150px; flex-shrink: 0; border-left: 1px solid #333; }
-            #player { flex: 1; height: 100%; }
+        /* AJUSTE PARA TELAS GRANDES (PC E TV) */
+        @media (min-width: 800px) {
+            #main { 
+                flex-direction: row; 
+                overflow: hidden; 
+                height: calc(100vh - 120px); 
+            }
+            
+            #canais { 
+                width: 280px;         /* Largura equilibrada: nem muito fino, nem largo */
+                flex: none !important; /* Trava a largura para o player crescer */
+                flex-shrink: 0; 
+                height: 100%;        /* Acompanha a altura do vídeo */
+                overflow-y: auto;    /* Rolagem própria se tiver muitos canais */
+                border-left: 1px solid #333; 
+                background: #111;
+            }
+            
+            #player { 
+                flex: 1 !important;   /* O vídeo "estica" e ocupa todo o resto da tela */
+                height: 100%; 
+                background: #000;
+            }
         }
     </style>
 </head>
