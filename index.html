@@ -17,7 +17,6 @@
             overflow: hidden;
         }
 
-        /* LADO ESQUERDO: SEU CONTATO */
         #fixo-contato {
             width: 50%;
             background: #111;
@@ -30,11 +29,10 @@
             border-right: 1px solid #333;
         }
 
-        /* LADO DIREITO: PROPAGANDA */
         #banner-container { 
             width: 50%; 
             height: 100%; 
-            position: relative;
+            position: relative; 
             overflow: hidden;
             background: #050505;
         }
@@ -52,16 +50,34 @@
 
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
+        /* Estilo para Celular */
         #main { display: flex; flex: 1; flex-direction: column; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; }
         #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
-       @media (min-width: 800px) {
-            #main { flex-direction: row; overflow: hidden; height: calc(100vh - 120px); }
-            #canais { width: 150px; flex-shrink: 0; border-left: 1px solid #333; }
-            #player { flex: 1; height: 100%; }
+        /* Ajuste para PC/TV */
+        @media (min-width: 800px) {
+            #main { 
+                flex-direction: row; 
+                overflow: hidden; 
+                height: calc(100vh - 120px); 
+            }
+            
+            #player { 
+                /* AJUSTE AQUI O TAMANHO DO PLAYER */
+                width: 75%; 
+                height: 100%; 
+            }
+
+            #canais { 
+                flex: 1; 
+                height: 100%; 
+                overflow-y: auto; 
+                border-left: 1px solid #333; 
+                background: #111;
+            }
         }
     </style>
 </head>
@@ -73,7 +89,6 @@
         <div style="color: #25D366; font-size: 18px; font-weight: bold;">📲 (28) 98804-9598</div>
         <div style="font-size: 10px; color: #ccc; margin-top: 5px;">Sua marca em Cachoeiro</div>
     </div>
-
     <div id="banner-container"></div>
 </header>
 
@@ -160,7 +175,9 @@
                         indiceAtual = meuIndice;
                         player.load(linha);
                         player.play(); 
-                        if(window.innerWidth < 800) window.scrollTo({top: 0, behavior: 'smooth'});
+                        
+                        // ROLAGEM AUTOMÁTICA PARA QUALQUER TELA
+                        window.scrollTo({top: 0, behavior: 'smooth'});
                     };
                     menu.appendChild(div);
                 }
