@@ -42,7 +42,7 @@
 
 <script>
     // --- CONFIGURAÇÃO DO BUNKER PRIVADO ---
-    // Coloquei sua chave mestra aqui para o GitHub deixar você entrar
+    // Sua chave mestra que libera o acesso à lista privada
     const meuToken = "ghp_gZgeKQaz3ND7m0OQJyyNWKTcM1mru60GwMFG";
     const urlApi = "https://api.github.com/repos/cloneey9090-netizen/tv/contents/lista.txt";
 
@@ -84,7 +84,7 @@
 
     async function carregarTV() {
         try {
-            // Agora o player mostra a "identidade" (Token) para o GitHub liberar a lista
+            // Solicitação especial usando o Token para abrir o arquivo privado
             const res = await fetch(urlApi, {
                 headers: {
                     'Authorization': `token ${meuToken}`,
@@ -92,6 +92,8 @@
                 }
             });
             
+            if (!res.ok) throw new Error("Acesso negado ao bunker");
+
             const data = await res.text();
             const linhas = data.split('\n');
             const menu = document.getElementById('canais');
@@ -138,7 +140,7 @@
             });
             if(imagens.length > 0) showSlides();
         } catch(e) {
-            console.error("Erro ao abrir o bunker:", e);
+            console.error("Erro ao carregar a lista privada:", e);
         }
     }
 
