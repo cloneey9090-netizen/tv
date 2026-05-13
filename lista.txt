@@ -6,7 +6,8 @@ IMG=https://i.postimg.cc/wMKV8pYB/petshow.png
 
 
 EXTM3U # TV 
-
+#EXTINF:-1,📺 ACESSAR YOUTUBE
+https://www.youtube.com/embed?listType=search&list=noticias+ao+vivo
 #EXTINF:-1, AUTO 
 https://i.postimg.cc/wMKV8pYB/petshow.png
 #EXTINF:-1 AUTO 
@@ -15,6 +16,7 @@ https://archive.org/download/propaganda_202605/propaganda.mp4
 
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
+
 
 #EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta",SBT
 https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8
