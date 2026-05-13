@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV COMUNIDADE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
         /* RESET E PADRÃO DA TELA */
@@ -47,7 +48,7 @@
             flex-shrink: 0; 
         }
 
-        /* BARRA LATERAL COM ROLAGEM E BOTÃO YOUTUBE */
+        /* BARRA LATERAL COM ROLAGEM */
         #canais { 
             flex: 1; 
             background: #111; 
@@ -56,7 +57,7 @@
             flex-direction: column;
         }
 
-        /* BOTÃO ESTILO OPÇÃO 2 */
+        /* BOTÃO YOUTUBE ESTILIZADO */
         .btn-youtube {
             background: #ff0000;
             color: white;
@@ -66,9 +67,12 @@
             cursor: pointer;
             border: none;
             width: 100%;
-            font-size: 14px;
+            font-size: 16px;
             border-bottom: 3px solid #333;
-            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         .btn-youtube:hover { background: #cc0000; }
 
@@ -91,9 +95,12 @@
             #player { 
                 width: 75%; 
                 height: 100%; 
+                position: sticky;
+                top: 0;
             }
             #canais { 
                 height: 100%; 
+                overflow-y: scroll;
             }
         }
     </style>
@@ -111,7 +118,9 @@
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
-        <button class="btn-youtube" onclick="abrirYoutube()">🔴 CARREGAR VÍDEO DO YOUTUBE</button>
+        <button class="btn-youtube" onclick="abrirYoutube()">
+            <i class="fab fa-youtube"></i> ACESSAR YOUTUBE WEB
+        </button>
         <div id="lista-canais"></div>
     </div> 
 </div>
@@ -129,24 +138,19 @@
         width: '100%', 
         height: '100%', 
         autoPlay: true,
-        mute: true 
+        mute: true // Sempre mudo no primeiro carregamento pro Navegador aceitar
     });
 
-    // FUNÇÃO OPÇÃO 2: TELETRANSPORTE DE VÍDEO
+    // FUNÇÃO PARA CARREGAR O YOUTUBE OFICIAL
     function abrirYoutube() {
-        let link = prompt("Cole aqui o LINK do vídeo do YouTube:");
-        if (link && link.trim() !== "") {
-            // Se for link do YouTube, a gente garante que o Clappr tente rodar ou avisa o player
-            executarCanal({nome: "YOUTUBE PLAYER", link: link});
-            alert("Carregando conteúdo do YouTube no Player Principal...");
-        }
+        executarCanal({nome: "YOUTUBE", link: "https://www.youtube.com"});
     }
 
-    // LÓGICA DE SOM E PLAY
+    // LÓGICA DE SOM E PLAY AUTOMÁTICO
     function executarCanal(canalObj) {
         player.load(canalObj.link);
         
-        // Regra do Mudo para canais AUTO e Som para o resto (incluindo YouTube)
+        // Se NÃO for canal de propaganda (AUTO), solta o som total!
         if (!canalObj.nome.toUpperCase().includes("AUTO")) {
             player.unmute();
             player.setVolume(100);
