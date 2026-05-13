@@ -56,6 +56,7 @@
             flex-direction: column;
         }
 
+        /* BOTÃO ESTILO OPÇÃO 2 */
         .btn-youtube {
             background: #ff0000;
             color: white;
@@ -65,8 +66,9 @@
             cursor: pointer;
             border: none;
             width: 100%;
-            font-size: 16px;
-            border-bottom: 2px solid #333;
+            font-size: 14px;
+            border-bottom: 3px solid #333;
+            text-transform: uppercase;
         }
         .btn-youtube:hover { background: #cc0000; }
 
@@ -109,7 +111,7 @@
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
-        <button class="btn-youtube" onclick="abrirYoutube()">📺 ASSISTIR DO YOUTUBE</button>
+        <button class="btn-youtube" onclick="abrirYoutube()">🔴 CARREGAR VÍDEO DO YOUTUBE</button>
         <div id="lista-canais"></div>
     </div> 
 </div>
@@ -130,28 +132,21 @@
         mute: true 
     });
 
-    // FUNÇÃO PARA O BOTÃO DO YOUTUBE
+    // FUNÇÃO OPÇÃO 2: TELETRANSPORTE DE VÍDEO
     function abrirYoutube() {
-        let link = prompt("Cole o link do vídeo do YouTube aqui:");
-        if (link) {
-            // Converte link normal em link de embed para o Clappr aceitar melhor
-            let videoId = "";
-            if(link.includes("v=")) videoId = link.split("v=")[1].split("&")[0];
-            else if(link.includes("youtu.be/")) videoId = link.split("youtu.be/")[1];
-            
-            if(videoId) {
-                executarCanal({nome: "YouTube", link: link});
-            } else {
-                alert("Link inválido. Tente copiar o link do vídeo novamente.");
-            }
+        let link = prompt("Cole aqui o LINK do vídeo do YouTube:");
+        if (link && link.trim() !== "") {
+            // Se for link do YouTube, a gente garante que o Clappr tente rodar ou avisa o player
+            executarCanal({nome: "YOUTUBE PLAYER", link: link});
+            alert("Carregando conteúdo do YouTube no Player Principal...");
         }
     }
 
-    // LÓGICA DE SOM AUTOMÁTICO SANEADA
+    // LÓGICA DE SOM E PLAY
     function executarCanal(canalObj) {
         player.load(canalObj.link);
         
-        // Se o nome tiver "AUTO", fica mudo. Se não, solta o som!
+        // Regra do Mudo para canais AUTO e Som para o resto (incluindo YouTube)
         if (!canalObj.nome.toUpperCase().includes("AUTO")) {
             player.unmute();
             player.setVolume(100);
@@ -178,7 +173,7 @@
         const lista = document.getElementById('canais');
         p.classList.toggle('video-expandido');
         c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
-        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'none'; // Esconde os canais no full
+        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
     }
 
     async function carregarTV() {
