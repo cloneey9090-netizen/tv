@@ -52,23 +52,28 @@
 
         /* Estilo Base */
         #main { display: flex; flex: 1; flex-direction: column; } 
-        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; transition: all 0.5s ease; }
+        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
         #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
-        /* A MÁGICA DO GIRO (Engana a TV) */
+        /* CORREÇÃO DO CALCULO: CRESCER SEM GIRAR */
         .video-expandido {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
-            width: 100vh !important; 
-            height: 100vw !important; 
-            transform: rotate(90deg);
-            transform-origin: top left;
-            margin-left: 100vw;
+            width: 100vw !important;  /* Ocupa a largura total */
+            height: 100vh !important; /* Ocupa a altura total */
             z-index: 9999;
             background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Garante que o vídeo dentro do player ocupe tudo */
+        .video-expandido video {
+            object-fit: contain !important; /* Mantém o formato do canal sem distorcer */
         }
 
         @media (min-width: 800px) {
@@ -110,7 +115,7 @@
         mute: false 
     });
 
-    // SISTEMA INTELIGENTE DE GIRO
+    // SISTEMA INTELIGENTE DE EXPANSÃO (Sem o erro de cálculo)
     function toggleSmartFull() {
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
