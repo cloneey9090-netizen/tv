@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,24 +6,27 @@
     <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; overflow: hidden; }
         #fixo-contato { width: 50%; background: #111; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5px; border-right: 1px solid #333; }
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
+        
         #main { display: flex; flex: 1; flex-direction: column; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
         #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
+        /* CRESCER SEM GIRAR - CORREÇÃO DA TV */
         .video-expandido {
             position: fixed !important; top: 0 !important; left: 0 !important;
             width: 100vw !important; height: 100vh !important;
             z-index: 9999; background: #000; display: flex;
             justify-content: center; align-items: center;
         }
+        .video-expandido video { object-fit: contain !important; }
 
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
@@ -53,18 +55,29 @@
     let imagens = [];
     let slideIndex = 0;
     let listaDeVideos = [];
+    let indiceAtual = 0;
 
-    // O COMANDO AUTO ESTÁ AQUI DENTRO
     var player = new Clappr.Player({ 
         parentId: "#player", 
         source: "", 
         width: '100%', 
         height: '100%', 
-        autoPlay: true, // AUTO ATIVADO
-        mute: true,     // Essencial para o Auto funcionar no Android
-        playback: { playInline: true },
-        events: {
-            onEnded: function() { player.play(); } // LOOP ATIVADO
+        autoPlay: true,
+        mute: true 
+    });
+
+    // --- RECOLOCANDO A LÓGICA DO AUTO QUE O SENHOR TINHA ---
+    player.on(Clappr.Events.PLAYER_ENDED, function() {
+        let canalAtual = listaDeVideos[indiceAtual];
+        // Se no nome do canal tiver "AUTO", ele pula pro próximo
+        if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
+            indiceAtual++;
+            if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+            player.load(listaDeVideos[indiceAtual].link);
+            player.play();
+        } else {
+            // Se não for auto, ele apenas repete o mesmo vídeo (Loop)
+            player.play();
         }
     });
 
@@ -101,19 +114,17 @@
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
 
-                    // AQUI O AUTO CARREGA O PRIMEIRO CANAL SOZINHO
-                    if (meuIndice === 0) { 
-                        player.load(linha);
-                        player.play(); 
-                    }
+                    if (meuIndice === 0) { player.load(linha); }
 
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
                     div.onclick = (e) => { 
                         e.stopPropagation();
+                        indiceAtual = meuIndice;
                         player.load(linha);
                         player.play(); 
+                        window.scrollTo({top: 0, behavior: 'smooth'});
                     };
                     menu.appendChild(div);
                 }
