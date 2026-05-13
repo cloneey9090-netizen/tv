@@ -42,7 +42,7 @@
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
         <button class="btn-youtube" onclick="abrirYoutube()">
-            <i class="fab fa-youtube"></i> ABRIR YOUTUBE TV
+            <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
         </button>
         <div id="lista-canais"></div>
     </div> 
@@ -67,6 +67,7 @@
             mute: true 
         });
 
+        // ESSA É A PARTE QUE FAZ O AUTO VOLTAR A FUNCIONAR:
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
@@ -79,24 +80,32 @@
         });
     }
 
-    // NOVA FUNÇÃO PARA NÃO DAR ERRO DE LIGAÇÃO RECUSADA
     function abrirYoutube() {
-        window.open("https://www.youtube.com/tv", "_blank");
+        const playerDiv = document.getElementById("player");
+        if (clapprPlayer) clapprPlayer.destroy();
+        // Abre o Youtube dentro do quadro para não sair do seu site
+        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
+        
+        // Se for link do YouTube na lista:
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
+            // Volta para o player normal
             if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
+            
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
             } else {
                 clapprPlayer.load(canalObj.link);
             }
+
+            // Regra do Som
             if (!canalObj.nome.toUpperCase().includes("AUTO")) {
                 clapprPlayer.unmute();
                 clapprPlayer.setVolume(100);
@@ -139,7 +148,9 @@
                     let infoCanal = { nome: nomeTemp, link: linha };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
+
                     if (meuIndice === 0) iniciarPlayer(linha);
+
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
