@@ -73,6 +73,7 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            text-decoration: none;
         }
         .btn-youtube:hover { background: #cc0000; }
 
@@ -100,7 +101,7 @@
             }
             #canais { 
                 height: 100%; 
-                overflow-y: scroll;
+                overflow-y: auto; /* Rolagem independente dos canais */
             }
         }
     </style>
@@ -118,9 +119,9 @@
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
-        <button class="btn-youtube" onclick="abrirYoutube()">
+        <div class="btn-youtube" onclick="abrirYoutube()">
             <i class="fab fa-youtube"></i> ACESSAR YOUTUBE WEB
-        </button>
+        </div>
         <div id="lista-canais"></div>
     </div> 
 </div>
@@ -138,26 +139,37 @@
         width: '100%', 
         height: '100%', 
         autoPlay: true,
-        mute: true // Sempre mudo no primeiro carregamento pro Navegador aceitar
+        mute: true 
     });
 
-    // FUNÇÃO PARA CARREGAR O YOUTUBE OFICIAL
+    // FUNÇÃO DO YOUTUBE (Usando Embed para não dar erro de suporte)
     function abrirYoutube() {
-        executarCanal({nome: "YOUTUBE", link: "https://www.youtube.com"});
+        // Use o link do seu canal ou uma busca geral
+        const linkYoutube = "https://www.youtube.com/embed?listType=search&list=noticias+ao+vivo";
+        executarCanal({nome: "YOUTUBE", link: linkYoutube});
     }
 
-    // LÓGICA DE SOM E PLAY AUTOMÁTICO
+    // LÓGICA DE SOM INTELIGENTE
     function executarCanal(canalObj) {
-        player.load(canalObj.link);
-        
-        // Se NÃO for canal de propaganda (AUTO), solta o som total!
-        if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-            player.unmute();
-            player.setVolume(100);
+        // Se for YouTube usamos Iframe para evitar erro de segurança
+        if (canalObj.link.includes("youtube.com/embed")) {
+            document.querySelector("#player").innerHTML = `<iframe width="100%" height="100%" src="${canalObj.link}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
-            player.mute();
+            // Se o player sumiu por causa do youtube, a gente restaura ele
+            if (!document.querySelector(".clappr-video")) {
+                location.reload(); // Recarrega para voltar o player normal se necessário
+            }
+            player.load(canalObj.link);
+            
+            // SEPARAÇÃO DO SOM: Nome AUTO = Mudo / Resto = Som 100%
+            if (!canalObj.nome.toUpperCase().includes("AUTO")) {
+                player.unmute();
+                player.setVolume(100);
+            } else {
+                player.mute();
+            }
+            player.play();
         }
-        player.play();
     }
 
     player.on(Clappr.Events.PLAYER_ENDED, function() {
