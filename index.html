@@ -14,8 +14,8 @@
             margin: 0; 
             display: flex; 
             flex-direction: column; 
-            height: 100vh; /* Trava a altura na tela da TV */
-            overflow: hidden; /* Impede a página toda de rolar */
+            height: 100vh; 
+            overflow: hidden; 
         }
 
         header { 
@@ -37,7 +37,7 @@
             display: flex; 
             flex: 1; 
             flex-direction: column; 
-            overflow: hidden; /* Importante para o player não vazar */
+            overflow: hidden; 
         } 
 
         #player { 
@@ -47,12 +47,28 @@
             flex-shrink: 0; 
         }
 
-        /* A MÁGICA DA ROLAGEM SÓ NOS CANAIS */
+        /* BARRA LATERAL COM ROLAGEM E BOTÃO YOUTUBE */
         #canais { 
             flex: 1; 
             background: #111; 
-            overflow-y: auto; /* Só a lista rola agora */
+            overflow-y: auto; 
+            display: flex;
+            flex-direction: column;
         }
+
+        .btn-youtube {
+            background: #ff0000;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            font-size: 16px;
+            border-bottom: 2px solid #333;
+        }
+        .btn-youtube:hover { background: #cc0000; }
 
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
@@ -67,15 +83,15 @@
         /* AJUSTE PARA TELAS GRANDES (PC E TV) */
         @media (min-width: 800px) {
             #main { 
-                flex-direction: row; /* Player na esquerda, Canais na direita */
+                flex-direction: row; 
                 height: calc(100vh - 120px); 
             }
             #player { 
-                width: 75%; /* Tamanho imponente do player */
+                width: 75%; 
                 height: 100%; 
             }
             #canais { 
-                height: 100%; /* A lista preenche a lateral toda */
+                height: 100%; 
             }
         }
     </style>
@@ -92,7 +108,10 @@
 
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
-    <div id="canais"></div> 
+    <div id="canais">
+        <button class="btn-youtube" onclick="abrirYoutube()">📺 ASSISTIR DO YOUTUBE</button>
+        <div id="lista-canais"></div>
+    </div> 
 </div>
 
 <script>
@@ -111,11 +130,28 @@
         mute: true 
     });
 
-    // LÓGICA DE SOM AUTOMÁTICO
+    // FUNÇÃO PARA O BOTÃO DO YOUTUBE
+    function abrirYoutube() {
+        let link = prompt("Cole o link do vídeo do YouTube aqui:");
+        if (link) {
+            // Converte link normal em link de embed para o Clappr aceitar melhor
+            let videoId = "";
+            if(link.includes("v=")) videoId = link.split("v=")[1].split("&")[0];
+            else if(link.includes("youtu.be/")) videoId = link.split("youtu.be/")[1];
+            
+            if(videoId) {
+                executarCanal({nome: "YouTube", link: link});
+            } else {
+                alert("Link inválido. Tente copiar o link do vídeo novamente.");
+            }
+        }
+    }
+
+    // LÓGICA DE SOM AUTOMÁTICO SANEADA
     function executarCanal(canalObj) {
         player.load(canalObj.link);
         
-        // CORREÇÃO DO SOM: Se não for AUTO, solta o som total
+        // Se o nome tiver "AUTO", fica mudo. Se não, solta o som!
         if (!canalObj.nome.toUpperCase().includes("AUTO")) {
             player.unmute();
             player.setVolume(100);
@@ -142,7 +178,7 @@
         const lista = document.getElementById('canais');
         p.classList.toggle('video-expandido');
         c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
-        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'block';
+        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'none'; // Esconde os canais no full
     }
 
     async function carregarTV() {
@@ -150,7 +186,7 @@
             const res = await fetch(urlLista + "?t=" + new Date().getTime());
             const data = await res.text();
             const linhas = data.split('\n');
-            const menu = document.getElementById('canais');
+            const menu = document.getElementById('lista-canais');
             const container = document.getElementById('banner-container');
             let nomeTemp = "Canal";
 
