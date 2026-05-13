@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV COMUNIDADE</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
         /* RESET E PADRÃO DA TELA */
@@ -15,8 +14,8 @@
             margin: 0; 
             display: flex; 
             flex-direction: column; 
-            height: 100vh; 
-            overflow: hidden; 
+            height: 100vh; /* Trava a altura na tela da TV */
+            overflow: hidden; /* Impede a página toda de rolar */
         }
 
         header { 
@@ -38,7 +37,7 @@
             display: flex; 
             flex: 1; 
             flex-direction: column; 
-            overflow: hidden; 
+            overflow: hidden; /* Importante para o player não vazar */
         } 
 
         #player { 
@@ -48,34 +47,12 @@
             flex-shrink: 0; 
         }
 
-        /* BARRA LATERAL COM ROLAGEM */
+        /* A MÁGICA DA ROLAGEM SÓ NOS CANAIS */
         #canais { 
             flex: 1; 
             background: #111; 
-            overflow-y: auto; 
-            display: flex;
-            flex-direction: column;
+            overflow-y: auto; /* Só a lista rola agora */
         }
-
-        /* BOTÃO YOUTUBE ESTILIZADO */
-        .btn-youtube {
-            background: #ff0000;
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-            font-size: 16px;
-            border-bottom: 3px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .btn-youtube:hover { background: #cc0000; }
 
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
@@ -90,18 +67,15 @@
         /* AJUSTE PARA TELAS GRANDES (PC E TV) */
         @media (min-width: 800px) {
             #main { 
-                flex-direction: row; 
+                flex-direction: row; /* Player na esquerda, Canais na direita */
                 height: calc(100vh - 120px); 
             }
             #player { 
-                width: 75%; 
+                width: 75%; /* Tamanho imponente do player */
                 height: 100%; 
-                position: sticky;
-                top: 0;
             }
             #canais { 
-                height: 100%; 
-                overflow-y: auto; /* Rolagem independente dos canais */
+                height: 100%; /* A lista preenche a lateral toda */
             }
         }
     </style>
@@ -118,12 +92,7 @@
 
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
-    <div id="canais">
-        <div class="btn-youtube" onclick="abrirYoutube()">
-            <i class="fab fa-youtube"></i> ACESSAR YOUTUBE WEB
-        </div>
-        <div id="lista-canais"></div>
-    </div> 
+    <div id="canais"></div> 
 </div>
 
 <script>
@@ -142,34 +111,18 @@
         mute: true 
     });
 
-    // FUNÇÃO DO YOUTUBE (Usando Embed para não dar erro de suporte)
-    function abrirYoutube() {
-        // Use o link do seu canal ou uma busca geral
-        const linkYoutube = "https://www.youtube.com/embed?listType=search&list=noticias+ao+vivo";
-        executarCanal({nome: "YOUTUBE", link: linkYoutube});
-    }
-
-    // LÓGICA DE SOM INTELIGENTE
+    // LÓGICA DE SOM AUTOMÁTICO
     function executarCanal(canalObj) {
-        // Se for YouTube usamos Iframe para evitar erro de segurança
-        if (canalObj.link.includes("youtube.com/embed")) {
-            document.querySelector("#player").innerHTML = `<iframe width="100%" height="100%" src="${canalObj.link}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        player.load(canalObj.link);
+        
+        // CORREÇÃO DO SOM: Se não for AUTO, solta o som total
+        if (!canalObj.nome.toUpperCase().includes("AUTO")) {
+            player.unmute();
+            player.setVolume(100);
         } else {
-            // Se o player sumiu por causa do youtube, a gente restaura ele
-            if (!document.querySelector(".clappr-video")) {
-                location.reload(); // Recarrega para voltar o player normal se necessário
-            }
-            player.load(canalObj.link);
-            
-            // SEPARAÇÃO DO SOM: Nome AUTO = Mudo / Resto = Som 100%
-            if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                player.unmute();
-                player.setVolume(100);
-            } else {
-                player.mute();
-            }
-            player.play();
+            player.mute();
         }
+        player.play();
     }
 
     player.on(Clappr.Events.PLAYER_ENDED, function() {
@@ -189,7 +142,7 @@
         const lista = document.getElementById('canais');
         p.classList.toggle('video-expandido');
         c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
-        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'block';
     }
 
     async function carregarTV() {
@@ -197,7 +150,7 @@
             const res = await fetch(urlLista + "?t=" + new Date().getTime());
             const data = await res.text();
             const linhas = data.split('\n');
-            const menu = document.getElementById('lista-canais');
+            const menu = document.getElementById('canais');
             const container = document.getElementById('banner-container');
             let nomeTemp = "Canal";
 
