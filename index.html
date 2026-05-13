@@ -13,16 +13,24 @@
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
+        
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
-        #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; }
-        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
+        
+        /* AJUSTE DO CANAL E YOUTUBE */
+        #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
+        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; display: flex; align-items: center; }
         .canal:hover { background: #ff9900; color: #000; }
+        
+        .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; }
+        .btn-youtube i { margin-right: 10px; font-size: 20px; }
+
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
+        
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
-            #canais { height: 100%; overflow-y: auto; }
+            #canais { height: 100%; overflow-y: auto; width: 25%; }
         }
     </style>
 </head>
@@ -39,6 +47,9 @@
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
+        <button class="btn-youtube" onclick="abrirYoutube()">
+            <i class="fab fa-youtube"></i> ABRIR YOUTUBE TV
+        </button>
         <div id="lista-canais"></div>
     </div> 
 </div>
@@ -62,7 +73,6 @@
             mute: true 
         });
 
-        // RECOLOCANDO O LOOP QUE TINHA SUMIDO:
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
@@ -75,21 +85,33 @@
         });
     }
 
+    function abrirYoutube() {
+        const playerDiv = document.getElementById("player");
+        if (clapprPlayer) clapprPlayer.destroy();
+        // Link TV para aceitar controle remoto e não precisar de mouse
+        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/tv" frameborder="0" allow="autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+    }
+
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
 
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
+            // Se o iframe do Youtube estiver lá, limpa para voltar o Clappr
+            if (playerDiv.querySelector("iframe")) {
+                playerDiv.innerHTML = "";
+            }
+
             if (!document.querySelector(".clappr-video")) {
-                playerDiv.innerHTML = ""; 
                 iniciarPlayer(canalObj.link);
             } else {
                 clapprPlayer.load(canalObj.link);
             }
             
+            // REGRA DO SOM: Se não for AUTO, solta o som!
             if (!canalObj.nome.toUpperCase().includes("AUTO")) {
                 clapprPlayer.unmute();
                 clapprPlayer.setVolume(100);
