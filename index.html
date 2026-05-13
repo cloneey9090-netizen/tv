@@ -19,7 +19,6 @@
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
-        /* CRESCER SEM GIRAR - CORREÇÃO DA TV */
         .video-expandido {
             position: fixed !important; top: 0 !important; left: 0 !important;
             width: 100vw !important; height: 100vh !important;
@@ -30,7 +29,7 @@
 
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
-            #player { width: 75%; height: 100%; }
+            #player { width: 75%; height: 100%; } /* Seu ajuste de harmonia mantido */
             #canais { flex: 1; border-left: 1px solid #333; }
         }
     </style>
@@ -63,23 +62,34 @@
         width: '100%', 
         height: '100%', 
         autoPlay: true,
-        mute: true 
+        mute: true // O primeiro entra mudo por regra da TV
     });
 
-    // --- RECOLOCANDO A LÓGICA DO AUTO QUE O SENHOR TINHA ---
+    // LÓGICA DE SOM E PRÓXIMO VÍDEO
     player.on(Clappr.Events.PLAYER_ENDED, function() {
         let canalAtual = listaDeVideos[indiceAtual];
-        // Se no nome do canal tiver "AUTO", ele pula pro próximo
         if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
             indiceAtual++;
             if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
-            player.load(listaDeVideos[indiceAtual].link);
-            player.play();
+            executarCanal(listaDeVideos[indiceAtual]);
         } else {
-            // Se não for auto, ele apenas repete o mesmo vídeo (Loop)
             player.play();
         }
     });
+
+    // FUNÇÃO QUE CONTROLA O SOM DE FORMA INTELIGENTE
+    function executarCanal(canalObj) {
+        player.load(canalObj.link);
+        
+        // Se NÃO tiver "AUTO" no nome, solta o som!
+        if (!canalObj.nome.toUpperCase().includes("AUTO")) {
+            player.unmute();
+            player.setVolume(100);
+        } else {
+            player.mute(); // Se for propaganda/auto, mantém mudo
+        }
+        player.play();
+    }
 
     function toggleSmartFull() {
         const p = document.getElementById('player');
@@ -122,8 +132,7 @@
                     div.onclick = (e) => { 
                         e.stopPropagation();
                         indiceAtual = meuIndice;
-                        player.load(linha);
-                        player.play(); 
+                        executarCanal(infoCanal); // Usa a função inteligente de som
                         window.scrollTo({top: 0, behavior: 'smooth'});
                     };
                     menu.appendChild(div);
