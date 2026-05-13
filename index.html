@@ -42,7 +42,7 @@
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
         <button class="btn-youtube" onclick="abrirYoutube()">
-            <i class="fab fa-youtube"></i> VER YOUTUBE NO PLAYER
+            <i class="fab fa-youtube"></i> ABRIR YOUTUBE TV
         </button>
         <div id="lista-canais"></div>
     </div> 
@@ -79,23 +79,10 @@
         });
     }
 
-function abrirYoutube() {
-    const playerDiv = document.getElementById("player");
-    
-    // 1. Destruímos o player de canais para não dar conflito
-    if (clapprPlayer) {
-        clapprPlayer.destroy();
-        clapprPlayer = null; // Limpa para garantir
+    // NOVA FUNÇÃO PARA NÃO DAR ERRO DE LIGAÇÃO RECUSADA
+    function abrirYoutube() {
+        window.open("https://www.youtube.com/tv", "_blank");
     }
-    
-    // 2. Colocamos o YouTube no quadro do vídeo
-    // Esse link abaixo abre os vídeos em alta do YouTube direto no seu player
-    playerDiv.innerHTML = `<iframe width="100%" height="100%" 
-        src= "https://www.youtube.com/embed/ZbpR91WRNMY"
-        frameborder="0" 
-        allow="autoplay; encrypted-media; picture-in-picture" 
-        allowfullscreen></iframe>`;
-}
 
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
@@ -104,16 +91,12 @@ function abrirYoutube() {
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
-            // Se tiver um iframe (Youtube) aberto, limpa ele para voltar o canal normal
             if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
-            
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
             } else {
                 clapprPlayer.load(canalObj.link);
             }
-
-            // REGRA DO SOM: Mudo apenas no AUTO, som alto no resto!
             if (!canalObj.nome.toUpperCase().includes("AUTO")) {
                 clapprPlayer.unmute();
                 clapprPlayer.setVolume(100);
