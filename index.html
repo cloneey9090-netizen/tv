@@ -7,72 +7,23 @@
     <title>TV COMUNIDADE</title>
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
-        
-        header { 
-            background: #000; 
-            border-bottom: 2px solid #ff9900; 
-            height: 120px; 
-            display: flex; 
-            width: 100%; 
-            overflow: hidden;
-        }
-
-        #fixo-contato {
-            width: 50%;
-            background: #111;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 5px;
-            border-right: 1px solid #333;
-        }
-
-        #banner-container { 
-            width: 50%; 
-            height: 100%; 
-            position: relative; 
-            overflow: hidden;
-            background: #050505;
-        }
-
-        .promo-slide { 
-            height: 100%; 
-            width: 100%; 
-            display: none; 
-            position: absolute;
-            top: 0;
-            left: 0;
-            object-fit: fill;
-            animation: fade 1s; 
-        }
-
+        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+        header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; overflow: hidden; }
+        #fixo-contato { width: 50%; background: #111; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5px; border-right: 1px solid #333; }
+        #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
+        .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
-
         #main { display: flex; flex: 1; flex-direction: column; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; transition: all 0.3s ease; }
         #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
-        /* CRESCER TELA CHEIA */
         .video-expandido {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            z-index: 9999;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .video-expandido video {
-            object-fit: contain !important;
+            position: fixed !important; top: 0 !important; left: 0 !important;
+            width: 100vw !important; height: 100vh !important;
+            z-index: 9999; background: #000; display: flex;
+            justify-content: center; align-items: center;
         }
 
         @media (min-width: 800px) {
@@ -88,7 +39,6 @@
     <div id="fixo-contato">
         <div style="color: #ff9900; font-size: 14px; margin-bottom: 5px; font-weight: bold;">ANUNCIE AQUI</div>
         <div style="color: #25D366; font-size: 18px; font-weight: bold;">📲 (28) 98804-9598</div>
-        <div style="font-size: 10px; color: #ccc; margin-top: 5px;">Sua marca em Cachoeiro</div>
     </div>
     <div id="banner-container"></div>
 </header>
@@ -103,29 +53,18 @@
     let imagens = [];
     let slideIndex = 0;
     let listaDeVideos = [];
-    let indiceAtual = 0;
 
-    // CONFIGURAÇÃO DO PLAYER COM AUTOPLAY E LOOP
+    // O COMANDO AUTO ESTÁ AQUI DENTRO
     var player = new Clappr.Player({ 
         parentId: "#player", 
         source: "", 
         width: '100%', 
         height: '100%', 
-        autoPlay: true,
-        mute: true, // PRECISA COMEÇAR MUDO PARA O ANDROID DAR O PLAY SOZINHO
-        playback: {
-            playInline: true,
-            recycleVideo: true
-        },
+        autoPlay: true, // AUTO ATIVADO
+        mute: true,     // Essencial para o Auto funcionar no Android
+        playback: { playInline: true },
         events: {
-            // ISSO AQUI É O MOTOR DO LOOP (REPETIR)
-            onEnded: function() {
-                console.log("Vídeo acabou, reiniciando...");
-                player.play();
-            },
-            onPlay: function() {
-                console.log("Vídeo rodando...");
-            }
+            onEnded: function() { player.play(); } // LOOP ATIVADO
         }
     });
 
@@ -133,16 +72,9 @@
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
         const lista = document.getElementById('canais');
-
-        if (!p.classList.contains('video-expandido')) {
-            p.classList.add('video-expandido');
-            c.style.display = 'none';
-            lista.style.display = 'none';
-        } else {
-            p.classList.remove('video-expandido');
-            c.style.display = 'flex';
-            lista.style.display = 'block';
-        }
+        p.classList.toggle('video-expandido');
+        c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'block';
     }
 
     async function carregarTV() {
@@ -163,39 +95,34 @@
                     container.appendChild(img);
                     imagens.push(img);
                 }
-                if(linha.includes("#EXTINF")) { 
-                    nomeTemp = linha.split(',')[1] || "Canal"; 
-                }
+                if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
                 else if(linha.startsWith("http")) {
                     let infoCanal = { nome: nomeTemp, link: linha };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
 
+                    // AQUI O AUTO CARREGA O PRIMEIRO CANAL SOZINHO
                     if (meuIndice === 0) { 
                         player.load(linha);
-                        player.play(); // Força o início do primeiro canal
+                        player.play(); 
                     }
 
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
-
                     div.onclick = (e) => { 
                         e.stopPropagation();
-                        indiceAtual = meuIndice;
                         player.load(linha);
                         player.play(); 
-                        window.scrollTo({top: 0, behavior: 'smooth'});
                     };
                     menu.appendChild(div);
                 }
             });
             if(imagens.length > 0) showSlides();
-        } catch(e) { console.error("Erro:", e); }
+        } catch(e) { console.error(e); }
     }
 
     function showSlides() {
-        if (imagens.length === 0) return;
         imagens.forEach(img => img.style.display = "none");
         slideIndex++;
         if (slideIndex > imagens.length) slideIndex = 1;
