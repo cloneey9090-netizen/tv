@@ -79,13 +79,23 @@
         });
     }
 
-    // FUNÇÃO QUE CARREGA O YOUTUBE DENTRO DO PLAYER SEM SAIR DO APP
-    function abrirYoutube() {
-        const playerDiv = document.getElementById("player");
-        if (clapprPlayer) clapprPlayer.destroy();
-        // Carrega o YouTube em modo EMBED (Permitido pelo Google)
-        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PU" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+function abrirYoutube() {
+    const playerDiv = document.getElementById("player");
+    
+    // 1. Destruímos o player de canais para não dar conflito
+    if (clapprPlayer) {
+        clapprPlayer.destroy();
+        clapprPlayer = null; // Limpa para garantir
     }
+    
+    // 2. Colocamos o YouTube no quadro do vídeo
+    // Esse link abaixo abre os vídeos em alta do YouTube direto no seu player
+    playerDiv.innerHTML = `<iframe width="100%" height="100%" 
+        src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" 
+        frameborder="0" 
+        allow="autoplay; encrypted-media; picture-in-picture" 
+        allowfullscreen></iframe>`;
+}
 
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
