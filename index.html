@@ -50,40 +50,37 @@
 
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        /* Estilo para Celular */
+        /* Estilo Base */
         #main { display: flex; flex: 1; flex-direction: column; } 
-        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; }
+        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; cursor: pointer; transition: all 0.5s ease; }
         #canais { flex: 1; background: #111; overflow-y: auto; min-height: 300px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .canal:hover { background: #ff9900; color: #000; }
 
-        /* Ajuste para PC/TV */
-        @media (min-width: 800px) {
-            #main { 
-                flex-direction: row; 
-                overflow: hidden; 
-                height: calc(100vh - 120px); 
-            }
-            
-            #player { 
-                /* AJUSTE AQUI O TAMANHO DO PLAYER */
-                width: 65%; 
-                height: 80%; 
-            }
+        /* A MÁGICA DO GIRO (Engana a TV) */
+        .video-expandido {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vh !important; 
+            height: 100vw !important; 
+            transform: rotate(90deg);
+            transform-origin: top left;
+            margin-left: 100vw;
+            z-index: 9999;
+            background: #000;
+        }
 
-            #canais { 
-                flex: 1; 
-                height: 100%; 
-                overflow-y: auto; 
-                border-left: 1px solid #333; 
-                background: #111;
-            }
+        @media (min-width: 800px) {
+            #main { flex-direction: row; height: calc(100vh - 120px); }
+            #player { width: 65%; height: 100%; }
+            #canais { flex: 1; border-left: 1px solid #333; }
         }
     </style>
 </head>
 <body>
 
-<header>
+<header id="cabecalho">
     <div id="fixo-contato">
         <div style="color: #ff9900; font-size: 14px; margin-bottom: 5px; font-weight: bold;">ANUNCIE AQUI</div>
         <div style="color: #25D366; font-size: 18px; font-weight: bold;">📲 (28) 98804-9598</div>
@@ -93,7 +90,7 @@
 </header>
 
 <div id="main">
-    <div id="player" onclick="toggleFullScreen()"></div> 
+    <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais"></div> 
 </div>
 
@@ -110,28 +107,23 @@
         width: '100%', 
         height: '100%', 
         autoPlay: true,
-        mute: true 
+        mute: false 
     });
 
-    player.on(Clappr.Events.PLAYER_ENDED, function() {
-        let canalAtual = listaDeVideos[indiceAtual];
-        if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
-            indiceAtual++;
-            if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
-            player.load(listaDeVideos[indiceAtual].link);
-            player.play();
-        } else {
-            player.play();
-        }
-    });
-
-    function toggleFullScreen() {
+    // SISTEMA INTELIGENTE DE GIRO
+    function toggleSmartFull() {
         const p = document.getElementById('player');
-        if (!document.fullscreenElement) {
-            if (p.requestFullscreen) p.requestFullscreen();
-            else if (p.webkitRequestFullscreen) p.webkitRequestFullscreen();
+        const c = document.getElementById('cabecalho');
+        const lista = document.getElementById('canais');
+
+        if (!p.classList.contains('video-expandido')) {
+            p.classList.add('video-expandido');
+            c.style.display = 'none';
+            lista.style.display = 'none';
         } else {
-            if (document.exitFullscreen) document.exitFullscreen();
+            p.classList.remove('video-expandido');
+            c.style.display = 'flex';
+            lista.style.display = 'block';
         }
     }
 
@@ -161,9 +153,7 @@
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
 
-                    if (meuIndice === 0) {
-                        player.load(linha);
-                    }
+                    if (meuIndice === 0) { player.load(linha); }
 
                     const div = document.createElement('div');
                     div.className = 'canal';
@@ -171,21 +161,16 @@
 
                     div.onclick = (e) => { 
                         e.stopPropagation();
-                        player.setVolume(100); 
                         indiceAtual = meuIndice;
                         player.load(linha);
                         player.play(); 
-                        
-                        // ROLAGEM AUTOMÁTICA PARA QUALQUER TELA
                         window.scrollTo({top: 0, behavior: 'smooth'});
                     };
                     menu.appendChild(div);
                 }
             });
             if(imagens.length > 0) showSlides();
-        } catch(e) {
-            console.error("Erro:", e);
-        }
+        } catch(e) { console.error("Erro:", e); }
     }
 
     function showSlides() {
