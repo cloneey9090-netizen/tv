@@ -9,10 +9,16 @@
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; flex-shrink: 0; }
-        #fixo-contato { width: 50%; background: #111; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 5px; border-right: 1px solid #333; }
+        
+        /* LADO ESQUERDO: ESPAÇO PARA O SEU SELO 3D */
+        #espaco-selo-3d { width: 50%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; border-right: 1px solid #222; }
+        
+        /* LADO DIREITO: BANNERS PROMO */
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
+        
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
+        
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
         #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
@@ -21,6 +27,7 @@
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
+        
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
@@ -31,10 +38,13 @@
 <body>
 
 <header id="cabecalho">
-    <div id="fixo-contato">
-        <div style="color: #ff9900; font-size: 14px; margin-bottom: 5px; font-weight: bold;">ANUNCIE AQUI</div>
-        <div style="color: #25D366; font-size: 18px; font-weight: bold;">📲 (28) 98804-9598</div>
+    <div id="espaco-selo-3d">
+        <img id="minha-logo-3d" src="https://cdn-icons-png.flaticon.com/512/716/716429.png" style="height: 70%; object-fit: contain; position: absolute; opacity: 0.8;">
+        
+        <div style="color: #ff9900; font-size: 12px; font-weight: bold; z-index: 2; text-shadow: 2px 2px 4px #000;">TV COMUNIDADE</div>
+        <div style="color: #25D366; font-size: 16px; font-weight: bold; z-index: 2; text-shadow: 2px 2px 4px #000;">📲 (28) 98804-9598</div>
     </div>
+
     <div id="banner-container"></div>
 </header>
 
@@ -59,15 +69,9 @@
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", 
-            source: link, 
-            width: '100%', 
-            height: '100%', 
-            autoPlay: true,
-            mute: true 
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
 
-        // ESSA É A PARTE QUE FAZ O AUTO VOLTAR A FUNCIONAR:
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
@@ -83,32 +87,24 @@
     function abrirYoutube() {
         const playerDiv = document.getElementById("player");
         if (clapprPlayer) clapprPlayer.destroy();
-        // Abre o Youtube dentro do quadro para não sair do seu site
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
-        
-        // Se for link do YouTube na lista:
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
-            // Volta para o player normal
             if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
-            
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
             } else {
                 clapprPlayer.load(canalObj.link);
             }
-
-            // Regra do Som
             if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                clapprPlayer.unmute();
-                clapprPlayer.setVolume(100);
+                clapprPlayer.unmute(); clapprPlayer.setVolume(100);
             } else {
                 clapprPlayer.mute();
             }
@@ -148,16 +144,12 @@
                     let infoCanal = { nome: nomeTemp, link: linha };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
-
                     if (meuIndice === 0) iniciarPlayer(linha);
-
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
                     div.onclick = (e) => { 
-                        e.stopPropagation();
-                        indiceAtual = meuIndice;
-                        executarCanal(infoCanal);
+                        e.stopPropagation(); indiceAtual = meuIndice; executarCanal(infoCanal);
                     };
                     menu.appendChild(div);
                 }
