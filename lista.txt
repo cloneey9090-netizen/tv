@@ -16,8 +16,9 @@ https://archive.org/download/propaganda_202605/propaganda.mp4
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
 
-#EXTINF:-1,📺 GAZETA MEIO-DIA (AO VIVO)
-https://g1.globo.com/es/espirito-santo/ao-vivo/ao-vivo-assista-gazeta-meio-dia.ghtml
+#EXTINF:-1,📺sbt (AO VIVO)
+https://www.youtube.com/watch?v=UF2sQlzngQQyBd80
+
 #EXTINF:-1,📺 ACESSAR YOUTUBE
 https://www.youtube.com/embed/ZbpR91WRNMY
 
