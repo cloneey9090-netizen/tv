@@ -18,8 +18,7 @@ https://www.youtube.com/embed/SpwiHTbwa-g
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
 
 
-#EXTINF:-1,📺globo youtube (ao vivo)
-https://www.youtube.com/embed/NaAVo5JrV9s
+
 
 #EXTINF:-1,📺sbt youtube (AO VIVO)
 https://www.youtube.com/embed/LLpNUqHVam8
