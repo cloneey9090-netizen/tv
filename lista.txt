@@ -18,7 +18,7 @@ https://www.youtube.com/watch?v=mFXOPpJd8yV_D9r3
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
 
 #EXTINF:-1,📺sbt (AO VIVO)
-https://www.youtube.com/watch?v=UF2sQlzngQQyBd80
+https://www.youtube.com/embed/LLpNUqHVam8
 
 #EXTINF:-1,📺 ACESSAR YOUTUBE
 https://www.youtube.com/embed/ZbpR91WRNMY
