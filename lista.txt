@@ -12,12 +12,16 @@ https://i.postimg.cc/wMKV8pYB/petshow.png
 #EXTINF:-1 AUTO 
 https://archive.org/download/propaganda_202605/propaganda.mp4
 #EXTINF:-1 AUTO
-https://www.youtube.com/watch?v=mFXOPpJd8yV_D9r3
+https://www.youtube.com/embed/SpwiHTbwa-g
 
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
 
-#EXTINF:-1,📺sbt (AO VIVO)
+
+#EXTINF:-1,📺globo youtube (ao vivo)
+https://www.youtube.com/embed/NaAVo5JrV9s
+
+#EXTINF:-1,📺sbt youtube (AO VIVO)
 https://www.youtube.com/embed/LLpNUqHVam8
 
 #EXTINF:-1,📺 ACESSAR YOUTUBE
