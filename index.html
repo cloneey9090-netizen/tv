@@ -30,8 +30,9 @@
         .btn-salvar { background: #ff9900; color: #000; padding: 12px 25px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 16px; width: 100%; }
         .btn-limpar { background: #444; color: #fff; padding: 8px; border: none; font-size: 12px; margin-top: 15px; cursor: pointer; border-radius: 5px; width: 100%; }
 
-        /* FIX DA TELA CHEIA BRUTA: Força ocupar tudo sem deixar bordas */
+        /* FIX DA TELA CHEIA BRUTA: Força o container e os elementos internos do Clappr a ocuparem tudo */
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999 !important; background: #000; }
+        .video-expandido .clappr-player, .video-expandido video, .video-expandido .player-poster { width: 100vw !important; height: 100vh !important; }
 
         .tela-bloqueio { background: url('https://i.gifer.com/76bX.gif') repeat; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: #ff9900; position: fixed; top: 0; left: 0; width: 100vw; z-index: 99999; }
         .caixa-erro { background: rgba(0, 0, 0, 0.85); padding: 30px; border: 3px solid #ff9900; border-radius: 10px; box-shadow: 0 0 20px #ff9900; font-family: monospace; }
@@ -74,7 +75,7 @@
 </div>
 
 <script>
-    // 🛡️ TRANCA DE DOMÍNIO
+    // 🛡️ TRANCA DE DOMÍNIO ORIGINAL
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = `
             <div class="tela-bloqueio">
@@ -124,7 +125,6 @@
             mutarAtivo = true;
         }
 
-        // Importante: width e height setados em 100% para obedecer o redimensionamento inteligente
         clapprPlayer = new Clappr.Player({ 
             parentId: "#player", source: link, width: "100%", height: "100%", autoPlay: true, mute: mutarAtivo 
         });
@@ -170,7 +170,6 @@
         }
     }
 
-    // 📺 SMART EXPANDIDO CORRIGIDO (Ocupa 100% real da tela agora)
     function toggleSmartFull() {
         const p = document.getElementById('player');
         p.classList.toggle('video-expandido');
@@ -178,7 +177,6 @@
         document.getElementById('cabecalho').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
         document.getElementById('canais').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
         
-        // Comando mestre: se o Clappr existir, força ele a recalcular o tamanho da tela cheia na hora
         if (clapprPlayer) {
             setTimeout(() => {
                 clapprPlayer.resize({width: "100%", height: "100%"});
@@ -202,7 +200,6 @@
             return;
         }
 
-        // MOTOR DE BUSCA COM PROXY ATUALIZADO ANTI-BLOQUEIO DE CORS
         try {
             document.getElementById('lista-canais').innerHTML = "<p style='color:orange; padding:10px;'>Conectando à lista externa...</p>";
             const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna);
@@ -221,7 +218,8 @@
     }
 
     function processarDados(textoLista) {
-        const linhas = textoLista.split('\n');
+        // CORREÇÃO ESSENCIAL: Garante a quebra de linha limpando resíduos de \r do Windows
+        const linhas = textoLista.split(/\r?\n/);
         const menu = document.getElementById('lista-canais');
         const container = document.getElementById('banner-container');
         
