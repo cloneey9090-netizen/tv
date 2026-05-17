@@ -18,16 +18,18 @@
         #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
         .canal:hover { background: #ff9900; color: #000; }
+        
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
-        .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
         
-        #painel-externo { background: #222; border: 4px solid #ff9900; padding: 15px; margin: 10px; border-radius: 10px; text-align: center; }
+        .btn-config { background: #333; color: #ff9900; border: 1px solid #ff9900; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-bottom: 10px; font-size: 14px; width: 100%; text-align: center; }
+        .btn-config:hover { background: #ff9900; color: #000; }
+
+        #painel-externo { display: none; background: #222; border: 4px solid #ff9900; padding: 15px; margin: 10px 0; border-radius: 10px; text-align: center; }
         #url-input { width: 90%; padding: 12px; margin-bottom: 10px; border-radius: 5px; border: none; font-size: 16px; text-align: center; background: #000; color: #fff; border: 1px solid #ff9900; }
         .btn-salvar { background: #ff9900; color: #000; padding: 12px 25px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 16px; width: 100%; }
         .btn-limpar { background: #444; color: #fff; padding: 8px; border: none; font-size: 12px; margin-top: 15px; cursor: pointer; border-radius: 5px; width: 100%; }
 
-        /* ESTILO DOS CHUVISCOS DA TRANCA SEGURA */
         .tela-bloqueio { background: url('https://i.gifer.com/76bX.gif') repeat; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: #ff9900; position: fixed; top: 0; left: 0; width: 100vw; z-index: 99999; }
         .caixa-erro { background: rgba(0, 0, 0, 0.85); padding: 30px; border: 3px solid #ff9900; border-radius: 10px; box-shadow: 0 0 20px #ff9900; font-family: monospace; }
 
@@ -51,11 +53,7 @@
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
-        <button class="btn-youtube" onclick="abrirYoutube()">
-            <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
-        </button>
-        
-        <div id="lista-canais"></div>
+        <button class="btn-config" onclick="togglePainelExterno()"><i class="fas fa-cog"></i> CONFIGURAR MINHA LISTA</button>
 
         <div id="painel-externo">
             <b style="color: #ff9900; font-size: 18px;">ADICIONAR LISTA NOVA</b><br><br>
@@ -63,11 +61,17 @@
             <button class="btn-salvar" onclick="salvarListaExterna()">✅ SALVAR E RODAR</button>
             <button class="btn-limpar" onclick="limparLista()">❌ VOLTAR À LISTA PADRÃO</button>
         </div>
+
+        <button class="btn-youtube" onclick="abrirYoutube()">
+            <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
+        </button>
+        
+        <div id="lista-canais"></div>
     </div> 
 </div>
 
 <script>
-    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (Chuvisco + Erro)
+    // 🛡️ TRANCA DE DOMÍNIO
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = `
             <div class="tela-bloqueio">
@@ -80,12 +84,17 @@
         window.stop();
     }
 
-    const urlListaPadrao = "lista.txt"; // Busca sua lista padrão no seu GitHub automaticamente
+    const urlListaPadrao = "lista.txt"; 
     let imagens = [];
     let slideIndex = 0;
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
+
+    function togglePainelExterno() {
+        const painel = document.getElementById("painel-externo");
+        painel.style.display = (painel.style.display === "block") ? "none" : "block";
+    }
 
     function salvarListaExterna() {
         const url = document.getElementById('url-input').value.trim();
@@ -102,10 +111,34 @@
         location.reload();
     }
 
+    // MOTOR REVISADO COM REPRODUÇÃO AUTOMÁTICA EM SÉRIE (SISTEMA AUTO)
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
+        
+        let canalAtual = listaDeVideos[indiceAtual];
+        let mutarAtivo = false;
+        
+        // Se o nome do canal contiver "AUTO", ele inicia mutado para proteção
+        if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
+            mutarAtivo = true;
+        }
+
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: mutarAtivo 
+        });
+
+        // RECONHECIMENTO DO FIM DO VÍDEO
+        clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
+            let canalFinalizado = listaDeVideos[indiceAtual];
+            
+            // Se for um canal do sistema AUTO, pula sozinho para o próximo da lista
+            if (canalFinalizado && canalFinalizado.nome.toUpperCase().includes("AUTO")) {
+                indiceAtual++;
+                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0; // Reinicia a lista se chegar no fim
+                executarCanal(listaDeVideos[indiceAtual]);
+            } else {
+                clapprPlayer.play(); // Se for canal normal, apenas repete o sinal
+            }
         });
     }
 
@@ -126,9 +159,16 @@
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
             } else {
+                // Atualiza o link do Clappr e calibra o volume do AUTO
+                if (canalObj.nome.toUpperCase().includes("AUTO")) {
+                    clapprPlayer.mute();
+                } else {
+                    clapprPlayer.unmute();
+                    clapprPlayer.setVolume(100);
+                }
                 clapprPlayer.load(canalObj.link);
+                clapprPlayer.play();
             }
-            clapprPlayer.play();
         }
     }
 
@@ -143,7 +183,6 @@
         let data = "";
         const listaExterna = localStorage.getItem('lista_custom_comandante');
 
-        // SE NÃO TEM LISTA EXTERNA SALVA: Carrega o seu lista.txt original
         if (!listaExterna) {
             try {
                 const res = await fetch(urlListaPadrao + "?t=" + new Date().getTime());
@@ -156,7 +195,6 @@
             return;
         }
 
-        // SE TEM LISTA EXTERNA SALVA: Puxa ela usando o proxy anti-bloqueio
         try {
             document.getElementById('lista-canais').innerHTML = "<p style='color:orange; padding:10px;'>Conectando à lista externa...</p>";
             const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna + "?t=" + new Date().getTime());
@@ -183,27 +221,32 @@
         let nomeTemp = "Canal";
 
         linhas.forEach(l => {
-            const linha = l.trim();
-            if(linha.startsWith('IMG=')) {
+            const static_line = l.trim();
+            if(static_line.startsWith('IMG=')) {
                 const img = document.createElement('img');
-                img.src = linha.replace('IMG=', '');
+                img.src = static_line.replace('IMG=', '');
                 img.className = 'promo-slide';
                 container.appendChild(img);
                 imagens.push(img);
             }
-            if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
-            else if(linha.startsWith("http")) {
-                let infoCanal = { nome: nomeTemp, link: linha };
+            if(static_line.includes("#EXTINF")) { nomeTemp = static_line.split(',')[1] || "Canal"; }
+            else if(static_line.startsWith("http")) {
+                let infoCanal = { nome: nomeTemp, link: static_line };
                 listaDeVideos.push(infoCanal);
                 let meuIndice = listaDeVideos.length - 1;
                 
-                if (meuIndice === 0) iniciarPlayer(linha);
+                if (meuIndice === 0) {
+                    indiceAtual = 0;
+                    iniciarPlayer(static_line);
+                }
                 
                 const div = document.createElement('div');
                 div.className = 'canal';
                 div.innerHTML = "▶️ " + nomeTemp;
                 div.onclick = (e) => { 
-                    e.stopPropagation(); indiceAtual = meuIndice; executarCanal(infoCanal);
+                    e.stopPropagation(); 
+                    indiceAtual = meuIndice; // Sincroniza o índice ao clicar manualmente
+                    executarCanal(infoCanal);
                 };
                 menu.appendChild(div);
             }
