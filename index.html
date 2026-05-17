@@ -9,31 +9,21 @@
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; flex-shrink: 0; }
-        
-        /* LADO ESQUERDO: SEU SELO 3D */
         #espaco-selo-3d { width: 50%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; }
-        
-        /* LADO DIREITO: BANNERS PROMO */
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
-        
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
-        
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
         #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
-        
-        /* CAIXA DE LISTA EXTERNA */
         .container-externo { padding: 10px; background: #1a1a1a; margin-bottom: 10px; border-radius: 5px; border: 1px solid #333; display: flex; gap: 5px; }
         .container-externo input { flex: 1; padding: 10px; background: #000; border: 1px solid #ff9900; color: #fff; border-radius: 4px; font-size: 14px; }
         .container-externo button { background: #ff9900; color: #000; border: none; padding: 10px 15px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
         .canal:hover { background: #ff9900; color: #000; }
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
-        
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
@@ -55,8 +45,8 @@
     <div id="canais">
         
         <div class="container-externo">
-            <input type="text" id="input-link-externo" placeholder="Cole o link aqui para rodar...">
-            <button onclick="reproduzirLinkExterno()"><i class="fas fa-play"></i> RULER</button>
+            <input type="text" id="input-link-externo" placeholder="Cole o link da lista ou canal aqui...">
+            <button onclick="reproduzirLinkExterno()"><i class="fas fa-play"></i></button>
         </div>
 
         <button class="btn-youtube" onclick="abrirYoutube()">
@@ -101,36 +91,64 @@
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    // SISTEMA TURBO PARA LINK EXTERNO (FORÇA DE QUALQUER JEITO)
-    function reproduzirLinkExterno() {
+    // SISTEMA ANTI-BLOQUEIO PARA LISTAS DE TERCEIROS
+    async function reproduzirLinkExterno() {
         const linkOriginal = document.getElementById("input-link-externo").value.trim();
         if (!linkOriginal) return;
 
         const playerDiv = document.getElementById("player");
-        if (clapprPlayer) clapprPlayer.destroy(); // Derruba o player antigo para não travar
+        if (clapprPlayer) clapprPlayer.destroy();
 
-        let linkFormatado = linkOriginal;
+        // 1. Se for link do YouTube, monta o iframe direto
+        if (linkOriginal.includes("youtube.com/watch?v=") || linkOriginal.includes("youtu.be/")) {
+            let videoId = linkOriginal.includes("v=") ? linkOriginal.split("v=")[1].split("&")[0] : linkOriginal.split("youtu.be/")[1].split("?")[0];
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            return;
+        }
 
-        // Trata links normais de computador ou celular do Youtube
-        if (linkOriginal.includes("youtube.com/watch?v=")) {
-            let videoId = linkOriginal.split("v=")[1].split("&")[0];
-            linkFormatado = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkFormatado}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        } else if (linkOriginal.includes("youtu.be/")) {
-            let videoId = linkOriginal.split("youtu.be/")[1].split("?")[0];
-            linkFormatado = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkFormatado}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        } 
-        // Se for um link direto de streaming de terceiros (.m3u8 ou .mp4)
-        else if (linkOriginal.includes(".m3u8") || linkOriginal.includes(".mp4")) {
-            playerDiv.innerHTML = ""; // Limpa a área
-            iniciarPlayer(linkOriginal); // Joga direto no motor do Clappr
-        } 
-        // Qualquer outro link (Páginas da Web, Servidores IPTV, Links HTTP comuns)
-        else {
+        // 2. Se for link de lista (.m3u ou .m3u8), quebra o bloqueio usando um Proxy público
+        if (linkOriginal.includes(".m3u") || linkOriginal.includes(".m3u8")) {
+            playerDiv.innerHTML = "<div style='color:#ff9900;padding:20px;text-align:center;'>Processando lista externa...</div>";
+            
+            // Usando o proxy de quebra de trava de segurança (CORS)
+            const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(linkOriginal);
+            
+            try {
+                const res = await fetch(proxyUrl);
+                if(!res.ok) throw new Error();
+                const data = await res.text();
+                
+                // Se o link colado for uma lista inteira, vamos ler o primeiro link de canal dela para rodar
+                const linhas = data.split("\n");
+                let primeiroLinkCanal = "";
+                
+                for(let i = 0; i < linhas.length; i++) {
+                    if(linhas[i].trim().startsWith("http")) {
+                        primeiroLinkCanal = linhas[i].trim();
+                        break;
+                    }
+                }
+
+                if(primeiroLinkCanal) {
+                    playerDiv.innerHTML = "";
+                    iniciarPlayer(primeiroLinkCanal); // Roda o canal da lista de terceiros!
+                } else {
+                    // Se for o link direto de transmissão protegido
+                    playerDiv.innerHTML = "";
+                    iniciarPlayer(proxyUrl);
+                }
+            } catch (e) {
+                // Modo de segurança caso o proxy falhe: tenta rodar direto
+                playerDiv.innerHTML = "";
+                iniciarPlayer(linkOriginal);
+            }
+        } else {
+            // Qualquer outro link joga na tela via iframe
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkOriginal}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         }
     }
+
+    function执行Canal(canalObj) { ejecutarCanal(canalObj); }
 
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
