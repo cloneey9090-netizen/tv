@@ -55,8 +55,8 @@
     <div id="canais">
         
         <div class="container-externo">
-            <input type="text" id="input-link-externo" placeholder="Cole link externo ou do YouTube...">
-            <button onclick="reproduzirLinkExterno()"><i class="fas fa-play"></i></button>
+            <input type="text" id="input-link-externo" placeholder="Cole o link aqui para rodar...">
+            <button onclick="reproduzirLinkExterno()"><i class="fas fa-play"></i> RULER</button>
         </div>
 
         <button class="btn-youtube" onclick="abrirYoutube()">
@@ -101,33 +101,34 @@
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    // FUNÇÃO REFORMULADA PARA LINK EXTERNO
+    // SISTEMA TURBO PARA LINK EXTERNO (FORÇA DE QUALQUER JEITO)
     function reproduzirLinkExterno() {
         const linkOriginal = document.getElementById("input-link-externo").value.trim();
         if (!linkOriginal) return;
 
-        let linkFormatado = linkOriginal;
         const playerDiv = document.getElementById("player");
+        if (clapprPlayer) clapprPlayer.destroy(); // Derruba o player antigo para não travar
 
-        // Corrige links do YouTube
+        let linkFormatado = linkOriginal;
+
+        // Trata links normais de computador ou celular do Youtube
         if (linkOriginal.includes("youtube.com/watch?v=")) {
             let videoId = linkOriginal.split("v=")[1].split("&")[0];
-            linkFormatado = `https://www.youtube.com/embed/${videoId}`;
+            linkFormatado = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkFormatado}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else if (linkOriginal.includes("youtu.be/")) {
             let videoId = linkOriginal.split("youtu.be/")[1].split("?")[0];
-            linkFormatado = `https://www.youtube.com/embed/${videoId}`;
-        }
-
-        // Se for um link de página ou embed do YouTube
-        if (linkFormatado.includes("youtube.com/embed/") || linkFormatado.includes(".ghtml") || linkFormatado.includes("html")) {
-            if (clapprPlayer) clapprPlayer.destroy();
-            let separador = linkFormatado.includes("?") ? "&" : "?";
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkFormatado}${separador}autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        } else {
-            // Roda no motor Clappr nativo se for m3u8 ou mp4 direto
-            if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
-            let canalExternoObj = { nome: "EXTERNO", link: linkFormatado };
-            executarCanal(canalExternoObj);
+            linkFormatado = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkFormatado}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        } 
+        // Se for um link direto de streaming de terceiros (.m3u8 ou .mp4)
+        else if (linkOriginal.includes(".m3u8") || linkOriginal.includes(".mp4")) {
+            playerDiv.innerHTML = ""; // Limpa a área
+            iniciarPlayer(linkOriginal); // Joga direto no motor do Clappr
+        } 
+        // Qualquer outro link (Páginas da Web, Servidores IPTV, Links HTTP comuns)
+        else {
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkOriginal}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         }
     }
 
