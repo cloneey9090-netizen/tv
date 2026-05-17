@@ -91,7 +91,7 @@
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    // SISTEMA ANTI-BLOQUEIO PARA LISTAS DE TERCEIROS
+    // SISTEMA INTELIGENTE BRUTO (IGUAL AO MOTOR DE ARRANQUE)
     async function reproduzirLinkExterno() {
         const linkOriginal = document.getElementById("input-link-externo").value.trim();
         if (!linkOriginal) return;
@@ -99,56 +99,48 @@
         const playerDiv = document.getElementById("player");
         if (clapprPlayer) clapprPlayer.destroy();
 
-        // 1. Se for link do YouTube, monta o iframe direto
+        // Se for YouTube
         if (linkOriginal.includes("youtube.com/watch?v=") || linkOriginal.includes("youtu.be/")) {
             let videoId = linkOriginal.includes("v=") ? linkOriginal.split("v=")[1].split("&")[0] : linkOriginal.split("youtu.be/")[1].split("?")[0];
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             return;
         }
 
-        // 2. Se for link de lista (.m3u ou .m3u8), quebra o bloqueio usando um Proxy público
-        if (linkOriginal.includes(".m3u") || linkOriginal.includes(".m3u8")) {
-            playerDiv.innerHTML = "<div style='color:#ff9900;padding:20px;text-align:center;'>Processando lista externa...</div>";
-            
-            // Usando o proxy de quebra de trava de segurança (CORS)
+        // Se for uma lista M3U de terceiros (como a do iptvlegal)
+        if (linkOriginal.includes(".m3u") && !linkOriginal.includes(".m3u8")) {
+            playerDiv.innerHTML = "<div style='color:#ff9900;padding:20px;text-align:center;'>Processando lista m3u...</div>";
             const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(linkOriginal);
             
             try {
                 const res = await fetch(proxyUrl);
-                if(!res.ok) throw new Error();
                 const data = await res.text();
-                
-                // Se o link colado for uma lista inteira, vamos ler o primeiro link de canal dela para rodar
                 const linhas = data.split("\n");
-                let primeiroLinkCanal = "";
+                let linkDoPrimeiroCanal = "";
                 
                 for(let i = 0; i < linhas.length; i++) {
                     if(linhas[i].trim().startsWith("http")) {
-                        primeiroLinkCanal = linhas[i].trim();
+                        linkDoPrimeiroCanal = linhas[i].trim();
                         break;
                     }
                 }
 
-                if(primeiroLinkCanal) {
+                if(linkDoPrimeiroCanal) {
                     playerDiv.innerHTML = "";
-                    iniciarPlayer(primeiroLinkCanal); // Roda o canal da lista de terceiros!
+                    iniciarPlayer(linkDoPrimeiroCanal);
                 } else {
-                    // Se for o link direto de transmissão protegido
                     playerDiv.innerHTML = "";
-                    iniciarPlayer(proxyUrl);
+                    iniciarPlayer(linkOriginal);
                 }
             } catch (e) {
-                // Modo de segurança caso o proxy falhe: tenta rodar direto
                 playerDiv.innerHTML = "";
                 iniciarPlayer(linkOriginal);
             }
         } else {
-            // Qualquer outro link joga na tela via iframe
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkOriginal}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            // Se for link de canal direto (.m3u8, .mp4) ou qualquer outro site, joga direto na tela
+            playerDiv.innerHTML = "";
+            iniciarPlayer(linkOriginal);
         }
     }
-
-    function执行Canal(canalObj) { ejecutarCanal(canalObj); }
 
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
