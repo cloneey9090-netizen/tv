@@ -22,6 +22,12 @@
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
         #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
+        
+        /* CAIXA DE LISTA EXTERNA / TERCEIROS */
+        .container-externo { padding: 10px; background: #1a1a1a; margin-bottom: 10px; border-radius: 5px; border: 1px solid #333; display: flex; gap: 5px; }
+        .container-externo input { flex: 1; padding: 10px; background: #000; border: 1px solid #ff9900; color: #fff; border-radius: 4px; font-size: 14px; }
+        .container-externo button { background: #ff9900; color: #000; border: none; padding: 10px 15px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
         .canal:hover { background: #ff9900; color: #000; }
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
@@ -47,6 +53,12 @@
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
+        
+        <div class="container-externo">
+            <input type="text" id="input-link-externo" placeholder="Cole link externo ou do YouTube...">
+            <button onclick="reproduzirLinkExterno()"><i class="fas fa-play"></i></button>
+        </div>
+
         <button class="btn-youtube" onclick="abrirYoutube()">
             <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
         </button>
@@ -87,6 +99,40 @@
         const playerDiv = document.getElementById("player");
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    }
+
+    // FUNÇÃO DA LISTA DE TERCEIROS / YOUTUBE
+    function reproduzirLinkExterno() {
+        const linkOriginal = document.getElementById("input-link-externo").value.trim();
+        if (!linkOriginal) return;
+
+        let linkFormatado = linkOriginal;
+        const playerDiv = document.getElementById("player");
+
+        // Tratamento automático para links normais e de celular do YouTube
+        if (linkOriginal.includes("youtube.com/watch?v=")) {
+            let videoId = linkOriginal.split("v=")[1].split("&")[0];
+            linkFormatado = `https://www.youtube.com/embed/${videoId}`;
+        } else if (linkOriginal.includes("youtu.be/")) {
+            let videoId = linkOriginal.split("youtu.be/")[1].split("?")[0];
+            linkFormatado = `https://www.youtube.com/embed/${videoId}`;
+        }
+
+        // Se for um link de página ou embed (YouTube, páginas HTML, etc.)
+        if (linkFormatado.includes("youtube.com/embed/") || linkFormatado.includes(".ghtml") || linkFormatado.includes("html")) {
+            if (clapprPlayer) clapprPlayer.destroy();
+            let separador = linkFormatado.includes("?") ? "&" : "?";
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkFormatado}${separador}autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        } else {
+            // Se for link direto de vídeo de terceiros (.m3u8, .mp4), usa o motor Clappr nativo
+            let fakeCanalObj = { nome: "Link Externo", link: linkFormatado };
+            executarCanal(fakeCanalObj);
+        }
+    }
+
+    function执行Canal(canalObj) {
+        // Correção de nomenclatura interna para manter compatibilidade total
+        executarCanal(canalObj);
     }
 
     function executarCanal(canalObj) {
@@ -135,12 +181,14 @@
                     container.appendChild(img);
                     imagens.push(img);
                 }
-                if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
+                if(linha.includes("#EXTINF")) { nomeTemp = AppExtrairNome(linha); }
                 else if(linha.startsWith("http")) {
                     let infoCanal = { nome: nomeTemp, link: linha };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
+                    
                     if (meuIndice === 0) iniciarPlayer(linha);
+                    
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
@@ -152,6 +200,13 @@
             });
             if(imagens.length > 0) showSlides();
         } catch(e) { console.error(e); }
+    }
+
+    function AppExtrairNome(linha) {
+        if(linha.includes(',')) {
+            return linha.split(',')[1] || "Canal";
+        }
+        return "Canal";
     }
 
     function showSlides() {
