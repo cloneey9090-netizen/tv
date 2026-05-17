@@ -22,18 +22,18 @@
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
         
-        /* BOTÃO PARA MOSTRAR/ESCONDER CONFIGURAÇÃO */
+        /* BOTÃO ELEGANTE PARA MOSTRAR/OCULTAR */
         .btn-config { background: #333; color: #ff9900; border: 1px solid #ff9900; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-bottom: 10px; font-size: 14px; width: 100%; text-align: center; }
         .btn-config:hover { background: #ff9900; color: #000; }
 
-        /* PAINEL REMOTO INICIA OCULTO */
-        #painel-externo { display: none; background: #222; border: 4px solid #ff9900; padding: 15px; margin: 10px 0; border-radius: 10px; text-align: center; }
+        /* PAINEL REMOTO (COMEÇA OCULTO) */
+        #painel-externo { display: none; background: #222; border: 4px solid #ff9900; padding: 15px; margin: 10px; border-radius: 10px; text-align: center; }
         #url-input { width: 90%; padding: 12px; margin-bottom: 10px; border-radius: 5px; border: none; font-size: 16px; text-align: center; background: #000; color: #fff; border: 1px solid #ff9900; }
         .btn-salvar { background: #ff9900; color: #000; padding: 12px 25px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 16px; width: 100%; }
-        .btn-limpar { background: #444; color: #fff; padding: 8px; border: none; font-size: 12px; margin-top: 15px; cursor: pointer; border-radius: 5px; width: 100%; }
+        .btn-limpar { background: #666; color: #fff; padding: 8px; border: none; font-size: 12px; margin-top: 15px; cursor: pointer; border-radius: 5px; width: 100%; }
 
-        /* SELETOR MAUTRO PARA TELA CHEIA REAL */
-        .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999 !important; background: #000; }
+        /* FIX DA TELA CHEIA MONSTRO */
+        .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
 
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
@@ -73,13 +73,23 @@
 </div>
 
 <script>
-    const urlListaPadrao = "lista.txt"; // Sua lista padrão local do GitHub
+    // LISTA DE ARRANQUE IMEDIATO ORIGINAL
+    const listaDeArranque = `
+IMG=https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500
+IMG=https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500
+#EXTINF:-1, CANAL DE TESTE 1 (ARRANQUE)
+https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8
+#EXTINF:-1, CANAL DE TESTE 2 (FILME)
+https://playertest.longtailvideo.com/adaptive/bigbuckbunny/bigbuckbunny.m3u8
+    `.trim();
+
     let imagens = [];
     let slideIndex = 0;
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
 
+    // ABRE E FECHA O PAINEL DE CONFIGURAÇÃO
     function togglePainelExterno() {
         const painel = document.getElementById("painel-externo");
         painel.style.display = (painel.style.display === "block") ? "none" : "block";
@@ -96,37 +106,34 @@
 
     function limparLista() {
         localStorage.removeItem('lista_custom_comandante');
-        alert("Retornando para a lista padrão.");
+        alert("Retornando para a lista de arranque instantânea.");
         location.reload();
     }
 
-    // INTERRUPTOR INTELIGENTE DO PLAYER COM RECONHECIMENTO DE FIM DE VÍDEO (AUTO)
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
         
         let canalAtual = listaDeVideos[indiceAtual];
         let mutarAtivo = false;
         
-        // Se encontrar a tag "AUTO", inicia sem som para evitar sustos
+        // Regra do motor AUTO
         if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
             mutarAtivo = true;
         }
 
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: mutarAtivo 
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: mutarAtivo
         });
 
-        // Evento que monitora quando a transmissão termina
+        // Evento fim do vídeo (AUTO)
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             let canalFinalizado = listaDeVideos[indiceAtual];
-            
-            // Se for do sistema AUTO, pula automaticamente para a próxima linha da lista
             if (canalFinalizado && canalFinalizado.nome.toUpperCase().includes("AUTO")) {
                 indiceAtual++;
-                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0; 
+                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
                 executarCanal(listaDeVideos[indiceAtual]);
             } else {
-                clapprPlayer.play(); 
+                clapprPlayer.play();
             }
         });
     }
@@ -155,16 +162,15 @@
                     clapprPlayer.setVolume(100);
                 }
                 clapprPlayer.load(canalObj.link);
-                clapprPlayer.play();
             }
+            clapprPlayer.play();
         }
     }
 
-    // 📺 SMART FULLSCREEN CORRIGIDO: Força o Clappr a dar resize em tempo real
+    // 📺 TELA CHEIA AJUSTADA - Força o Clappr a reajustar o tamanho
     function toggleSmartFull() {
         const p = document.getElementById('player');
         p.classList.toggle('video-expandido');
-        
         document.getElementById('cabecalho').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
         document.getElementById('canais').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
         
@@ -175,44 +181,35 @@
         }
     }
 
-    // O SEU MOTOR DE ARRANQUE ORIGINAL RECONSTRUÍDO
+    // SEU MOTOR DE CARREGAMENTO REMOTO ORIGINAL PRESERVADO
     async function carregarTV() {
         let data = "";
         const listaExterna = localStorage.getItem('lista_custom_comandante');
 
-        // Se NÃO tem lista externa salva, lê a sua lista.txt do seu repositório
         if (!listaExterna) {
-            try {
-                const res = await fetch(urlListaPadrao + "?t=" + new Date().getTime());
-                data = await res.text();
-                processarDados(data);
-            } catch(e) {
-                console.error(e);
-                document.getElementById('lista-canais').innerHTML = "<p style='color:red; padding:10px;'>Erro ao carregar canais padrão.</p>";
-            }
+            processarDados(listaDeArranque);
             return;
         }
 
-        // Se TEM lista externa, liga o motor de arranque remoto com o tratamento correto de link limpo
         try {
             document.getElementById('lista-canais').innerHTML = "<p style='color:orange; padding:10px;'>Conectando à lista externa...</p>";
-            const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna);
+            const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna + "?t=" + new Date().getTime());
             const res = await fetch(finalUrl);
             data = await res.text();
             processarDados(data);
         } catch(e) { 
             console.error(e);
-            alert("Link remoto falhou! Retornando para os canais da comunidade.");
+            alert("Link remoto falhou! Voltando para o arranque seguro.");
             limparLista();
         }
     }
 
-    // TRATAMENTO FIEL DO SEU MOTOR (Limpa quebras do Windows para os canais externos funcionarem)
+    // SEU PROCESSADOR ORIGINAL COM AJUSTE DE QUEBRA DE LINHA ANTI-CORRUPÇÃO
     function processarDados(textoLista) {
+        // CORREÇÃO MESTRE: Limpa resíduos de \r que quebravam os tokens das URLs remotas
         const linhas = textoLista.replace(/\r/g, '').split('\n');
         const menu = document.getElementById('lista-canais');
         const container = document.getElementById('banner-container');
-        
         menu.innerHTML = ""; 
         listaDeVideos = [];
         imagens = [];
@@ -235,18 +232,13 @@
                 listaDeVideos.push(infoCanal);
                 let meuIndice = listaDeVideos.length - 1;
                 
-                if (meuIndice === 0) {
-                    indiceAtual = 0;
-                    iniciarPlayer(linha);
-                }
+                if (meuIndice === 0) iniciarPlayer(linha);
                 
                 const div = document.createElement('div');
                 div.className = 'canal';
                 div.innerHTML = "▶️ " + nomeTemp;
                 div.onclick = (e) => { 
-                    e.stopPropagation(); 
-                    indiceAtual = meuIndice; 
-                    executarCanal(infoCanal);
+                    e.stopPropagation(); indiceAtual = meuIndice; executarCanal(infoCanal);
                 };
                 menu.appendChild(div);
             }
