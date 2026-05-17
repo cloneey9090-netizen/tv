@@ -3,38 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV COMUNIDADE</title>
+    <title>TV COMUNIDADE - ARRANCADA RÁPIDA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; flex-shrink: 0; }
-        #espaco-selo-3d { width: 50%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; }
+        #espaco-selo-3d { width: 50%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; border-right: 1px solid #222; }
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
         #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
-        
-        .container-externo { padding: 10px; background: #1a1a1a; margin-bottom: 10px; border-radius: 5px; border: 1px solid #333; display: flex; gap: 5px; }
-        .container-externo input { flex: 1; padding: 10px; background: #000; border: 1px solid #ff9900; color: #fff; border-radius: 4px; font-size: 14px; }
-        .container-externo button { background: #ff9900; color: #000; border: none; padding: 10px 15px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
         .canal:hover { background: #ff9900; color: #000; }
-        
-        /* Divisores de Categoria */
-        .titulo-categoria { background: #222; color: #ff9900; padding: 8px 10px; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; border-left: 3px solid #ff9900; margin-top: 10px; margin-bottom: 5px; }
-        
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
         
-        /* TRANCA SEGURA - CHUVISCOS */
-        .tela-bloqueio { background: url('https://i.gifer.com/76bX.gif') repeat; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: #ff9900; }
+        #painel-externo { background: #222; border: 4px solid #ff9900; padding: 15px; margin: 10px; border-radius: 10px; text-align: center; }
+        #url-input { width: 90%; padding: 12px; margin-bottom: 10px; border-radius: 5px; border: none; font-size: 16px; text-align: center; background: #000; color: #fff; border: 1px solid #ff9900; }
+        .btn-salvar { background: #ff9900; color: #000; padding: 12px 25px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 16px; width: 100%; }
+        .btn-limpar { background: #444; color: #fff; padding: 8px; border: none; font-size: 12px; margin-top: 15px; cursor: pointer; border-radius: 5px; width: 100%; }
+
+        /* ESTILO DOS CHUVISCOS DA TRANCA SEGURA */
+        .tela-bloqueio { background: url('https://i.gifer.com/76bX.gif') repeat; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: #ff9900; position: fixed; top: 0; left: 0; width: 100vw; z-index: 99999; }
         .caixa-erro { background: rgba(0, 0, 0, 0.85); padding: 30px; border: 3px solid #ff9900; border-radius: 10px; box-shadow: 0 0 20px #ff9900; font-family: monospace; }
-        
+
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
@@ -46,7 +42,8 @@
 
 <header id="cabecalho">
     <div id="espaco-selo-3d">
-        <img src="https://i.postimg.cc/PqKbmKV5/0514.gif" style="height: 100%; width: 150%; object-fit: contain;">
+        <img id="minha-logo-3d" src="https://i.postimg.cc/PqKbmKV5/0514.gif" style="height: 70%; object-fit: contain; position: absolute; opacity: 0.8;">
+        <div style="color: #ff9900; font-size: 12px; font-weight: bold; z-index: 2; text-shadow: 2px 2px 4px #000; margin-top: 50px;">TV COMUNIDADE</div>
     </div>
     <div id="banner-container"></div>
 </header>
@@ -54,28 +51,23 @@
 <div id="main">
     <div id="player" onclick="toggleSmartFull()"></div> 
     <div id="canais">
-        
-        <div class="container-externo">
-            <input type="text" id="input-link-externo" placeholder="Cole o link da sua lista m3u aqui...">
-            <button onclick="reproduzirLinkExterno()"><i class="fas fa-play"></i></button>
-        </div>
-
         <button class="btn-youtube" onclick="abrirYoutube()">
             <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
         </button>
         
-        <div class="titulo-categoria">⭐ Nossos Canais</div>
         <div id="lista-canais"></div>
-        
-        <div id="categoria-externa" style="display: none;">
-            <div class="titulo-categoria">📺 Canais da Sua Lista</div>
-            <div id="lista-canais-externos"></div>
+
+        <div id="painel-externo">
+            <b style="color: #ff9900; font-size: 18px;">ADICIONAR LISTA NOVA</b><br><br>
+            <input type="text" id="url-input" placeholder="Cole o link da lista m3u aqui...">
+            <button class="btn-salvar" onclick="salvarListaExterna()">✅ SALVAR E RODAR</button>
+            <button class="btn-limpar" onclick="limparLista()">❌ VOLTAR À LISTA PADRÃO</button>
         </div>
     </div> 
 </div>
 
 <script>
-    // 🛡️ TRANCA DE DOMÍNIO COM CHUVISCO
+    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (Chuvisco + Erro)
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = `
             <div class="tela-bloqueio">
@@ -85,28 +77,35 @@
                 </div>
             </div>
         `;
+        window.stop();
     }
 
-    const urlLista = "lista.txt"; 
+    const urlListaPadrao = "lista.txt"; // Busca sua lista padrão no seu GitHub automaticamente
     let imagens = [];
     let slideIndex = 0;
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
 
+    function salvarListaExterna() {
+        const url = document.getElementById('url-input').value.trim();
+        if(url) {
+            localStorage.setItem('lista_custom_comandante', url);
+            alert("Lista externa salva! Inicializando motor remoto...");
+            location.reload();
+        }
+    }
+
+    function limparLista() {
+        localStorage.removeItem('lista_custom_comandante');
+        alert("Retornando para a lista padrão da comunidade.");
+        location.reload();
+    }
+
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
         clapprPlayer = new Clappr.Player({ 
             parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
-        });
-
-        clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-            let canalAtual = listaDeVideos[indiceAtual];
-            if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
-                indiceAtual++;
-                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
-                executarCanal(listaDeVideos[indiceAtual]);
-            } else { clapprPlayer.play(); }
         });
     }
 
@@ -114,85 +113,6 @@
         const playerDiv = document.getElementById("player");
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-    }
-
-    // LEITOR E GERADOR AUTOMÁTICO DE BOTÕES PARA O USUÁRIO
-    async function reproduzirLinkExterno() {
-        const linkOriginal = document.getElementById("input-link-externo").value.trim();
-        if (!linkOriginal) return;
-
-        const playerDiv = document.getElementById("player");
-        const areaExterna = document.getElementById("categoria-externa");
-        const menuExterno = document.getElementById("lista-canais-externos");
-        
-        if (clapprPlayer) clapprPlayer.destroy();
-        menuExterno.innerHTML = ""; // Limpa botões de buscas anteriores
-
-        // Se for YouTube direto
-        if (linkOriginal.includes("youtube.com/watch?v=") || linkOriginal.includes("youtu.be/")) {
-            let videoId = linkOriginal.includes("v=") ? linkOriginal.split("v=")[1].split("&")[0] : linkOriginal.split("youtu.be/")[1].split("?")[0];
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-            areaExterna.style.display = "none";
-            return;
-        }
-
-        // Se for uma lista M3U (Puxa os canais e cria botões)
-        if (linkOriginal.includes(".m3u") && !linkOriginal.includes(".m3u8")) {
-            playerDiv.innerHTML = "<div style='color:#ff9900;padding:20px;text-align:center;'>Carregando canais da lista...</div>";
-            const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(linkOriginal);
-            
-            try {
-                const res = await fetch(proxyUrl);
-                const data = await res.text();
-                const linhas = data.split("\n");
-                
-                let nomeCanalTemp = "Canal Externo";
-                let encontrouCanais = false;
-                let primeiroLink = "";
-
-                linhas.forEach(l => {
-                    const linha = l.trim();
-                    if (linha.includes("#EXTINF")) {
-                        nomeCanalTemp = linha.split(',')[1] || "Canal Externo";
-                    } else if (linha.startsWith("http")) {
-                        encontrouCanais = true;
-                        let linkCanal = linha;
-                        if (!primeiroLink) primeiroLink = linkCanal;
-
-                        // Cria o botão na tela para o usuário clicar
-                        const div = document.createElement('div');
-                        div.className = 'canal';
-                        div.innerHTML = "📺 " + nomeCanalTemp;
-                        div.onclick = (e) => {
-                            e.stopPropagation();
-                            if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
-                            let objFake = { nome: nomeCanalTemp, link: linkCanal };
-                            executarCanal(objFake);
-                        };
-                        menuExterno.appendChild(div);
-                    }
-                });
-
-                if (encontrouCanais) {
-                    playerDiv.innerHTML = "";
-                    areaExterna.style.display = "block"; // Mostra os novos botões pro usuário
-                    iniciarPlayer(primeiroLink); // Toca o primeiro canal automaticamente
-                } else {
-                    playerDiv.innerHTML = "";
-                    areaExterna.style.display = "none";
-                    iniciarPlayer(linkOriginal);
-                }
-            } catch (e) {
-                playerDiv.innerHTML = "";
-                areaExterna.style.display = "none";
-                iniciarPlayer(linkOriginal);
-            }
-        } else {
-            // Link de canal único direto (.m3u8)
-            playerDiv.innerHTML = "";
-            areaExterna.style.display = "none";
-            iniciarPlayer(linkOriginal);
-        }
     }
 
     function executarCanal(canalObj) {
@@ -205,72 +125,100 @@
             if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
-            } else { clapprPlayer.load(canalObj.link); }
-            
-            if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                clapprPlayer.unmute(); clapprPlayer.setVolume(100);
-            } else { clapprPlayer.mute(); }
+            } else {
+                clapprPlayer.load(canalObj.link);
+            }
             clapprPlayer.play();
         }
     }
 
     function toggleSmartFull() {
         const p = document.getElementById('player');
-        const c = document.getElementById('cabecalho');
-        const lista = document.getElementById('canais');
         p.classList.toggle('video-expandido');
-        c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
-        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+        document.getElementById('cabecalho').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+        document.getElementById('canais').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
     }
 
     async function carregarTV() {
-        try {
-            const res = await fetch(urlLista + "?t=" + new Date().getTime());
-            const data = await res.text();
-            const linhas = data.split('\n');
-            const menu = document.getElementById('lista-canais');
-            const container = document.getElementById('banner-container');
-            let nomeTemp = "Canal";
+        let data = "";
+        const listaExterna = localStorage.getItem('lista_custom_comandante');
 
-            linhas.forEach(l => {
-                const linha = l.trim();
-                if(linha.startsWith('IMG=')) {
-                    const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '').trim();
-                    img.className = 'promo-slide';
-                    container.appendChild(img);
-                    imagens.push(img);
-                }
-                if(linha.includes("#EXTINF")) { 
-                    nomeTemp = linha.split(',')[1] || "Canal"; 
-                }
-                else if(linha.startsWith("http")) {
-                    let infoCanal = { nome: nomeTemp, link: linha };
-                    listaDeVideos.push(infoCanal);
-                    let meuIndice = listaDeVideos.length - 1;
-                    
-                    if (meuIndice === 0) iniciarPlayer(linha);
-                    
-                    const div = document.createElement('div');
-                    div.className = 'canal';
-                    div.innerHTML = "▶️ " + nomeTemp;
-                    div.onclick = (e) => { 
-                        e.stopPropagation(); indiceAtual = meuIndice; executarCanal(infoCanal);
-                    };
-                    menu.appendChild(div);
-                }
-            });
-            if(imagens.length > 0) showSlides();
-        } catch(e) { console.error(e); }
+        // SE NÃO TEM LISTA EXTERNA SALVA: Carrega o seu lista.txt original
+        if (!listaExterna) {
+            try {
+                const res = await fetch(urlListaPadrao + "?t=" + new Date().getTime());
+                data = await res.text();
+                processarDados(data);
+            } catch(e) {
+                console.error(e);
+                document.getElementById('lista-canais').innerHTML = "<p style='color:red; padding:10px;'>Erro ao carregar canais padrão.</p>";
+            }
+            return;
+        }
+
+        // SE TEM LISTA EXTERNA SALVA: Puxa ela usando o proxy anti-bloqueio
+        try {
+            document.getElementById('lista-canais').innerHTML = "<p style='color:orange; padding:10px;'>Conectando à lista externa...</p>";
+            const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna + "?t=" + new Date().getTime());
+            const res = await fetch(finalUrl);
+            data = await res.text();
+            processarDados(data);
+        } catch(e) { 
+            console.error(e);
+            alert("Link remoto falhou! Voltando para os canais padrão.");
+            limparLista();
+        }
+    }
+
+    function processarDados(textoLista) {
+        const linhas = textoLista.split('\n');
+        const menu = document.getElementById('lista-canais');
+        const container = document.getElementById('banner-container');
+        
+        menu.innerHTML = ""; 
+        listaDeVideos = [];
+        imagens = [];
+        container.innerHTML = "";
+        
+        let nomeTemp = "Canal";
+
+        linhas.forEach(l => {
+            const linha = l.trim();
+            if(linha.startsWith('IMG=')) {
+                const img = document.createElement('img');
+                img.src = linha.replace('IMG=', '');
+                img.className = 'promo-slide';
+                container.appendChild(img);
+                imagens.push(img);
+            }
+            if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
+            else if(linha.startsWith("http")) {
+                let infoCanal = { nome: nomeTemp, link: linha };
+                listaDeVideos.push(infoCanal);
+                let meuIndice = listaDeVideos.length - 1;
+                
+                if (meuIndice === 0) iniciarPlayer(linha);
+                
+                const div = document.createElement('div');
+                div.className = 'canal';
+                div.innerHTML = "▶️ " + nomeTemp;
+                div.onclick = (e) => { 
+                    e.stopPropagation(); indiceAtual = meuIndice; executarCanal(infoCanal);
+                };
+                menu.appendChild(div);
+            }
+        });
+        if(imagens.length > 0) showSlides();
     }
 
     function showSlides() {
         imagens.forEach(img => img.style.display = "none");
         slideIndex++;
         if (slideIndex > imagens.length) slideIndex = 1;
-        imagens[slideIndex-1].style.display = "block";
-        setTimeout(showSlides, 10000); 
+        if (imagens[slideIndex-1]) imagens[slideIndex-1].style.display = "block";
+        setTimeout(showSlides, 8000); 
     }
+    
     carregarTV();
 </script>
 </body>
