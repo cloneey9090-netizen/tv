@@ -30,6 +30,9 @@
         .btn-salvar { background: #ff9900; color: #000; padding: 12px 25px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 16px; width: 100%; }
         .btn-limpar { background: #444; color: #fff; padding: 8px; border: none; font-size: 12px; margin-top: 15px; cursor: pointer; border-radius: 5px; width: 100%; }
 
+        /* FIX DA TELA CHEIA BRUTA: Força ocupar tudo sem deixar bordas */
+        .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999 !important; background: #000; }
+
         .tela-bloqueio { background: url('https://i.gifer.com/76bX.gif') repeat; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; color: #ff9900; position: fixed; top: 0; left: 0; width: 100vw; z-index: 99999; }
         .caixa-erro { background: rgba(0, 0, 0, 0.85); padding: 30px; border: 3px solid #ff9900; border-radius: 10px; box-shadow: 0 0 20px #ff9900; font-family: monospace; }
 
@@ -97,7 +100,7 @@
     }
 
     function salvarListaExterna() {
-        const url = document.getElementById('url-input').value.trim();
+        let url = document.getElementById('url-input').value.trim();
         if(url) {
             localStorage.setItem('lista_custom_comandante', url);
             alert("Lista externa salva! Inicializando motor remoto...");
@@ -111,33 +114,29 @@
         location.reload();
     }
 
-    // MOTOR REVISADO COM REPRODUÇÃO AUTOMÁTICA EM SÉRIE (SISTEMA AUTO)
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
         
         let canalAtual = listaDeVideos[indiceAtual];
         let mutarAtivo = false;
         
-        // Se o nome do canal contiver "AUTO", ele inicia mutado para proteção
         if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
             mutarAtivo = true;
         }
 
+        // Importante: width e height setados em 100% para obedecer o redimensionamento inteligente
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: mutarAtivo 
+            parentId: "#player", source: link, width: "100%", height: "100%", autoPlay: true, mute: mutarAtivo 
         });
 
-        // RECONHECIMENTO DO FIM DO VÍDEO
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             let canalFinalizado = listaDeVideos[indiceAtual];
-            
-            // Se for um canal do sistema AUTO, pula sozinho para o próximo da lista
             if (canalFinalizado && canalFinalizado.nome.toUpperCase().includes("AUTO")) {
                 indiceAtual++;
-                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0; // Reinicia a lista se chegar no fim
+                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
                 executarCanal(listaDeVideos[indiceAtual]);
             } else {
-                clapprPlayer.play(); // Se for canal normal, apenas repete o sinal
+                clapprPlayer.play();
             }
         });
     }
@@ -159,7 +158,6 @@
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
             } else {
-                // Atualiza o link do Clappr e calibra o volume do AUTO
                 if (canalObj.nome.toUpperCase().includes("AUTO")) {
                     clapprPlayer.mute();
                 } else {
@@ -172,11 +170,20 @@
         }
     }
 
+    // 📺 SMART EXPANDIDO CORRIGIDO (Ocupa 100% real da tela agora)
     function toggleSmartFull() {
         const p = document.getElementById('player');
         p.classList.toggle('video-expandido');
+        
         document.getElementById('cabecalho').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
         document.getElementById('canais').style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+        
+        // Comando mestre: se o Clappr existir, força ele a recalcular o tamanho da tela cheia na hora
+        if (clapprPlayer) {
+            setTimeout(() => {
+                clapprPlayer.resize({width: "100%", height: "100%"});
+            }, 100);
+        }
     }
 
     async function carregarTV() {
@@ -195,15 +202,20 @@
             return;
         }
 
+        // MOTOR DE BUSCA COM PROXY ATUALIZADO ANTI-BLOQUEIO DE CORS
         try {
             document.getElementById('lista-canais').innerHTML = "<p style='color:orange; padding:10px;'>Conectando à lista externa...</p>";
-            const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna + "?t=" + new Date().getTime());
+            const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna);
             const res = await fetch(finalUrl);
-            data = await res.text();
-            processarDados(data);
+            if(res.ok) {
+                data = await res.text();
+                processarDados(data);
+            } else {
+                throw new Error("Erro na resposta do servidor proxy");
+            }
         } catch(e) { 
             console.error(e);
-            alert("Link remoto falhou! Voltando para os canais padrão.");
+            alert("Link remoto falhou ou bloqueou! Voltando para os canais padrão.");
             limparLista();
         }
     }
@@ -245,7 +257,7 @@
                 div.innerHTML = "▶️ " + nomeTemp;
                 div.onclick = (e) => { 
                     e.stopPropagation(); 
-                    indiceAtual = meuIndice; // Sincroniza o índice ao clicar manualmente
+                    indiceAtual = meuIndice; 
                     executarCanal(infoCanal);
                 };
                 menu.appendChild(div);
