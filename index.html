@@ -101,6 +101,7 @@
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
+    // FUNÇÃO REFORMULADA PARA LINK EXTERNO
     function reproduzirLinkExterno() {
         const linkOriginal = document.getElementById("input-link-externo").value.trim();
         if (!linkOriginal) return;
@@ -108,6 +109,7 @@
         let linkFormatado = linkOriginal;
         const playerDiv = document.getElementById("player");
 
+        // Corrige links do YouTube
         if (linkOriginal.includes("youtube.com/watch?v=")) {
             let videoId = linkOriginal.split("v=")[1].split("&")[0];
             linkFormatado = `https://www.youtube.com/embed/${videoId}`;
@@ -116,13 +118,16 @@
             linkFormatado = `https://www.youtube.com/embed/${videoId}`;
         }
 
+        // Se for um link de página ou embed do YouTube
         if (linkFormatado.includes("youtube.com/embed/") || linkFormatado.includes(".ghtml") || linkFormatado.includes("html")) {
             if (clapprPlayer) clapprPlayer.destroy();
             let separador = linkFormatado.includes("?") ? "&" : "?";
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${linkFormatado}${separador}autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
-            let fakeCanalObj = { nome: "Link Externo", link: linkFormatado };
-            executarCanal(fakeCanalObj);
+            // Roda no motor Clappr nativo se for m3u8 ou mp4 direto
+            if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
+            let canalExternoObj = { nome: "EXTERNO", link: linkFormatado };
+            executarCanal(canalExternoObj);
         }
     }
 
