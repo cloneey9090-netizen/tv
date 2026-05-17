@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -30,6 +31,7 @@
         .btn-salvar { background: #ff9900; color: #000; padding: 12px 25px; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; font-size: 16px; width: 100%; }
         .btn-limpar { background: #444; color: #fff; padding: 8px; border: none; font-size: 12px; margin-top: 15px; cursor: pointer; border-radius: 5px; width: 100%; }
 
+        /* FIX DA TELA CHEIA BRUTA: Força o container e os elementos internos do Clappr a ocuparem tudo */
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999 !important; background: #000; }
         .video-expandido .clappr-player, .video-expandido video, .video-expandido .player-poster { width: 100vw !important; height: 100vh !important; }
 
@@ -74,6 +76,7 @@
 </div>
 
 <script>
+    // 🛡️ TRANCA DE DOMÍNIO ORIGINAL
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = `
             <div class="tela-bloqueio">
@@ -98,13 +101,12 @@
         painel.style.display = (painel.style.display === "block") ? "none" : "block";
     }
 
-    // 🚀 ATUALIZAÇÃO ESTRATÉGICA: O site agora delega a carga pesada para o App Java interceptar
     function salvarListaExterna() {
         let url = document.getElementById('url-input').value.trim();
         if(url) {
             localStorage.setItem('lista_custom_comandante', url);
-            // Redireciona de forma limpa gerando uma mudança de rota que o Java captura sem travar
-            window.location.href = "https://tvcomunidade.player/?abrir_lista_m3u=" + encodeURIComponent(url);
+            alert("Lista externa salva! Inicializando motor remoto...");
+            location.reload();
         }
     }
 
@@ -153,12 +155,6 @@
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } else {
-            // 🚀 ENCAIXE PERFEITO DA INDEPENDÊNCIA: Força os links de canais de terceiros a passarem pelo filtro do Java do App
-            if (!canalObj.link.includes("github.io") && !canalObj.link.startsWith("lista.txt")) {
-                window.location.href = canalObj.link;
-                return;
-            }
-
             if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
@@ -205,24 +201,25 @@
             return;
         }
 
-        // Se houver lista externa, o próprio código do site tenta renderizar localmente via proxy, 
-        // mas caso o link m3u8 de transmissão seja clicado, ele cairá na interceptação nativa do Java.
         try {
+            document.getElementById('lista-canais').innerHTML = "<p style='color:orange; padding:10px;'>Conectando à lista externa...</p>";
             const finalUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(listaExterna);
             const res = await fetch(finalUrl);
             if(res.ok) {
                 data = await res.text();
                 processarDados(data);
             } else {
-                throw new Error("Proxy offline");
+                throw new Error("Erro na resposta do servidor proxy");
             }
         } catch(e) { 
             console.error(e);
-            document.getElementById('lista-canais').innerHTML = "<p style='color:orange; padding:10px;'>Lista Remota Ativada (Processamento Direto via App)...</p>";
+            alert("Link remoto falhou ou bloqueou! Voltando para os canais padrão.");
+            limparLista();
         }
     }
 
     function processarDados(textoLista) {
+        // CORREÇÃO ESSENCIAL: Garante a quebra de linha limpando resíduos de \r do Windows
         const linhas = textoLista.split(/\r?\n/);
         const menu = document.getElementById('lista-canais');
         const container = document.getElementById('banner-container');
@@ -249,7 +246,7 @@
                 listaDeVideos.push(infoCanal);
                 let meuIndice = listaDeVideos.length - 1;
                 
-                if (meuIndice === 0 && !static_line.includes("tvcomunidade.player")) {
+                if (meuIndice === 0) {
                     indiceAtual = 0;
                     iniciarPlayer(static_line);
                 }
