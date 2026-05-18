@@ -10,10 +10,10 @@
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; flex-shrink: 0; }
         
-        /* LADO ESQUERDO: SEU SELO 3D */
-        #espaco-selo-3d { width: 50%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; }
+        /* LADO ESQUERDO: ESPAÇO PARA O SEU SELO 3D */
+        #espaco-selo-3d { width: 50%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; border-right: 1px solid #222; }
         
-        /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
+        /* LADO DIREITO: BANNERS PROMO */
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
         
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
@@ -39,8 +39,12 @@
 
 <header id="cabecalho">
     <div id="espaco-selo-3d">
-        <img src="https://i.postimg.cc/PqKbmKV5/0514.gif" style="height: 100%; width: 150%; object-fit: contain;">
+        <img id="minha-logo-3d" src="https://i.postimg.cc/PqKbmKV5/0514.gif" style="height: 70%; object-fit: contain; position: absolute; opacity: 0.8;">
+        
+        <div style="color: #ff9900; font-size: 12px; font-weight: bold; z-index: 2; text-shadow: 2px 2px 4px #000;"></div>
+        <div style="color: #25D366; font-size: 16px; font-weight: bold; z-index: 2; text-shadow: 2px 2px 4px #000;"></div>
     </div>
+
     <div id="banner-container"></div>
 </header>
 
@@ -55,11 +59,6 @@
 </div>
 
 <script>
-    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE
-    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
-        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
-    }
-
     const urlLista = "lista.txt"; 
     let imagens = [];
     let slideIndex = 0;
@@ -79,7 +78,9 @@
                 indiceAtual++;
                 if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
                 executarCanal(listaDeVideos[indiceAtual]);
-            } else { clapprPlayer.play(); }
+            } else {
+                clapprPlayer.play();
+            }
         });
     }
 
@@ -99,11 +100,14 @@
             if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
-            } else { clapprPlayer.load(canalObj.link); }
-            
+            } else {
+                clapprPlayer.load(canalObj.link);
+            }
             if (!canalObj.nome.toUpperCase().includes("AUTO")) {
                 clapprPlayer.unmute(); clapprPlayer.setVolume(100);
-            } else { clapprPlayer.mute(); }
+            } else {
+                clapprPlayer.mute();
+            }
             clapprPlayer.play();
         }
     }
