@@ -19,22 +19,23 @@
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
-        #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
+        #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; height: calc(100vh - 120px); } 
         
-        /* AJUSTE DE CENTRALIZAÇÃO DO PLAYER (FIM DO CRESCIMENTO POR TRÁS) */
+        /* FIXAÇÃO DO PLAYER PARA NÃO CRESCER POR TRÁS DOS BOTÕES */
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; overflow: hidden; position: relative; }
+        #player * { max-width: 100%; max-height: 100%; }
         
         #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
-        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
+        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; flex-shrink: 0; }
         .canal:hover { background: #ff9900; color: #000; }
-        .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
+        .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; flex-shrink: 0; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
         
         /* FUNÇÃO EXPANDIR DO COMANDANTE PRESERVADA INTEGRALMENTE */
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
         
         @media (min-width: 800px) {
-            #main { flex-direction: row; height: calc(100vh - 120px); }
+            #main { flex-direction: row; }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
             #canais { height: 100%; overflow-y: auto; width: 25%; }
         }
@@ -72,7 +73,6 @@
     let indiceAtual = 0;
     let clapprPlayer;
 
-    // MOTOR DO PLAYER ADAPTADO PARA IMPEDIR TRAVAMENTO DE AUTOPLAY EM SMART TVS
     function iniciarPlayer(link, mutarIncial) {
         if (clapprPlayer) clapprPlayer.destroy();
         clapprPlayer = new Clappr.Player({ 
@@ -81,7 +81,7 @@
             width: '100%', 
             height: '100%', 
             autoPlay: true, 
-            mute: mutarIncial // Se for AUTO, já inicia travado no mudo para a TV liberar o sinal
+            mute: mutarIncial 
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
@@ -114,13 +114,14 @@
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link, deveMutar);
             } else { 
+                // CORREÇÃO CRÍTICA DO AUTO: Força o mudo/áudio antes de carregar a nova mídia
+                if (deveMutar) {
+                    clapprPlayer.mute();
+                } else {
+                    clapprPlayer.unmute();
+                    clapprPlayer.setVolume(100);
+                }
                 clapprPlayer.load(canalObj.link); 
-            }
-            
-            if (!deveMutar) {
-                clapprPlayer.unmute(); clapprPlayer.setVolume(100);
-            } else { 
-                clapprPlayer.mute(); 
             }
             clapprPlayer.play();
         }
@@ -159,7 +160,6 @@
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
                     
-                    // CALIBRAÇÃO DE ARRANQUE: Verifica se o primeiríssimo canal já deve iniciar mutado
                     if (meuIndice === 0) {
                         let mutarPrimeiro = nomeTemp.toUpperCase().includes("AUTO");
                         iniciarPlayer(linha, mutarPrimeiro);
@@ -182,7 +182,7 @@
         imagens.forEach(img => img.style.display = "none");
         slideIndex++;
         if (slideIndex > imagens.length) slideIndex = 1;
-        imagens[slideIndex-1].style.display = "block";
+        if (imagens[slideIndex-1]) imagens[slideIndex-1].style.display = "block";
         setTimeout(showSlides, 10000); 
     }
     carregarTV();
