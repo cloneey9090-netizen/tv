@@ -31,7 +31,7 @@
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; flex-shrink: 0; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
         
-        /* FUNÇÃO EXPANDIR DO COMANDANTE PRESERVADA INTEGRALMENTE */
+        /* FUNÇÃO EXPANDIR PRESERVADA INTEGRALMENTE */
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
         
         @media (min-width: 800px) {
@@ -61,7 +61,7 @@
 </div>
 
 <script>
-    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE
+    // 🛡️ TRANCA DE DOMÍNIO
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
     }
@@ -73,32 +73,37 @@
     let indiceAtual = 0;
     let clapprPlayer;
 
-    function iniciarPlayer(link, mutarIncial) {
+    // MOTOR EXCLUSIVO: Inicializa o áudio de acordo com o tipo de canal
+    function iniciarPlayer(link, mutarInicial) {
         if (clapprPlayer) clapprPlayer.destroy();
+        
         clapprPlayer = new Clappr.Player({ 
             parentId: "#player", 
             source: link, 
             width: '100%', 
             height: '100%', 
             autoPlay: true, 
-            mute: mutarIncial 
+            mute: mutarInicial // Bloqueia se for AUTO, libera se for normal
         });
 
-        // TRAVA DE SEGURANÇA SEGUINTE: Garante o mudo visual assim que o player estiver pronto
+        // Quando o player estiver pronto, se NÃO for canal auto, injetamos volume máximo
         clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
-            let canalAtual = listaDeVideos[indiceAtual];
-            if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
-                clapprPlayer.mute();
+            if (!mutarInicial) {
+                clapprPlayer.unmute();
+                clapprPlayer.setVolume(100);
             }
         });
 
+        // Avanço automático do sistema
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
                 indiceAtual++;
                 if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
                 executarCanal(listaDeVideos[indiceAtual]);
-            } else { clapprPlayer.play(); }
+            } else { 
+                clapprPlayer.play(); 
+            }
         });
     }
 
@@ -119,22 +124,8 @@
             
             let deveMutar = canalObj.nome.toUpperCase().includes("AUTO");
             
-            if (!document.querySelector(".clappr-video")) {
-                iniciarPlayer(canalObj.link, deveMutar);
-            } else { 
-                clapprPlayer.load(canalObj.link); 
-                
-                // ESCUTA ATIVA NA TROCA DE CANAL: Sincroniza o ícone de mudo imediatamente após o carregamento
-                clapprPlayer.once(Clappr.Events.PLAYER_READY, function() {
-                    if (deveMutar) {
-                        clapprPlayer.mute();
-                    } else {
-                        clapprPlayer.unmute();
-                        clapprPlayer.setVolume(100);
-                    }
-                });
-            }
-            clapprPlayer.play();
+            // Recriação limpa para evitar conflito de mudo/som no cache do Clappr
+            iniciarPlayer(canalObj.link, deveMutar);
         }
     }
 
@@ -160,7 +151,7 @@
                 const linha = l.trim();
                 if(linha.startsWith('IMG=')) {
                     const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '');
+                    img.src = inline = linha.replace('IMG=', '');
                     img.className = 'promo-slide';
                     container.appendChild(img);
                     imagens.push(img);
