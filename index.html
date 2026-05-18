@@ -84,6 +84,14 @@
             mute: mutarIncial 
         });
 
+        // TRAVA DE SEGURANÇA SEGUINTE: Garante o mudo visual assim que o player estiver pronto
+        clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
+            let canalAtual = listaDeVideos[indiceAtual];
+            if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
+                clapprPlayer.mute();
+            }
+        });
+
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
@@ -114,14 +122,17 @@
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link, deveMutar);
             } else { 
-                // CORREÇÃO CRÍTICA DO AUTO: Força o mudo/áudio antes de carregar a nova mídia
-                if (deveMutar) {
-                    clapprPlayer.mute();
-                } else {
-                    clapprPlayer.unmute();
-                    clapprPlayer.setVolume(100);
-                }
                 clapprPlayer.load(canalObj.link); 
+                
+                // ESCUTA ATIVA NA TROCA DE CANAL: Sincroniza o ícone de mudo imediatamente após o carregamento
+                clapprPlayer.once(Clappr.Events.PLAYER_READY, function() {
+                    if (deveMutar) {
+                        clapprPlayer.mute();
+                    } else {
+                        clapprPlayer.unmute();
+                        clapprPlayer.setVolume(100);
+                    }
+                });
             }
             clapprPlayer.play();
         }
