@@ -4,14 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV COMUNIDADE</title>
-    
-    <link rel="icon" href="https://i.postimg.cc/PqKbmKV5/0514.gif" type="image/gif">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/clappr-hlsjs-playback@latest/dist/clappr-hlsjs-playback.min.js"></script>
-    
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; flex-shrink: 0; }
@@ -61,10 +55,10 @@
 </div>
 
 <script>
-   /* // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE
+    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
-    }/*
+    }
 
     const urlLista = "lista.txt"; 
     let imagens = [];
@@ -73,24 +67,10 @@
     let indiceAtual = 0;
     let clapprPlayer;
 
-    // 📺 ADAPTADO PARA WEBOS E PC: Engenharia de arranque do Player atualizada com decodificador HLS
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", 
-            source: link, 
-            width: '100%', 
-            height: '100%', 
-            autoPlay: true, 
-            mute: true,
-            // 🚀 Ativa os plugs de rede que resolvem a tela preta no monitor e no webOS da LG
-            plugins: [HlsjsPlayback],
-            playback: {
-                hlsjsConfig: {
-                    maxBufferLength: 30,
-                    enableWorker: true
-                }
-            }
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
@@ -109,7 +89,7 @@
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    function ejecutarCanal(canalObj) {
+    function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
@@ -181,7 +161,7 @@
         imagens[slideIndex-1].style.display = "block";
         setTimeout(showSlides, 10000); 
     }
-    document.addEventListener("DOMContentLoaded", carregarTV);
+    carregarTV();
 </script>
 </body>
 </html>
