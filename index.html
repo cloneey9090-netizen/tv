@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-   
     <link rel="icon" href="https://i.postimg.cc/PqKbmKV5/0514.gif" type="image/gif">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TV COMUNIDADE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
+
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; flex-shrink: 0; }
@@ -15,11 +17,14 @@
         /* LADO ESQUERDO: SEU SELO 3D */
         #espaco-selo-3d { width: 50%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; }
         
-        /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
-
+        /* LADO DIREITO: ONDE MORAM OS BANNERS E O GOOGLE */
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
         
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
+        
+        /* Estilo para o bloco do Google não amassar o topo */
+        .google-box { width: 100%; height: 100%; display: none; position: absolute; top: 0; left: 0; }
+
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
@@ -44,7 +49,17 @@
     <div id="espaco-selo-3d">
         <img src="https://i.postimg.cc/PqKbmKV5/0514.gif" style="height: 100%; width: 150%; object-fit: contain;">
     </div>
-    <div id="banner-container"></div>
+    
+    <div id="banner-container">
+        
+        <div id="bloco-google-admob" class="google-box">
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:100%;height:120px"
+                 data-ad-client="ca-pub-3940256099942544" 
+                 data-ad-slot="6300978111"></ins>
+        </div>
+
+    </div>
 </header>
 
 <div id="main">
@@ -69,6 +84,9 @@
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
+    
+    // Controlador do Rodízio (Alterna entre imagem local e anúncio do Google)
+    let rodadaDoGoogle = false;
 
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
@@ -92,16 +110,7 @@
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    function executarCanal(canalObj) {
-        // 🛡️ FUSÍVEL DE SEGURANÇA CONTRA TRAVAMENTOS
-        try {
-            if (window.AndroidBridge && typeof window.AndroidBridge.mostrarPropagandaNoTopo === "function") {
-                window.AndroidBridge.mostrarPropagandaNoTopo();
-            }
-        } catch (erro) {
-            console.log("Android não detectado ou erro na ponte, seguindo em frente...");
-        }
-
+    function ejecutarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
@@ -139,20 +148,20 @@
             let nomeTemp = "Canal";
 
             linhas.forEach(l => {
-                const linha = l.trim();
-                if(linha.startsWith('IMG=')) {
+                const alignment = l.trim();
+                if(alignment.startsWith('IMG=')) {
                     const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '');
+                    img.src = alignment.replace('IMG=', '');
                     img.className = 'promo-slide';
                     container.appendChild(img);
                     imagens.push(img);
                 }
-                if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
-                else if(linha.startsWith("http")) {
-                    let infoCanal = { nome: nomeTemp, link: linha };
+                if(alignment.includes("#EXTINF")) { nomeTemp = alignment.split(',')[1] || "Canal"; }
+                else if(alignment.startsWith("http")) {
+                    let infoCanal = { nome: nomeTemp, link: alignment };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
-                    if (meuIndice === 0) iniciarPlayer(linha);
+                    if (meuIndice === 0) iniciarPlayer(alignment);
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
@@ -162,15 +171,36 @@
                     menu.appendChild(div);
                 }
             });
+            
+            // 🌟 Inicializa o anúncio do Google na memória
+            try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+
             if(imagens.length > 0) showSlides();
         } catch(e) { console.error(e); }
     }
 
+    // 🌟 3. O CRONÔMETRO DO RODÍZIO MODIFICADO (Mágica do equilíbrio)
     function showSlides() {
-        imagens.forEach(img => img.style.display = "none");
-        slideIndex++;
-        if (slideIndex > imagens.length) slideIndex = 1;
-        imagens[slideIndex-1].style.display = "block";
+        const divGoogle = document.getElementById("bloco-google-admob");
+
+        // Inverte a vez: se era local, vira Google; se era Google, vira local
+        rodadaDoGoogle = !rodadaDoGoogle;
+
+        if (rodadaDoGoogle) {
+            // VEZ DO GOOGLE: Esconde todas as suas imagens locais e liga o bloco do AdMob
+            imagens.forEach(img => img.style.display = "none");
+            divGoogle.style.display = "block";
+        } else {
+            // VEZ DO COMANDANTE: Esconde o bloco do Google e liga a próxima imagem local
+            divGoogle.style.display = "none";
+            
+            imagens.forEach(img => img.style.display = "none");
+            slideIndex++;
+            if (slideIndex > imagens.length) slideIndex = 1;
+            imagens[slideIndex-1].style.display = "block";
+        }
+
+        // Mantém o tempo exato de troca a cada 10 segundos
         setTimeout(showSlides, 10000); 
     }
     carregarTV();
