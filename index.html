@@ -22,7 +22,7 @@
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
-        /* 🌟 CORTINA DO GOOGLE: Fica no mesmo tamanho do banner, guardada por cima em outra camada */
+        /* 🌟 CORTINA DO GOOGLE: Fica por cima do carrossel quando ativa */
         #caixa-google-isolada {
             position: absolute;
             top: 0;
@@ -30,8 +30,8 @@
             width: 100%;
             height: 100%;
             background: #050505;
-            display: none; /* Começa totalmente invisível */
-            z-index: 99;   /* Fica por cima do carrossel quando ativa */
+            display: none; /* Controlado pelo relógio fantasma */
+            z-index: 99;   
         }
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
@@ -88,6 +88,7 @@
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
+    let telaCheiaAtiva = false; // Monitor para blindar o anúncio na tela cheia
 
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
@@ -134,9 +135,19 @@
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
         const lista = document.getElementById('canais');
+        const cortinaGoogle = document.getElementById("caixa-google-isolada");
+        
         p.classList.toggle('video-expandido');
-        c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
-        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+        telaCheiaAtiva = p.classList.contains('video-expandido');
+        
+        if (telaCheiaAtiva) {
+            c.style.display = 'none';
+            lista.style.display = 'none';
+            if (cortinaGoogle) cortinaGoogle.style.display = "none"; // Força sumir na hora
+        } else {
+            c.style.display = 'flex';
+            lista.style.display = 'flex';
+        }
     }
 
     async function carregarTV() {
@@ -149,20 +160,20 @@
             let nomeTemp = "Canal";
 
             linhas.forEach(l => {
-                const linha = l.trim();
-                if(linha.startsWith('IMG=')) {
+                const row = l.trim();
+                if(row.startsWith('IMG=')) {
                     const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '');
+                    img.src = row.replace('IMG=', '');
                     img.className = 'promo-slide';
                     container.appendChild(img);
                     imagens.push(img);
                 }
-                if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
-                else if(linha.startsWith("http")) {
-                    let infoCanal = { nome: nomeTemp, link: linha };
+                if(row.includes("#EXTINF")) { nomeTemp = row.split(',')[1] || "Canal"; }
+                else if(row.startsWith("http")) {
+                    let infoCanal = { nome: nomeTemp, link: row };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
-                    if (meuIndice === 0) iniciarPlayer(linha);
+                    if (meuIndice === 0) iniciarPlayer(row);
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
@@ -174,7 +185,7 @@
             });
             if(imagens.length > 0) showSlides();
             
-            // 🌟 Ativa o motor do Google na surdina e liga o temporizador fantasma
+            // Dá o primeiro estalo na inicialização do app
             try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
             dispararTemporizadorDoGoogle();
 
@@ -189,21 +200,30 @@
         setTimeout(showSlides, 10000); 
     }
 
-    // 🌟 RE LÓGIO FANTASMA DO GOOGLE (Totalmente independente)
+    // 🌟 RELÓGIO FANTASMA CORRIGIDO (Garante a recarga do anúncio)
     function dispararTemporizadorDoGoogle() {
         const cortinaGoogle = document.getElementById("caixa-google-isolada");
         
-        // Loop infinito totalmente isolado: 
-        // A cada 50 segundos, joga o anúncio na tela por 15 segundos e retira.
+        // A cada 50 segundos, avalia se pode subir a cortina
         setInterval(function() {
-            if (cortinaGoogle) {
-                cortinaGoogle.style.display = "block"; // Cobre o carrossel local
+            // Só executa se a cortina existir e o usuário NÃO estiver com canal em tela cheia
+            if (cortinaGoogle && !telaCheiaAtiva) {
                 
+                cortinaGoogle.style.display = "block"; // Sobe a cortina por cima das locais
+                
+                // 🔥 O PULO DO GATO: Força o motor do Google a rodar e puxar a imagem de teste na hora exata que abriu!
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch(e) {
+                    console.log("Recarregando imagem do AdSense...");
+                }
+                
+                // Segura o anúncio na tela por 15 segundos e depois recolhe
                 setTimeout(function() {
-                    cortinaGoogle.style.display = "none"; // Devolve a visão para as suas imagens
-                }, 15000); // Fica 15 segundos ativo
+                    cortinaGoogle.style.display = "none"; // Desce a cortina e volta a passar suas locais
+                }, 15000); 
             }
-        }, 50000); // Roda o ciclo a cada 50 segundos
+        }, 50000); 
     }
 
     carregarTV();
