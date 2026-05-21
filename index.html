@@ -6,9 +6,6 @@
     <title>TV COMUNIDADE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3940256099942544" crossorigin="anonymous"></script>
-
     <style>
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         header { background: #000; border-bottom: 2px solid #ff9900; height: 120px; display: flex; width: 100%; flex-shrink: 0; }
@@ -21,18 +18,6 @@
         
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
-        
-        /* 🌟 CORTINA DO GOOGLE: Fica por cima do carrossel quando ativa */
-        #caixa-google-isolada {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #050505;
-            display: none; /* Controlado pelo relógio fantasma */
-            z-index: 99;   
-        }
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
         #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
@@ -56,14 +41,7 @@
     <div id="espaco-selo-3d">
         <img src="https://i.postimg.cc/PqKbmKV5/0514.gif" style="height: 100%; width: 150%; object-fit: contain;">
     </div>
-    <div id="banner-container">
-        <div id="caixa-google-isolada">
-            <ins class="adsbygoogle"
-                 style="display:inline-block;width:100%;height:120px"
-                 data-ad-client="ca-pub-3940256099942544"
-                 data-ad-slot="6300978111"></ins>
-        </div>
-    </div>
+    <div id="banner-container"></div>
 </header>
 
 <div id="main">
@@ -88,7 +66,6 @@
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
-    let telaCheiaAtiva = false; // Monitor para blindar o anúncio na tela cheia
 
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
@@ -135,19 +112,9 @@
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
         const lista = document.getElementById('canais');
-        const cortinaGoogle = document.getElementById("caixa-google-isolada");
-        
         p.classList.toggle('video-expandido');
-        telaCheiaAtiva = p.classList.contains('video-expandido');
-        
-        if (telaCheiaAtiva) {
-            c.style.display = 'none';
-            lista.style.display = 'none';
-            if (cortinaGoogle) cortinaGoogle.style.display = "none"; // Força sumir na hora
-        } else {
-            c.style.display = 'flex';
-            lista.style.display = 'flex';
-        }
+        c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+        lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
     }
 
     async function carregarTV() {
@@ -160,20 +127,20 @@
             let nomeTemp = "Canal";
 
             linhas.forEach(l => {
-                const row = l.trim();
-                if(row.startsWith('IMG=')) {
+                const linha = l.trim();
+                if(linha.startsWith('IMG=')) {
                     const img = document.createElement('img');
-                    img.src = row.replace('IMG=', '');
+                    img.src = linha.replace('IMG=', '');
                     img.className = 'promo-slide';
                     container.appendChild(img);
                     imagens.push(img);
                 }
-                if(row.includes("#EXTINF")) { nomeTemp = row.split(',')[1] || "Canal"; }
-                else if(row.startsWith("http")) {
-                    let infoCanal = { nome: nomeTemp, link: row };
+                if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
+                else if(linha.startsWith("http")) {
+                    let infoCanal = { nome: nomeTemp, link: linha };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
-                    if (meuIndice === 0) iniciarPlayer(row);
+                    if (meuIndice === 0) iniciarPlayer(linha);
                     const div = document.createElement('div');
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
@@ -184,11 +151,6 @@
                 }
             });
             if(imagens.length > 0) showSlides();
-            
-            // Dá o primeiro estalo na inicialização do app
-            try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-            dispararTemporizadorDoGoogle();
-
         } catch(e) { console.error(e); }
     }
 
@@ -199,33 +161,6 @@
         imagens[slideIndex-1].style.display = "block";
         setTimeout(showSlides, 10000); 
     }
-
-    // 🌟 RELÓGIO FANTASMA CORRIGIDO (Garante a recarga do anúncio)
-    function dispararTemporizadorDoGoogle() {
-        const cortinaGoogle = document.getElementById("caixa-google-isolada");
-        
-        // A cada 50 segundos, avalia se pode subir a cortina
-        setInterval(function() {
-            // Só executa se a cortina existir e o usuário NÃO estiver com canal em tela cheia
-            if (cortinaGoogle && !telaCheiaAtiva) {
-                
-                cortinaGoogle.style.display = "block"; // Sobe a cortina por cima das locais
-                
-                // 🔥 O PULO DO GATO: Força o motor do Google a rodar e puxar a imagem de teste na hora exata que abriu!
-                try {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                } catch(e) {
-                    console.log("Recarregando imagem do AdSense...");
-                }
-                
-                // Segura o anúncio na tela por 15 segundos e depois recolhe
-                setTimeout(function() {
-                    cortinaGoogle.style.display = "none"; // Desce a cortina e volta a passar suas locais
-                }, 15000); 
-            }
-        }, 50000); 
-    }
-
     carregarTV();
 </script>
 </body>
