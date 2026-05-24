@@ -34,7 +34,7 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u8
 
 #EXTINF:-1 tvg-language="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo Youtube
-https://www.youtube.com/embed/2RhHeyeR2e
+https://www.youtube.com/embed/vN0SIBjWWoU
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | interior de SP 
 https://cdn.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8
