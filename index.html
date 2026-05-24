@@ -16,17 +16,24 @@
         /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
         
+        /* Ajuste para suportar links nos banners sem quebrar o layout */
+        .promo-link { display: none; height: 100%; width: 100%; position: absolute; top: 0; left: 0; text-decoration: none; }
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; }
+        .promo-link .promo-slide { display: block; position: relative; }
+        
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
-        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; }
+        #player { width: 100%; aspect-ratio: 16 / 9; background: #000; flex-shrink: 0; position: relative; }
         #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
         .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
         .canal:hover { background: #ff9900; color: #000; }
         .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
         .btn-youtube i { margin-right: 10px; font-size: 20px; }
         .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
+        
+        /* Botão de Compra da Shopee Dinâmico */
+        #btn-compra-shopee { display: block; background: #ff5722; color: #fff; text-align: center; padding: 15px; font-weight: bold; text-decoration: none; font-size: 18px; border-radius: 5px; margin: 10px; box-shadow: 0 4px 15px rgba(255,87,34,0.4); }
         
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
@@ -45,7 +52,9 @@
 </header>
 
 <div id="main">
-    <div id="player" onclick="toggleSmartFull()"></div> 
+    <div id="player-container" style="display: flex; flex-direction: column; width: 100%;" class="player-box">
+        <div id="player" onclick="toggleSmartFull()"></div> 
+    </div>
     <div id="canais">
         <button class="btn-youtube" onclick="abrirYoutube()">
             <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
@@ -55,7 +64,7 @@
 </div>
 
 <script>
-    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE
+    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (Intacta)
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
     }
@@ -85,18 +94,50 @@
 
     function abrirYoutube() {
         const playerDiv = document.getElementById("player");
+        
+        // Remove botão da Shopee se ele existir para não misturar as fiações
+        const botaoAntigo = document.getElementById("btn-compra-shopee");
+        if (botaoAntigo) botaoAntigo.remove();
+
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
     function executarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
+        const playerContainer = document.getElementById("player-container");
+        
+        // Limpa o botão da Shopee sempre que houver uma troca de canal
+        const botaoAntigo = document.getElementById("btn-compra-shopee");
+        if (botaoAntigo) botaoAntigo.remove();
+
+        // 1. Sua engrenagem original do YouTube (Intacta)
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        } else {
-            if (playerDiv.querySelector("iframe")) playerDiv.innerHTML = "";
+        } 
+        // 🛍️ 2. NOVO PUXADINHO: Canal Comercial com link de Afiliado/Shopee
+        else if (canalObj.link.includes("|")) {
+            if (clapprPlayer) clapprPlayer.destroy();
+            
+            let partes = canalObj.link.split("|");
+            let videoPropaganda = partes[0].trim();
+            let linkAfiliado = partes[1].trim();
+
+            // Roda o vídeo promocional direto no visor do player usando tag nativa de vídeo
+            playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: contain; background:#000;"></video>`;
+            
+            // Faz brotar o botão de compra dinamicamente logo abaixo do player
+            playerContainer.insertAdjacentHTML('beforeend', `
+                <a id="btn-compra-shopee" href="${linkAfiliado}" target="_blank">
+                   🛍️ CLIQUE AQUI PARA APROVEITAR A OFERTA
+                </a>
+            `);
+        } 
+        // 3. Sua engrenagem original do Clappr para Canais de TV normais (Intacta)
+        else {
+            if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) playerDiv.innerHTML = "";
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
             } else { clapprPlayer.load(canalObj.link); }
@@ -109,7 +150,7 @@
     }
 
     function toggleSmartFull() {
-        const p = document.getElementById('player');
+        const p = document.getElementById('player-container'); // Expandido para levar o botão junto se estiver em tela cheia
         const c = document.getElementById('cabecalho');
         const lista = document.getElementById('canais');
         p.classList.toggle('video-expandido');
@@ -128,13 +169,39 @@
 
             linhas.forEach(l => {
                 const linha = l.trim();
+                
+                // 📡 AUTOMATIZAÇÃO DO BANNER DO TOPO (DIRECIONAMENTO ZAP/INSTA)
                 if(linha.startsWith('IMG=')) {
-                    const img = document.createElement('img');
-                    img.src = linha.replace('IMG=', '');
-                    img.className = 'promo-slide';
-                    container.appendChild(img);
-                    imagens.push(img);
+                    let dadosImg = linha.replace('IMG=', '');
+                    
+                    if (dadosImg.includes('|')) {
+                        // Se tem o divisor, separa a imagem e o link de destino (Zap/Insta/Shopee)
+                        let partesImg = dadosImg.split('|');
+                        let urlImagem = partesImg[0].trim();
+                        let urlDestino = partesImg[1].trim();
+
+                        const a = document.createElement('a');
+                        a.href = urlDestino;
+                        a.target = '_blank';
+                        a.className = 'promo-link';
+
+                        const img = document.createElement('img');
+                        img.src = urlImagem;
+                        img.className = 'promo-slide';
+                        
+                        a.appendChild(img);
+                        container.appendChild(a);
+                        imagens.push(a); // Coloca o link no carrossel de slides
+                    } else {
+                        // Imagem normal sem link (Comunidade Tradicional)
+                        const img = document.createElement('img');
+                        img.src = dadosImg;
+                        img.className = 'promo-slide';
+                        container.appendChild(img);
+                        imagens.push(img);
+                    }
                 }
+                
                 if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
                 else if(linha.startsWith("http")) {
                     let infoCanal = { nome: nomeTemp, link: linha };
@@ -145,7 +212,7 @@
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
                     div.onclick = (e) => { 
-                        e.stopPropagation(); indiceAtual = meuIndice; executarCanal(infoCanal);
+                        e.stopPropagation(); indiceAtual = meuIndice; ejecutarCanal(infoCanal);
                     };
                     menu.appendChild(div);
                 }
@@ -155,7 +222,7 @@
     }
 
     function showSlides() {
-        imagens.forEach(img => img.style.display = "none");
+        imagens.forEach(item => item.style.display = "none");
         slideIndex++;
         if (slideIndex > imagens.length) slideIndex = 1;
         imagens[slideIndex-1].style.display = "block";
