@@ -16,12 +16,8 @@
         /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
         #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
         
-        /* Fiação de isolamento corrigida para celulares */
+        /* Fiação de isolamento corrigida para os slides */
         .promo-slide { display: none; height: 100%; width: 100%; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; cursor: pointer; }
-        
-        /* Garante que o slide invisível não roube o toque na tela do celular */
-        .promo-slide[style*="display: none"] { pointer-events: none !important; z-index: -1 !important; }
-        .promo-slide[style*="display: block"] { pointer-events: auto !important; z-index: 2 !important; }
         
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
@@ -115,7 +111,7 @@
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-media" allowfullscreen></iframe>`;
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } 
         // 🛍️ 2. Módulo Shopee/Afiliados
         else if (canalObj.link.includes("|")) {
@@ -141,7 +137,7 @@
             } else { clapprPlayer.load(canalObj.link); }
             
             if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                clapprPlayer.unmute(); clapprPlayer.setVolume(100);
+                clapprPlayer.unmute();
             } else { clapprPlayer.mute(); }
             clapprPlayer.play();
         }
@@ -169,7 +165,6 @@
                 const cleanLinha = l.trim();
                 if (!cleanLinha) return;
                 
-                // 📡 CARREGAMENTO DOS BANNERS SEM ENVOLVIMENTO DE ABAS (PERFEITO PARA CELULAR)
                 if(cleanLinha.startsWith('IMG=')) {
                     let dadosImg = cleanLinha.replace('IMG=', '');
                     
@@ -182,7 +177,6 @@
                         let urlDestino = partesImg[1].trim();
 
                         img.src = urlImagem;
-                        // O clique agora é direto na imagem, evitando criar caixas fantasmas no mobile
                         img.onclick = () => window.open(urlDestino, '_blank');
                     } else {
                         img.src = dadosImg;
@@ -206,10 +200,8 @@
                     div.className = 'canal';
                     div.innerHTML = "▶️ " + nomeTemp;
                     
-                    // Evento otimizado para toque em telas mobile
-                    div.onclick = (e) => { 
-                        e.preventDefault();
-                        e.stopPropagation(); 
+                    // Clique limpo e direto, 100% compatível com celular e WebView
+                    div.onclick = () => { 
                         indiceAtual = meuIndice; 
                         executarCanal(infoCanal);
                     };
@@ -225,7 +217,7 @@
         imagens.forEach(item => item.style.display = "none");
         slideIndex++;
         if (slideIndex > imagens.length) slideIndex = 1;
-        imagens[slideIndex-1].style.style.display = "block";
+        imagens[slideIndex-1].style.display = "block";
         setTimeout(showSlides, 10000); 
     }
     carregarTV();
