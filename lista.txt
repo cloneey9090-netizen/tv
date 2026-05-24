@@ -1,5 +1,4 @@
-IMG=https://i.postimg.cc/link-da-foto-do-mercado.jpg 
-IMG=https://i.postimg.cc/link-da-foto-comum.jpg
+
 IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/5528988049598
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png
 
