@@ -13,11 +13,37 @@
         /* LADO ESQUERDO: SEU SELO 3D */
         #espaco-selo-3d { width: 50%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #000; }
         
-        /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
-        #banner-container { width: 50%; height: 100%; position: relative; overflow: hidden; background: #050505; }
+       /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
+#banner-container { 
+    width: 50%; 
+    height: 100%; 
+    position: relative; 
+    
+    /* 🔴 AQUI ESTÁ A CHAVE DO ACABAMENTO: */
+    border-radius: 12px;          /* Arredonda os cantos para casar com o player */
+    overflow: hidden;             /* IMPEDE que a imagem quadrada do patrocinador vase para fora */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); /* Dá profundidade e joga o banner para frente */
+    border: 1px solid #1a1a1a;    /* Moldura grafite ultra fina e profissional */
+    
+    background: #050505; 
+}
         
-        .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; cursor: pointer; }
-        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+.promo-slide { 
+    height: 100%; 
+    width: 100%; 
+    display: none; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    object-fit: fill; 
+    animation: fade 1s; 
+    cursor: pointer; 
+    
+    /* 🟢 GARANTIA ADICIONAL: */
+    border-radius: 12px;          /* Reforça o desenho redondo direto na foto */
+}
+
+@keyframes fade { from {opacity: .4} to {opacity: 1} }
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
