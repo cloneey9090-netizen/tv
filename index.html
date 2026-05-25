@@ -19,55 +19,81 @@
         .promo-slide { height: 100%; width: 100%; display: none; position: absolute; top: 0; left: 0; object-fit: fill; animation: fade 1s; cursor: pointer; }
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
-        #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
+        #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
- /* 📺 1. O AJUSTE FINO NO VISOR DO PLAYER */
-#player {
-    border-radius: 12px;          /* Cantos arredondados estilo Smart TV */
-    overflow: hidden;             /* Corta o vídeo nos cantos para não vazar */
-    border: 2px solid #ff5722;    /* A bordinha laranja que define o contorno */
-    background-color: #000000;
-    /* Sombra escura e profunda para tirar o efeito chapado */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
-    transition: all 0.3s ease;
-}
+        /* 📺 1. O VISOR DO PLAYER LAPIDADO */
+        #player {
+            border-radius: 12px;          /* Cantos arredondados estilo Smart TV */
+            overflow: hidden;             /* Corta o vídeo nos cantos para não vazar */
+            border: 2px solid #ff5722;    /* Bordinha laranja elegante */
+            background-color: #000000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
+            transition: all 0.3s ease;
+            width: 100%;
+            height: 220px;                /* Altura padrão controlada para celular */
+        }
 
-/* 📱 2. OS BOTÕES DE CANAL COM CARA DE APLICATIVO */
-.botao-canal, button, .channel-btn { 
-    /* (Nota: use a classe exata que está nos seus botões atuais) */
-    border-radius: 8px;           /* Cantos suavizados para o dedo tocar */
-    border: 1px solid #222;       /* Linha fina grafite para dar relevo */
-    background: linear-gradient(145deg, #1a1a1a, #0a0a0a); /* Degradê que dá volume */
-    color: #ffffff;
-    padding: 12px;
-    margin-bottom: 8px;           /* Separação para os botões não colarem */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra que joga o botão "para frente" */
-    transition: all 0.2s ease;    /* Movimento suave */
-}
+        #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
-/* ✨ 3. O EFEITO DE TOQUE / CANAL ATIVO (O neon controlado) */
-.botao-canal:hover, .botao-canal:active, .channel-btn.active {
-    background: #111111;
-    border-color: #ff5722;        /* A borda acende em laranja ao selecionar */
-    box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); /* O neon suave só onde interessa */
-    transform: scale(1.02);       /* O botão cresce 2% simulando o clique físico */
-}
+        /* 📱 2. ABRIR YOUTUBE NO TOQUE DO CELULAR */
+        .btn-youtube {
+            border-radius: 8px;
+            border: 1px solid #c00;
+            background: linear-gradient(145deg, #cc181e, #990000);
+            color: #fff;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+        }
 
-/* 🚀 4. O BOTÃO CORINGA DE DETALHES (Abaixo do Player) */
-.botao-link-coringa {
-    border-radius: 8px;
-    background: #ff5722;          /* Cor forte de destaque */
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-    transition: all 0.3s ease;
-}
+        /* 📱 3. OS BOTÕES DE CANAL COM CARA DE APLICATIVO (Classe .canal corrigida) */
+        .canal { 
+            border-radius: 8px;           /* Cantos suavizados para o dedo tocar */
+            border: 1px solid #222;       /* Linha fina grafite para dar relevo */
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a); /* Degradê que dá volume */
+            color: #ffffff;
+            padding: 14px;                /* Um pouco maior para facilitar o toque no celular */
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra que joga o botão pra frente */
+            transition: all 0.2s ease;    /* Movimento suave */
+            font-weight: 500;
+        }
+
+        /* ✨ EFEITO DE SELEÇÃO E TOQUE */
+        .canal:hover, .canal:active {
+            background: #111111;
+            border-color: #ff5722;        /* A borda acende em laranja ao selecionar */
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); /* Neon controlado */
+            transform: scale(1.01);
+        }
+
+        /* 🚀 4. BOTÃO CORINGA DE OFERTAS (Fica no topo da lista se ativado) */
+        #btn-compra-shopee {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            background: #ff5722;          /* Cor forte de destaque */
+            color: white;
+            padding: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            animation: pulsar 2s infinite;
+        }
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 5px 20px rgba(255, 87, 34, 0.7); }
+            100% { transform: scale(1); }
+        }
         
+        /* 💻 AJUSTE PARA COMPUTADORES (TELAS GRANDES) */
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
-            #canais { height: 100%; overflow-y: auto; width: 25%; }
+            #canais { height: 100%; width: 25%; }
         }
     </style>
 </head>
@@ -129,7 +155,7 @@
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
-    function executarCanal(canalObj) {
+    function ejecutarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
         const canaisDiv = document.getElementById("canais");
         
@@ -141,7 +167,7 @@
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } 
-        // 🛍️ MODULO COMERCIAL (VÍDEO DA SHOPEE + BOTÃO)
+        // 🛍️ MODULO COMERCIAL NEUTRO
         else if (canalObj.link.includes("|")) {
             if (clapprPlayer) clapprPlayer.destroy();
             
@@ -151,10 +177,10 @@
 
             playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: contain; background:#000;"></video>`;
             
-            // Injeta o botão no topo da lista de canais para não quebrar o layout
+            // Injeta o botão neutro no topo da lista de canais para não quebrar o layout
             canaisDiv.insertAdjacentHTML('afterbegin', `
                 <a id="btn-compra-shopee" href="${linkAfiliado}" target="_blank">
-                   🛍️ CLIQUE AQUI PARA APROVEITAR A OFERTA
+                   🚀 CLIQUE AQUI PARA APROVEITAR A OFERTA
                 </a>
             `);
         } 
@@ -198,7 +224,6 @@
                     const img = document.createElement('img');
                     img.className = 'promo-slide';
                     
-                    // Se o banner tiver link de redirecionamento (Zap/Insta)
                     if (dadosImg.includes('|')) {
                         let partesImg = dadosImg.split('|');
                         img.src = partesImg[0].trim();
@@ -220,10 +245,10 @@
                     let meuIndice = listaDeVideos.length - 1;
                     if (meuIndice === 0) iniciarPlayer(linha);
                     const div = document.createElement('div');
-                    div.className = 'canal';
+                    div.className = 'canal'; // Mantido a fiação original sincronizada com o CSS
                     div.innerHTML = "▶️ " + nomeTemp;
                     div.onclick = (e) => { 
-                        e.stopPropagation(); indiceAtual = meuIndice; executarCanal(infoCanal);
+                        e.stopPropagation(); indiceAtual = meuIndice; ejecutarCanal(infoCanal);
                     };
                     menu.appendChild(div);
                 }
