@@ -20,28 +20,49 @@
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; } 
-       #player { 
-    width: 100%; 
-    aspect-ratio: 16 / 9; 
-    background: #050505; 
-    flex-shrink: 0; 
-    
-    /* 📺 FUNILARIA VISUAL DO PLAYER */
-    border-radius: 12px;                  /* Arredonda os cantos da moldura */
-    overflow: hidden;                     /* Obriga o vídeo a cortar nos cantos arredondados */
-    border: 2px solid #ff9900;            /* Moldura fina com o laranja oficial da sua TV */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* Sombra pesada para dar efeito 3D flutuante */
-    transition: all 0.3s ease;            /* Movimento suave para quando abrir no WebView */
-}
-        #canais { flex: 1; background: #111; overflow-y: auto; display: flex; flex-direction: column; padding: 5px; }
-        .canal { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-weight: bold; }
-        .canal:hover { background: #ff9900; color: #000; }
-        .btn-youtube { background: #ff0000; color: #fff; padding: 15px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; border-radius: 5px; margin-bottom: 10px; font-size: 16px; width: 100%; }
-        .btn-youtube i { margin-right: 10px; font-size: 20px; }
-        .video-expandido { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 9999; background: #000; }
         
-        /* Botão de Compra da Shopee Dinâmico (Mantendo o layout seguro) */
-        #btn-compra-shopee { display: block; background: #ff5722; color: #fff; text-align: center; padding: 15px; font-weight: bold; text-decoration: none; font-size: 18px; border-radius: 5px; margin: 10px; box-shadow: 0 4px 15px rgba(255,87,34,0.4); }
+ /* 📺 1. O AJUSTE FINO NO VISOR DO PLAYER */
+#player {
+    border-radius: 12px;          /* Cantos arredondados estilo Smart TV */
+    overflow: hidden;             /* Corta o vídeo nos cantos para não vazar */
+    border: 2px solid #ff5722;    /* A bordinha laranja que define o contorno */
+    background-color: #000000;
+    /* Sombra escura e profunda para tirar o efeito chapado */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
+    transition: all 0.3s ease;
+}
+
+/* 📱 2. OS BOTÕES DE CANAL COM CARA DE APLICATIVO */
+.botao-canal, button, .channel-btn { 
+    /* (Nota: use a classe exata que está nos seus botões atuais) */
+    border-radius: 8px;           /* Cantos suavizados para o dedo tocar */
+    border: 1px solid #222;       /* Linha fina grafite para dar relevo */
+    background: linear-gradient(145deg, #1a1a1a, #0a0a0a); /* Degradê que dá volume */
+    color: #ffffff;
+    padding: 12px;
+    margin-bottom: 8px;           /* Separação para os botões não colarem */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra que joga o botão "para frente" */
+    transition: all 0.2s ease;    /* Movimento suave */
+}
+
+/* ✨ 3. O EFEITO DE TOQUE / CANAL ATIVO (O neon controlado) */
+.botao-canal:hover, .botao-canal:active, .channel-btn.active {
+    background: #111111;
+    border-color: #ff5722;        /* A borda acende em laranja ao selecionar */
+    box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); /* O neon suave só onde interessa */
+    transform: scale(1.02);       /* O botão cresce 2% simulando o clique físico */
+}
+
+/* 🚀 4. O BOTÃO CORINGA DE DETALHES (Abaixo do Player) */
+.botao-link-coringa {
+    border-radius: 8px;
+    background: #ff5722;          /* Cor forte de destaque */
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+    transition: all 0.3s ease;
+}
         
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
