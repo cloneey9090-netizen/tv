@@ -136,7 +136,7 @@
             100% { transform: scale(1); }
         }
 
-        /* 📺 CONEXÃO DA MOLDURA EXPANDIDA PARA TELA CHEIA NA TV */
+        /* 📺 CONEXÃO DA MOLDURA EXPANDIDA CORRIGIDA PARA TV BOX (ABSOLUTO) */
         .video-expandido {
             position: fixed !important;
             top: 0 !important;
@@ -151,6 +151,7 @@
             background: #000000 !important;
         }
         
+        /* Força qualquer tipo de player (YouTube Iframe ou Clappr) a engolir a TV toda */
         .video-expandido iframe,
         .video-expandido video,
         .video-expandido .clappr-video,
@@ -242,8 +243,7 @@
         if (botaoAntigo) botaoAntigo.remove();
 
         if (clapprPlayer) clapprPlayer.destroy();
-        // 🔌 AJUSTE DE AUTOPLAY SEGURO PARA O YOUTUBE NA TV: autoplay=1&mute=1
-        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
     }
 
     function ejecutarCanal(canalObj) {
@@ -255,8 +255,7 @@
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
-            // 🔌 ADICIONADO MUTE=1 PARA EVITAR QUE A TV BLOQUEIE O AUTO-PLAY DO YOUTUBE
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } 
         else if (canalObj.link.includes("|")) {
             if (clapprPlayer) clapprPlayer.destroy();
@@ -265,7 +264,7 @@
             let videoPropaganda = partes[0].trim();
             let linkAfiliado = partes[1].trim();
 
-            playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
+            playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: contain; background:#000;"></video>`;
             
             canaisDiv.insertAdjacentHTML('afterbegin', `
                 <a id="btn-compra-shopee" href="${linkAfiliado}" target="_blank">
@@ -311,52 +310,53 @@
             let nomeTemp = "Canal";
 
             linhas.forEach(l => {
-                const linha = l.trim();
-                if (!linha) return;
+                const line = l.trim();
+                if (!line) return;
 
-                if(linha.startsWith('IMG=')) {
-                    let dadosImg = linha.replace('IMG=', '');
+                if(line.startsWith('IMG=')) {
+                    let dadosImg = line.replace('IMG=', '');
                     const img = document.createElement('img');
                     img.className = 'promo-slide';
                     
-          else {
-            if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) playerDiv.innerHTML = "";
-            
-            if (!document.querySelector(".clappr-video")) {
-                iniciarPlayer(canalObj.link);
-            } else { 
-                // Carrega o canal novo no player que já existe
-                clapprPlayer.load(canalObj.link); 
-                
-                // 🔌 RECONECTANDO O SENSOR: Força o Clappr a monitorar o fim do vídeo de novo!
-                clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-                    let canalAtual = listaDeVideos[indiceAtual];
-                    if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
-                        indiceAtual++;
-                        if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
-                        ejecutarCanal(listaDeVideos[indiceAtual]);
+                    if (dadosImg.includes('|')) {
+                        let partesImg = dadosImg.split('|');
+                        img.src = partesImg[0].trim();
+                        let linkDestino = partesImg[1].trim();
+                        img.onclick = () => window.open(linkDestino, '_blank');
                     } else {
-                        clapprPlayer.play();
+                        img.src = dadosImg;
                     }
-                });
-            }
-            
-            // Controle do som (Mute se for AUTO, som normal se for canal comum)
-            if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                clapprPlayer.unmute(); 
-                clapprPlayer.setVolume(100);
-            } else { 
-                clapprPlayer.mute(); 
-            }
-            clapprPlayer.play();
-        }
-    }
+                    
+                    container.appendChild(img);
+                    imagens.push(img);
+                }
+                
+                if(line.includes("#EXTINF")) { 
+                    nomeTemp = line.split(',')[1] || "Canal"; 
+                }
+                else if(line.startsWith("http")) {
+                    let infoCanal = { nome: nomeTemp, link: line };
+                    listaDeVideos.push(infoCanal);
+                    let meuIndice = listaDeVideos.length - 1;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'canal'; 
+                    div.innerHTML = "▶️ " + nomeTemp;
+                    div.onclick = (e) => { 
+                        e.stopPropagation(); 
+                        indiceAtual = meuIndice; 
+                        ejecutarCanal(infoCanal);
+                    };
+                    menu.appendChild(div);
+                }
+            });
 
-            // 🔌 SEU BLOCO ORIGINAL QUE VOCÊ MANDOU, INTEGRADO PERFEITAMENTE:
+     // 🔌 NOVO CIRCUITO AUTO CORRIGIDO:
             if (listaDeVideos.length > 0) {
-                // Procura se tem algum canal configurado como AUTO na lista
+                // Caça o canal AUTO usando as informações da linha limpa
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-                // Se achar o AUTO, começa por ele. Se não, começa pelo canal 1 (índice 0)
+                
+                // Se o sistema achar, inicia o AUTO. Se não achar, abre o primeiro canal (0)
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
                 ejecutarCanal(listaDeVideos[indiceAtual]);
             }
