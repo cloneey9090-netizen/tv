@@ -240,10 +240,12 @@ header {
                    🚀 CLIQUE AQUI PARA APROVEITAR A OFERTA
                 </a>
             `);
-        }        
-           else {
+        }  
+            else {
             // Limpa lixos de iframes ou vídeos antigos para o player nascer limpo
-            if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) playerDiv.innerHTML = "";
+            if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) {
+                playerDiv.innerHTML = "";
+            }
             
             // 🔌 Ajuste de fiação: Se for canal AUTO, ele já nasce mudo e dá play direto na raiz!
             if (!document.querySelector(".clappr-video")) {
@@ -261,7 +263,8 @@ header {
                 clapprPlayer.play();
             }
         }
- }
+    } // 👈 ESSA CHAVE FECHA A FUNÇÃO PRINCIPAL (EX: EXECUTARCANAL)
+        
     function toggleSmartFull() {
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
