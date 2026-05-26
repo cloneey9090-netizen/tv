@@ -26,7 +26,7 @@
             flex-shrink: 0; 
         }        
         
-        /* LADO ESQUERDO: SEU SELO 3D */
+        /* LADO ESQUERDO: SEU SELO 3D LIMPO */
         #espaco-selo-3d { 
             width: 50%; 
             height: 100%; 
@@ -36,12 +36,12 @@
             position: relative; 
             overflow: hidden; 
             background: #000; 
-            border: none !important;         
+            border: none !important;          
             outline: none !important;        
             box-shadow: none !important;     
         }
         
-        /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
+        /* LADO DIREITO: BANNERS PROMO COM CANTOS ARREDONDADOS */
         #banner-container { 
             width: 50%; 
             height: 100%; 
@@ -70,7 +70,7 @@
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
-      /* 📺 VISOR DO PLAYER LAPIDADO E PREENCHIDO */
+        /* 📺 VISOR DO PLAYER FLUTUANTE PREMIUM */
         #player {
             border-radius: 12px;          
             overflow: hidden;             
@@ -79,25 +79,9 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
             transition: all 0.3s ease;
             width: 100%;
-            
-            /* 🔌 AS NOVAS LINHAS QUE FAZEM O VÍDEO PREENCHER TUDO AUTOMÁTICO: */
-            position: relative !important;
-            padding-bottom: 56.25% !important; /* Mantém a proporção exata de TV (16:9) */
-            height: 0 !important; /* Deixa o padding-bottom comandar a altura sozinho */
+            height: 220px;                
         }
 
-        /* 🖼️ ESSE BLOCO OBRIGA QUALQUER VÍDEO OU IFRAME A ENGOLIR A TELA INTEIRA DO PLAYER */
-        #player iframe, 
-        #player video, 
-        #player .clappr-video,
-        #player > div {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-        }
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
         .btn-youtube {
@@ -112,6 +96,7 @@
             transition: all 0.2s ease;
         }
 
+        /* 📱 BOTÕES ESTILO MÓDULO EM RELEVO */
         .canal { 
             border-radius: 8px;           
             border: 1px solid #222;       
@@ -131,6 +116,7 @@
             transform: scale(1.01);
         }
 
+        /* 🚀 BOTÃO CORINGA DE OFERTAS */
         #btn-compra-shopee {
             display: block;
             text-align: center;
@@ -148,6 +134,26 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.02); box-shadow: 0 5px 20px rgba(255, 87, 34, 0.7); }
             100% { transform: scale(1); }
+        }
+
+        /* 📺 CONEXÃO DA MOLDURA EXPANDIDA PARA TELA CHEIA NA TV */
+        .video-expandido {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            border-radius: 0px !important;
+            border: none !important;
+        }
+        /* Garante que o player interno acompanhe a moldura expandida */
+        .video-expandido iframe,
+        .video-expandido video,
+        .video-expandido .clappr-video,
+        .video-expandido > div {
+            width: 100% !important;
+            height: 100% !important;
         }
         
         @media (min-width: 800px) {
@@ -189,7 +195,7 @@
     let indiceAtual = 0;
     let clapprPlayer;
 
-    // 📺 NOVO MOTOR REFORÇADO COM SUPORTE DUPLO (LIVE + MP4)
+    // 📺 MOTOR DUPLO (LIVE + MP4)
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
         
@@ -197,7 +203,6 @@
             parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
 
-        // Central de passagem de canais automotivos
         function avancarAuto() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
@@ -209,12 +214,10 @@
             }
         }
 
-        // Evento 1: Fim do vídeo na transmissão ao vivo padrão
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
             avancarAuto();
         });
 
-        // Evento 2: Captura o fim de arquivos .mp4 usando o player nativo interno
         clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
             const videoTag = document.querySelector('#player video');
             if (videoTag) {
@@ -278,6 +281,7 @@
         }
     }
 
+    // 🔄 REATIVANDO O CIRCUITO SMART FULL NA MOLDURA INTEIRA
     function toggleSmartFull() {
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
@@ -301,7 +305,7 @@
                 if (!linha) return;
 
                 if(linha.startsWith('IMG=')) {
-                    let dadosImg = linha.replace('IMG=', '');
+                    let dadosImg = line = linha.replace('IMG=', '');
                     const img = document.createElement('img');
                     img.className = 'promo-slide';
                     
@@ -338,11 +342,8 @@
                 }
             });
 
-            // 🔌 PARTIDA AUTOMÁTICA INTELIGENTE:
             if (listaDeVideos.length > 0) {
-                // Procura se tem algum canal configurado como AUTO na lista
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-                // Se achar o AUTO, começa por ele. Se não, começa pelo canal 1 (índice 0)
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
                 ejecutarCanal(listaDeVideos[indiceAtual]);
             }
