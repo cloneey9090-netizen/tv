@@ -104,6 +104,8 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
             transition: all 0.2s ease;    
             font-weight: 500;
+            user-select: none; /* Impede de selecionar texto ao segurar o botão */
+            -webkit-user-select: none;
         }
 
         .canal:hover, .canal:active {
@@ -164,8 +166,7 @@
 <body>
 
 <header id="cabecalho">
-    <div id="espaco-selo-3d">
-        </div>
+    <div id="espaco-selo-3d"></div>
     <div id="banner-container"></div>
 </header>
 
@@ -184,8 +185,8 @@
     // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
     // =========================================================================
     const urlLista = "lista.txt"; 
-    const LINK_LOGO_3D = "https://i.postimg.cc/PqKbmKV5/0514.gif"; // Substitua aqui o link do seu Selo 3D
-    const LARGURA_LOGO_3D = "150%"; // Altere aqui o tamanho/zoom do seu selo se precisar ajustar
+    const LINK_LOGO_3D = "https://i.postimg.cc/PqKbmKV5/0514.gif"; 
+    const LARGURA_LOGO_3D = "150%"; 
     // =========================================================================
 
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
@@ -198,7 +199,6 @@
     let indiceAtual = 0;
     let clapprPlayer;
 
-    // Injeta o selo 3D usando as configurações do painel lá do topo
     const espacoSelo = document.getElementById("espaco-selo-3d");
     if(espacoSelo) {
         espacoSelo.innerHTML = `<img src="${LINK_LOGO_3D}" style="height: 100%; width: ${LARGURA_LOGO_3D}; object-fit: contain;">`;
@@ -326,11 +326,11 @@
             let logoTemp = "";
 
             linhas.forEach(l => {
-                const linha = l.trim();
-                if (!linha) return;
+                const inline = l.trim();
+                if (!inline) return;
 
-                if(linha.startsWith('IMG=')) {
-                    let dadosImg = linha.replace('IMG=', '');
+                if(inline.startsWith('IMG=')) {
+                    let dadosImg = inline.replace('IMG=', '');
                     const img = document.createElement('img');
                     img.className = 'promo-slide';
                     
@@ -347,19 +347,19 @@
                     imagens.push(img);
                 }
                 
-                if(linha.includes("#EXTINF")) { 
-                    nomeTemp = linha.split(',')[1] || "Canal"; 
+                if(inline.includes("#EXTINF")) { 
+                    nomeTemp = inline.split(',')[1] || "Canal"; 
                     
-                    if (linha.includes('tvg-logo="')) {
-                        logoTemp = linha.split('tvg-logo="')[1].split('"')[0].trim();
-                    } else if (linha.includes('logo="')) {
-                        logoTemp = linha.split('logo="')[1].split('"')[0].trim();
+                    if (inline.includes('tvg-logo="')) {
+                        logoTemp = inline.split('tvg-logo="')[1].split('"')[0].trim();
+                    } else if (inline.includes('logo="')) {
+                        logoTemp = inline.split('logo="')[1].split('"')[0].trim();
                     } else {
                         logoTemp = "";
                     }
                 }
-                else if(linha.startsWith("http")) {
-                    let infoCanal = { nome: nomeTemp, link: linha, logo: logoTemp };
+                else if(inline.startsWith("http")) {
+                    let infoCanal = { nome: nomeTemp, link: inline, logo: logoTemp };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
                     
@@ -377,17 +377,29 @@
                         div.innerHTML = "▶️ " + nomeTemp;
                     }
                     
-                    div.onclick = (e) => { 
-                        e.stopPropagation(); 
-                        indiceAtual = meuIndice; 
-                        toggleSmartFull(true); 
-                        ejecutarCanal(infoCanal, false);
+                    // 🔌 MOTOR DE CLIQUE ADAPTADO PARA TV BOX (MÉTODO DO TOQUE LONGO)
+                    let timerClique;
+                    let foiCliqueLongo = false;
+
+                    // Evento para quando o usuário aperta o botão (Mouse ou Controle)
+                    div.onmousedown = div.ontouchstart = (e) => {
+                        foiCliqueLongo = false;
+                        timerClique = setTimeout(() => {
+                            foiCliqueLongo = true;
+                            indiceAtual = meuIndice;
+                            ejecutarCanal(infoCanal, true); // 💪 CLIQUE LONGO: AMPLIA DIRETO
+                        }, 800); // Se segurar por 800 milissegundos (menos de 1 segundo), vira tela cheia
                     };
-                    
-                    div.ondblclick = (e) => {
-                        e.stopPropagation();
-                        indiceAtual = meuIndice;
-                        ejecutarCanal(infoCanal, true); 
+
+                    // Evento para quando o usuário solta o botão
+                    div.onmouseup = div.ontouchend = (e) => {
+                        clearTimeout(timerClique); // Cancela o cronômetro
+                        if (!foiCliqueLongo) {
+                            // 😎 CLIQUE CURTO: Troca o canal normal e encolhe a tela
+                            indiceAtual = meuIndice; 
+                            toggleSmartFull(true); 
+                            ejecutarCanal(infoCanal, false);
+                        }
                     };
                     
                     menu.appendChild(div);
