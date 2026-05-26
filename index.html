@@ -201,24 +201,7 @@ header {
             } else { clapprPlayer.play(); }
         });
     }
-    
 
-   // 🔌 GATILHO AUTO: Dispara o primeiro canal assim que a página abrir
-window.addEventListener('DOMContentLoaded', () => {
-    // Aguarda um pequeno instante (meio segundo) para dar tempo da lista carregar
-    setTimeout(() => {
-        if (listaDeVideos && listaDeVideos.length > 0) {
-            // Procura o índice do canal que tem "AUTO" no nome
-            let indiceAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-            
-            // Se achar o canal AUTO, começa por ele. Se não, começa pelo primeiro da lista (índice 0)
-            indiceAtual = indiceAuto !== -1 ? indiceAuto : 0;
-            
-            // Dá partida no motor do player automaticamente!
-            iniciarPlayer(listaDeVideos[indiceAtual].link);
-        }
-    }, 500); 
-});
     
     function abrirYoutube() {
         const playerDiv = document.getElementById("player");
