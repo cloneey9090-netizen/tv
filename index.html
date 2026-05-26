@@ -319,38 +319,38 @@
                     const img = document.createElement('img');
                     img.className = 'promo-slide';
                     
-                    if (dadosImg.includes('|')) {
-                        let partesImg = dadosImg.split('|');
-                        img.src = partesImg[0].trim();
-                        let linkDestino = partesImg[1].trim();
-                        img.onclick = () => window.open(linkDestino, '_blank');
-                    } else {
-                        img.src = dadosImg;
-                    }
-                    
-                    container.appendChild(img);
-                    imagens.push(img);
-                }
+          else {
+            if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) playerDiv.innerHTML = "";
+            
+            if (!document.querySelector(".clappr-video")) {
+                iniciarPlayer(canalObj.link);
+            } else { 
+                // Carrega o canal novo no player que já existe
+                clapprPlayer.load(canalObj.link); 
                 
-                if(linha.includes("#EXTINF")) { 
-                    nomeTemp = linha.split(',')[1] || "Canal"; 
-                }
-                else if(linha.startsWith("http")) {
-                    let infoCanal = { nome: nomeTemp, link: linha };
-                    listaDeVideos.push(infoCanal);
-                    let meuIndice = listaDeVideos.length - 1;
-                    
-                    const div = document.createElement('div');
-                    div.className = 'canal'; 
-                    div.innerHTML = "▶️ " + nomeTemp;
-                    div.onclick = (e) => { 
-                        e.stopPropagation(); 
-                        indiceAtual = meuIndice; 
-                        ejecutarCanal(infoCanal);
-                    };
-                    menu.appendChild(div);
-                }
-            });
+                // 🔌 RECONECTANDO O SENSOR: Força o Clappr a monitorar o fim do vídeo de novo!
+                clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
+                    let canalAtual = listaDeVideos[indiceAtual];
+                    if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
+                        indiceAtual++;
+                        if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+                        ejecutarCanal(listaDeVideos[indiceAtual]);
+                    } else {
+                        clapprPlayer.play();
+                    }
+                });
+            }
+            
+            // Controle do som (Mute se for AUTO, som normal se for canal comum)
+            if (!canalObj.nome.toUpperCase().includes("AUTO")) {
+                clapprPlayer.unmute(); 
+                clapprPlayer.setVolume(100);
+            } else { 
+                clapprPlayer.mute(); 
+            }
+            clapprPlayer.play();
+        }
+    }
 
             // 🔌 SEU BLOCO ORIGINAL QUE VOCÊ MANDOU, INTEGRADO PERFEITAMENTE:
             if (listaDeVideos.length > 0) {
