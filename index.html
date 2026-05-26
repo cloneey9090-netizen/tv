@@ -70,7 +70,7 @@
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
-        /* 📺 VISOR DO PLAYER FLUTUANTE PREMIUM */
+        /* 📺 VISOR DO PLAYER CORRIGIDO (PREENCHE AS LATERAIS) */
         #player {
             border-radius: 12px;          
             overflow: hidden;             
@@ -79,7 +79,25 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
             transition: all 0.3s ease;
             width: 100%;
-            height: 220px;                
+            
+            /* Nova fiação mecânica para manter proporção de TV sem esmagar nas laterais */
+            position: relative !important;
+            padding-bottom: 56.25% !important; 
+            height: 0 !important;               
+        }
+
+        /* 🖼️ FORÇA O CONTEÚDO INTERNO (CLAPPR, MP4 E YOUTUBE) A CHEGAR ATÉ A BORDA */
+        #player iframe, 
+        #player video, 
+        #player .clappr-video,
+        #player .player,
+        #player > div {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: fill !important; /* Estica o sinal para matar as faixas pretas */
         }
 
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -146,19 +164,19 @@
             z-index: 99999 !important;
             border-radius: 0px !important;
             border: none !important;
-        }
-        /* Garante que o player interno acompanhe a moldura expandida */
-        .video-expandido iframe,
-        .video-expandido video,
-        .video-expandido .clappr-video,
-        .video-expandido > div {
-            width: 100% !important;
-            height: 100% !important;
+            padding-bottom: 0 !important; /* Desativa a proporção para assumir a TV toda */
+            height: 100vh !important;
         }
         
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
-            #player { width: 75%; height: 100%; position: sticky; top: 0; }
+            #player { 
+                width: 75%; 
+                /* No computador ajusta a altura dinamicamente */
+                padding-bottom: 42% !important; 
+                position: sticky; 
+                top: 0; 
+            }
             #canais { height: 100%; width: 25%; }
         }
     </style>
@@ -255,7 +273,7 @@
             let videoPropaganda = partes[0].trim();
             let linkAfiliado = partes[1].trim();
 
-            playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: contain; background:#000;"></video>`;
+            playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: fill; background:#000;"></video>`;
             
             canaisDiv.insertAdjacentHTML('afterbegin', `
                 <a id="btn-compra-shopee" href="${linkAfiliado}" target="_blank">
@@ -281,7 +299,7 @@
         }
     }
 
-    // 🔄 REATIVANDO O CIRCUITO SMART FULL NA MOLDURA INTEIRA
+    // 🔄 CIRCUITO SMART FULL NA MOLDURA INTEIRA
     function toggleSmartFull() {
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
@@ -305,7 +323,7 @@
                 if (!linha) return;
 
                 if(linha.startsWith('IMG=')) {
-                    let dadosImg = line = linha.replace('IMG=', '');
+                    let dadosImg = linha.replace('IMG=', '');
                     const img = document.createElement('img');
                     img.className = 'promo-slide';
                     
