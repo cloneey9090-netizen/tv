@@ -202,32 +202,23 @@ header {
         });
     }
     
-clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-            let canalAtual = listaDeVideos[indiceAtual];
-            if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
-                indiceAtual++;
-                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
-                executarCanal(listaDeVideos[indiceAtual]);
-            } else { clapprPlayer.play(); }
-        });
-    } // <- ESSA É A CHAVE ONDE TERMINA A SUA FUNÇÃO INICIARPLAYER
 
-    // 🔌 JUNTE O GATILHO AUTO LOGO AQUI ABAIXO DELA:
-    window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
-            if (listaDeVideos && listaDeVideos.length > 0) {
-                // Procura o canal "AUTO" na lista
-                let indiceAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-                
-                // Se achar o AUTO vai para ele, se não, começa do primeiro (0)
-                indiceAtual = indiceAuto !== -1 ? indiceAuto : 0;
-                
-                // Liga o player sozinho!
-                iniciarPlayer(listaDeVideos[indiceAtual].link);
-            }
-        }, 500); // 500 milissegundos de espera para a lista carregar tranquila
-    });
-
+   // 🔌 GATILHO AUTO: Dispara o primeiro canal assim que a página abrir
+window.addEventListener('DOMContentLoaded', () => {
+    // Aguarda um pequeno instante (meio segundo) para dar tempo da lista carregar
+    setTimeout(() => {
+        if (listaDeVideos && listaDeVideos.length > 0) {
+            // Procura o índice do canal que tem "AUTO" no nome
+            let indiceAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+            
+            // Se achar o canal AUTO, começa por ele. Se não, começa pelo primeiro da lista (índice 0)
+            indiceAtual = indiceAuto !== -1 ? indiceAuto : 0;
+            
+            // Dá partida no motor do player automaticamente!
+            iniciarPlayer(listaDeVideos[indiceAtual].link);
+        }
+    }, 500); 
+});
     
     function abrirYoutube() {
         const playerDiv = document.getElementById("player");
