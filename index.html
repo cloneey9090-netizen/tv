@@ -351,8 +351,12 @@
                 }
             });
 
+     // 🔌 NOVO CIRCUITO AUTO CORRIGIDO:
             if (listaDeVideos.length > 0) {
+                // Caça o canal AUTO usando as informações da linha limpa
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+                
+                // Se o sistema achar, inicia o AUTO. Se não achar, abre o primeiro canal (0)
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
                 ejecutarCanal(listaDeVideos[indiceAtual]);
             }
