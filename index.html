@@ -201,7 +201,34 @@ header {
             } else { clapprPlayer.play(); }
         });
     }
+    
+clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
+            let canalAtual = listaDeVideos[indiceAtual];
+            if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
+                indiceAtual++;
+                if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+                executarCanal(listaDeVideos[indiceAtual]);
+            } else { clapprPlayer.play(); }
+        });
+    } // <- ESSA É A CHAVE ONDE TERMINA A SUA FUNÇÃO INICIARPLAYER
 
+    // 🔌 JUNTE O GATILHO AUTO LOGO AQUI ABAIXO DELA:
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (listaDeVideos && listaDeVideos.length > 0) {
+                // Procura o canal "AUTO" na lista
+                let indiceAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+                
+                // Se achar o AUTO vai para ele, se não, começa do primeiro (0)
+                indiceAtual = indiceAuto !== -1 ? indiceAuto : 0;
+                
+                // Liga o player sozinho!
+                iniciarPlayer(listaDeVideos[indiceAtual].link);
+            }
+        }, 500); // 500 milissegundos de espera para a lista carregar tranquila
+    });
+
+    
     function abrirYoutube() {
         const playerDiv = document.getElementById("player");
         
