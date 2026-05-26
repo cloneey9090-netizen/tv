@@ -241,18 +241,27 @@ header {
                 </a>
             `);
         } 
-        else {
+            
+else {
+            // Limpa lixos de iframes ou vídeos antigos para o player nascer limpo
             if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) playerDiv.innerHTML = "";
+            
+            // 🔌 Ajuste de fiação: Se for canal AUTO, ele já nasce mudo e dá play direto na raiz!
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
-            } else { clapprPlayer.load(canalObj.link); }
-            
-            if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                clapprPlayer.unmute(); clapprPlayer.setVolume(100);
-            } else { clapprPlayer.mute(); }
-            clapprPlayer.play();
+            } else { 
+                clapprPlayer.load(canalObj.link); 
+                
+                // Só aplica os comandos se o player já existir e estiver trocando de canal
+                if (!canalObj.nome.toUpperCase().includes("AUTO")) {
+                    clapprPlayer.unmute(); 
+                    clapprPlayer.setVolume(100);
+                } else { 
+                    clapprPlayer.mute(); 
+                }
+                clapprPlayer.play();
+            }
         }
-    }
 
     function toggleSmartFull() {
         const p = document.getElementById('player');
