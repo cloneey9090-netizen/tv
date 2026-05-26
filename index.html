@@ -94,16 +94,7 @@
             margin-bottom: 4px;
         }
 
-        /* CONTAINER DO BOTÃO DE CANAL */
-        .canal-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            width: 100%;
-        }
-
         .canal { 
-            flex: 1;
             border-radius: 8px;           
             border: 1px solid #222;       
             background: linear-gradient(145deg, #1a1a1a, #0a0a0a); 
@@ -118,27 +109,8 @@
         .canal:hover, .canal:active {
             background: #111111;
             border-color: #ff5722;        
-        }
-
-        /* 📺 BOTÃO ADICIONAL EXCLUSIVO PARA AMPLIAR */
-        .btn-ampliar {
-            background: linear-gradient(145deg, #ff5722, #d84315);
-            border: none;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-ampliar:hover, .btn-ampliar:active {
-            background: #ff7043;
-            box-shadow: 0 0 12px rgba(255, 87, 34, 0.6);
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); 
+            transform: scale(1.01);
         }
 
         #btn-compra-shopee {
@@ -258,6 +230,7 @@
         ejecutarCanal(listaDeVideos[indiceAtual]);
     }
 
+    // Ao abrir a playlist do YouTube por esse botão, ele também já joga para frente em tela cheia
     function abrirYoutube() {
         const playerDiv = document.getElementById("player");
         const botaoAntigo = document.getElementById("btn-compra-shopee");
@@ -265,6 +238,7 @@
 
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+        toggleSmartFull(false); // Joga para frente
     }
 
     function toggleSmartFull(forçarFechar = false) {
@@ -277,9 +251,9 @@
             c.style.display = 'flex';
             lista.style.display = 'flex';
         } else {
-            p.classList.toggle('video-expandido');
-            c.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
-            lista.style.display = p.classList.contains('video-expandido') ? 'none' : 'flex';
+            p.classList.add('video-expandido'); // Mantém expandido ao ativar
+            c.style.display = 'none';
+            lista.style.display = 'none';
         }
     }
 
@@ -389,50 +363,43 @@
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
                     
-                    // 🔌 NOVO CIRCUITO MECÂNICO: DUPLO BOTÃO FIXO
-                    const containerCanal = document.createElement('div');
-                    containerCanal.className = 'canal-container';
-
-                    const divCanal = document.createElement('div');
-                    divCanal.className = 'canal'; 
+                    const div = document.createElement('div');
+                    div.className = 'canal'; 
                     
                     if (infoCanal.logo) {
-                        divCanal.innerHTML = `
+                        div.innerHTML = `
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <img src="${infoCanal.logo}" style="width: 28px; height: 28px; object-fit: contain; border-radius: 4px; background: rgba(0,0,0,0.5);" onerror="this.style.display='none'">
                                 <span style="font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nomeTemp}</span>
                             </div>
                         `;
                     } else {
-                        divCanal.innerHTML = "▶️ " + nomeTemp;
+                        div.innerHTML = "▶️ " + nomeTemp;
                     }
                     
-                    // Clique comum no canal: Abre na caixinha pequena
-                    divCanal.onclick = () => { 
+                    // 🔌 RETORNO AO CLIQUE SIMPLES E DIRETO: TROCA O CANAL E JÁ AMPLIA NA HORA!
+                    div.onclick = (e) => { 
+                        e.stopPropagation();
                         indiceAtual = meuIndice; 
-                        toggleSmartFull(true); // Garante que fecha a tela cheia
-                        ejecutarCanal(infoCanal, false);
-                    };
-
-                    // Botão 📺 do lado do canal: Abre direto em Tela Cheia
-                    const btnAmpliar = document.createElement('button');
-                    btnAmpliar.className = 'btn-ampliar';
-                    btnAmpliar.innerHTML = '<i class="fas fa-tv"></i>';
-                    btnAmpliar.onclick = () => {
-                        indiceAtual = meuIndice;
-                        ejecutarCanal(infoCanal, true); // Abre o player direto na frente de tudo
+                        
+                        // Se o canal clicado for o "AUTO", ele roda na janelinha padrão. Qualquer outro pula pra tela cheia!
+                        if (infoCanal.nome.toUpperCase().includes("AUTO")) {
+                            toggleSmartFull(true); // Força encolher no Auto
+                            ejecutarCanal(infoCanal, false);
+                        } else {
+                            ejecutarCanal(infoCanal, true); // True força a ir para a frente e ampliar direto!
+                        }
                     };
                     
-                    containerCanal.appendChild(divCanal);
-                    containerCanal.appendChild(btnAmpliar);
-                    menu.appendChild(containerCanal);
+                    menu.appendChild(div);
                 }
             });
 
+            // Partida inicial padrão do aplicativo
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-                ejecutarCanal(listaDeVideos[indiceAtual]);
+                ejecutarCanal(listaDeVideos[indiceAtual], false); // Inicializa normal sem ampliar
             }
 
             if(imagens.length > 0) showSlides();
