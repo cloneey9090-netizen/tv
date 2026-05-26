@@ -77,7 +77,25 @@
             transition: all 0.3s ease;
             width: 100%;
             height: 220px;                
-            cursor: pointer; /* Deixa a mãozinha indicando que dá para clicar e voltar */
+            position: relative;
+        }
+
+        /* 🔘 CAMADA INVISÍVEL PARA FECHAR A TELA CHEIA NA TV BOX */
+        #capa-fechar-fullscreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 80px; /* Cria uma linha de toque invisível no topo da tela */
+            background: rgba(0, 0, 0, 0.01); /* Quase invisível, mas intercepta o clique */
+            z-index: 999999;
+            cursor: pointer;
+        }
+
+        /* Um pequeno indicador visual discreto só para o usuário saber onde clicar se passar o mouse */
+        #capa-fechar-fullscreen:hover {
+            background: rgba(255, 87, 34, 0.1);
         }
 
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -139,7 +157,7 @@
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            z-index: 99999 !important;
+            z-index: 99995 !important;
             border-radius: 0px !important;
             border: none !important;
             margin: 0 !important;
@@ -153,7 +171,6 @@
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            pointer-events: none; /* Faz o clique atravessar o vídeo e bater direto na div #player */
         }
         
         @media (min-width: 800px) {
@@ -171,7 +188,7 @@
 </header>
 
 <div id="main">
-    <div id="player" onclick="verificarSaidaTelaCheia()"></div> 
+    <div id="player"></div> 
     <div id="canais">
         <button class="btn-youtube" onclick="abrirYoutube()">
             <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
@@ -179,6 +196,8 @@
         <div id="lista-canais"></div>
     </div> 
 </div>
+
+<div id="capa-fechar-fullscreen" onclick="verificarSaidaTelaCheia()"></div>
 
 <script>
     // =========================================================================
@@ -230,7 +249,6 @@
         indiceAtual++;
         if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
         
-        // Se avançar automaticamente para um canal comum ou auto, tira da tela cheia pra não travar o app
         if (!listaDeVideos[indiceAtual].link.includes("|")) {
             toggleSmartFull(true); 
         }
@@ -245,34 +263,30 @@
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
         
-        // Abre o Youtube direto em tela cheia
-        const p = document.getElementById('player');
-        p.classList.add('video-expandido');
-        document.getElementById('cabecalho').style.display = 'none';
-        document.getElementById('canais').style.display = 'none';
+        toggleSmartFull(false); 
     }
 
-    // 🔌 SENSOR DE TOQUE PARA VOLTAR: Se clicar no player em tela cheia, ele encolhe na hora!
+    // 🔌 Função disparada ao clicar na barra invisível do topo
     function verificarSaidaTelaCheia() {
-        const p = document.getElementById('player');
-        if (p.classList.contains('video-expandido')) {
-            toggleSmartFull(true);
-        }
+        toggleSmartFull(true);
     }
 
     function toggleSmartFull(forçarFechar = false) {
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
         const lista = document.getElementById('canais');
+        const capaFechar = document.getElementById('capa-fechar-fullscreen');
         
         if (forçarFechar) {
             p.classList.remove('video-expandido');
             c.style.display = 'flex';
             lista.style.display = 'flex';
+            capaFechar.style.display = 'none'; // Some com a barra invisível
         } else {
             p.classList.add('video-expandido');
             c.style.display = 'none';
             lista.style.display = 'none';
+            capaFechar.style.display = 'block'; // Ativa a barra invisível por cima do vídeo
         }
     }
 
@@ -283,10 +297,7 @@
         if (botaoAntigo) botaoAntigo.remove();
 
         if (ampliarDireto) {
-            const p = document.getElementById('player');
-            p.classList.add('video-expandido');
-            document.getElementById('cabecalho').style.display = 'none';
-            canaisDiv.style.display = 'none';
+            toggleSmartFull(false);
         }
 
         if (canalObj.link.includes("youtube.com")) {
@@ -304,7 +315,7 @@
             playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
             
             document.getElementById('video-propaganda').onended = function() {
-                toggleSmartFull(true); // Encolhe a tela ao terminar a propaganda promocional
+                toggleSmartFull(true); 
                 avancarAuto();
             };
             
