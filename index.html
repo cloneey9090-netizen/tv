@@ -7,92 +7,83 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-       body { 
-    background: #000; 
-    color: #fff; 
-    font-family: sans-serif; 
-    margin: 0; 
-    display: flex; 
-    flex-direction: column; 
-    height: 100vh; 
-    overflow: hidden; 
-}
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
 
-header { 
-    background: #000; 
-    /* 🛠️ A SOLDA: Removemos a border-bottom daqui para apagar a linha de vez! */
-    height: 120px; 
-    display: flex; 
-    width: 100%; 
-    flex-shrink: 0; 
-} 
+        header { 
+            background: #000; 
+            height: 120px; 
+            display: flex; 
+            width: 100%; 
+            flex-shrink: 0; 
+        }        
         
         /* LADO ESQUERDO: SEU SELO 3D */
         #espaco-selo-3d { 
-    width: 50%; 
-    height: 100%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    position: relative; 
-    overflow: hidden; 
-    background: #000; 
-    
-    /* 🛠️ AS SOLDAS PARA APAGAR A LINHA AMARELA */
-    border: none !important;         /* Desarma qualquer borda que venha de outro lugar */
-    outline: none !important;        /* Remove qualquer contorno fantasma */
-    box-shadow: none !important;     /* Garante que nenhuma sombra clara vire uma linha */
-}
+            width: 50%; 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            overflow: hidden; 
+            background: #000; 
+            border: none !important;         
+            outline: none !important;        
+            box-shadow: none !important;     
+        }
         
-       /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
-#banner-container { 
-    width: 50%; 
-    height: 100%; 
-    position: relative; 
-    
-    /* 🔴 AQUI ESTÁ A CHAVE DO ACABAMENTO: */
-    border-radius: 12px;          /* Arredonda os cantos para casar com o player */
-    overflow: hidden;             /* IMPEDE que a imagem quadrada do patrocinador vase para fora */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); /* Dá profundidade e joga o banner para frente */
-    border: 1px solid #1a1a1a;    /* Moldura grafite ultra fina e profissional */
-    
-    background: #050505; 
-}
+        /* LADO DIREITO: BANNERS PROMO (VIA LISTA.TXT) */
+        #banner-container { 
+            width: 50%; 
+            height: 100%; 
+            position: relative; 
+            border-radius: 12px;          
+            overflow: hidden;             
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); 
+            border: 1px solid #1a1a1a;    
+            background: #050505; 
+        }
         
-.promo-slide { 
-    height: 100%; 
-    width: 100%; 
-    display: none; 
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    object-fit: fill; 
-    animation: fade 1s; 
-    cursor: pointer; 
-    
-    /* 🟢 GARANTIA ADICIONAL: */
-    border-radius: 12px;          /* Reforça o desenho redondo direto na foto */
-}
+        .promo-slide { 
+            height: 100%; 
+            width: 100%; 
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            object-fit: fill; 
+            animation: fade 1s; 
+            cursor: pointer; 
+            border-radius: 12px;          
+        }
 
-@keyframes fade { from {opacity: .4} to {opacity: 1} }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
-        /* 📺 1. O VISOR DO PLAYER LAPIDADO */
+        /* 📺 VISOR DO PLAYER LAPIDADO */
         #player {
-            border-radius: 12px;          /* Cantos arredondados estilo Smart TV */
-            overflow: hidden;             /* Corta o vídeo nos cantos para não vazar */
-            border: 2px solid #ff5722;    /* Bordinha laranja elegante */
+            border-radius: 12px;          
+            overflow: hidden;             
+            border: 2px solid #ff5722;    
             background-color: #000000;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
             transition: all 0.3s ease;
             width: 100%;
-            height: 220px;                /* Altura padrão controlada para celular */
+            height: 220px;                
         }
 
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
-        /* 📱 2. ABRIR YOUTUBE NO TOQUE DO CELULAR */
         .btn-youtube {
             border-radius: 8px;
             border: 1px solid #c00;
@@ -105,34 +96,31 @@ header {
             transition: all 0.2s ease;
         }
 
-        /* 📱 3. OS BOTÕES DE CANAL COM CARA DE APLICATIVO (Classe .canal corrigida) */
         .canal { 
-            border-radius: 8px;           /* Cantos suavizados para o dedo tocar */
-            border: 1px solid #222;       /* Linha fina grafite para dar relevo */
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a); /* Degradê que dá volume */
+            border-radius: 8px;           
+            border: 1px solid #222;       
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a); 
             color: #ffffff;
-            padding: 14px;                /* Um pouco maior para facilitar o toque no celular */
+            padding: 14px;                
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra que joga o botão pra frente */
-            transition: all 0.2s ease;    /* Movimento suave */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+            transition: all 0.2s ease;    
             font-weight: 500;
         }
 
-        /* ✨ EFEITO DE SELEÇÃO E TOQUE */
         .canal:hover, .canal:active {
             background: #111111;
-            border-color: #ff5722;        /* A borda acende em laranja ao selecionar */
-            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); /* Neon controlado */
+            border-color: #ff5722;        
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); 
             transform: scale(1.01);
         }
 
-        /* 🚀 4. BOTÃO CORINGA DE OFERTAS (Fica no topo da lista se ativado) */
         #btn-compra-shopee {
             display: block;
             text-align: center;
             text-decoration: none;
             border-radius: 8px;
-            background: #ff5722;          /* Cor forte de destaque */
+            background: #ff5722;          
             color: white;
             padding: 14px;
             font-weight: bold;
@@ -146,7 +134,6 @@ header {
             100% { transform: scale(1); }
         }
         
-        /* 💻 AJUSTE PARA COMPUTADORES (TELAS GRANDES) */
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
@@ -174,7 +161,7 @@ header {
 </div>
 
 <script>
-    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE
+    // 🛡️ TRANCA DE DOMÍNIO
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
     }
@@ -186,25 +173,44 @@ header {
     let indiceAtual = 0;
     let clapprPlayer;
 
+    // 📺 NOVO MOTOR REFORÇADO COM SUPORTE DUPLO (LIVE + MP4)
     function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
+        
         clapprPlayer = new Clappr.Player({ 
             parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
 
-        clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
+        // Central de passagem de canais automotivos
+        function avancarAuto() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
                 indiceAtual++;
                 if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
-                executarCanal(listaDeVideos[indiceAtual]);
-            } else { clapprPlayer.play(); }
+                ejecutarCanal(listaDeVideos[indiceAtual]);
+            } else { 
+                clapprPlayer.play(); 
+            }
+        }
+
+        // Evento 1: Fim do vídeo na transmissão ao vivo padrão
+        clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
+            avancarAuto();
+        });
+
+        // Evento 2: Captura o fim de arquivos .mp4 usando o player nativo interno
+        clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
+            const videoTag = document.querySelector('#player video');
+            if (videoTag) {
+                videoTag.onended = function() {
+                    avancarAuto();
+                };
+            }
         });
     }
 
     function abrirYoutube() {
         const playerDiv = document.getElementById("player");
-        
         const botaoAntigo = document.getElementById("btn-compra-shopee");
         if (botaoAntigo) botaoAntigo.remove();
 
@@ -215,7 +221,6 @@ header {
     function ejecutarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
         const canaisDiv = document.getElementById("canais");
-        
         const botaoAntigo = document.getElementById("btn-compra-shopee");
         if (botaoAntigo) botaoAntigo.remove();
 
@@ -224,7 +229,6 @@ header {
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } 
-        // 🛍️ MODULO COMERCIAL NEUTRO
         else if (canalObj.link.includes("|")) {
             if (clapprPlayer) clapprPlayer.destroy();
             
@@ -234,10 +238,9 @@ header {
 
             playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: contain; background:#000;"></video>`;
             
-            // Injeta o botão neutro no topo da lista de canais para não quebrar o layout
             canaisDiv.insertAdjacentHTML('afterbegin', `
                 <a id="btn-compra-shopee" href="${linkAfiliado}" target="_blank">
-                   🚀 CLIQUE AQUI PARA APROVEITAR A OFERTA
+                    🚀 CLIQUE AQUI PARA APROVEITAR A OFERTA
                 </a>
             `);
         } 
@@ -245,11 +248,16 @@ header {
             if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) playerDiv.innerHTML = "";
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
-            } else { clapprPlayer.load(canalObj.link); }
+            } else { 
+                clapprPlayer.load(canalObj.link); 
+            }
             
             if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                clapprPlayer.unmute(); clapprPlayer.setVolume(100);
-            } else { clapprPlayer.mute(); }
+                clapprPlayer.unmute(); 
+                clapprPlayer.setVolume(100);
+            } else { 
+                clapprPlayer.mute(); 
+            }
             clapprPlayer.play();
         }
     }
@@ -285,7 +293,6 @@ header {
                         let partesImg = dadosImg.split('|');
                         img.src = partesImg[0].trim();
                         let linkDestino = partesImg[1].trim();
-                        
                         img.onclick = () => window.open(linkDestino, '_blank');
                     } else {
                         img.src = dadosImg;
@@ -295,21 +302,35 @@ header {
                     imagens.push(img);
                 }
                 
-                if(linha.includes("#EXTINF")) { nomeTemp = linha.split(',')[1] || "Canal"; }
+                if(linha.includes("#EXTINF")) { 
+                    nomeTemp = linha.split(',')[1] || "Canal"; 
+                }
                 else if(linha.startsWith("http")) {
                     let infoCanal = { nome: nomeTemp, link: linha };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
-                    if (meuIndice === 0) iniciarPlayer(linha);
+                    
                     const div = document.createElement('div');
-                    div.className = 'canal'; // Mantido a fiação original sincronizada com o CSS
+                    div.className = 'canal'; 
                     div.innerHTML = "▶️ " + nomeTemp;
                     div.onclick = (e) => { 
-                        e.stopPropagation(); indiceAtual = meuIndice; ejecutarCanal(infoCanal);
+                        e.stopPropagation(); 
+                        indiceAtual = meuIndice; 
+                        ejecutarCanal(infoCanal);
                     };
                     menu.appendChild(div);
                 }
             });
+
+            // 🔌 PARTIDA AUTOMÁTICA INTELIGENTE:
+            if (listaDeVideos.length > 0) {
+                // Procura se tem algum canal configurado como AUTO na lista
+                let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+                // Se achar o AUTO, começa por ele. Se não, começa pelo canal 1 (índice 0)
+                indiceAtual = idxAuto !== -1 ? idxAuto : 0;
+                ejecutarCanal(listaDeVideos[indiceAtual]);
+            }
+
             if(imagens.length > 0) showSlides();
         } catch(e) { console.error(e); }
     }
