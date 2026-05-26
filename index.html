@@ -94,7 +94,16 @@
             margin-bottom: 4px;
         }
 
+        /* CONTAINER DO BOTÃO DE CANAL */
+        .canal-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+
         .canal { 
+            flex: 1;
             border-radius: 8px;           
             border: 1px solid #222;       
             background: linear-gradient(145deg, #1a1a1a, #0a0a0a); 
@@ -104,15 +113,32 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
             transition: all 0.2s ease;    
             font-weight: 500;
-            user-select: none; /* Impede de selecionar texto ao segurar o botão */
-            -webkit-user-select: none;
         }
 
         .canal:hover, .canal:active {
             background: #111111;
             border-color: #ff5722;        
-            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); 
-            transform: scale(1.01);
+        }
+
+        /* 📺 BOTÃO ADICIONAL EXCLUSIVO PARA AMPLIAR */
+        .btn-ampliar {
+            background: linear-gradient(145deg, #ff5722, #d84315);
+            border: none;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-ampliar:hover, .btn-ampliar:active {
+            background: #ff7043;
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.6);
         }
 
         #btn-compra-shopee {
@@ -363,46 +389,43 @@
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
                     
-                    const div = document.createElement('div');
-                    div.className = 'canal'; 
+                    // 🔌 NOVO CIRCUITO MECÂNICO: DUPLO BOTÃO FIXO
+                    const containerCanal = document.createElement('div');
+                    containerCanal.className = 'canal-container';
+
+                    const divCanal = document.createElement('div');
+                    divCanal.className = 'canal'; 
                     
                     if (infoCanal.logo) {
-                        div.innerHTML = `
+                        divCanal.innerHTML = `
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <img src="${infoCanal.logo}" style="width: 28px; height: 28px; object-fit: contain; border-radius: 4px; background: rgba(0,0,0,0.5);" onerror="this.style.display='none'">
                                 <span style="font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nomeTemp}</span>
                             </div>
                         `;
                     } else {
-                        div.innerHTML = "▶️ " + nomeTemp;
+                        divCanal.innerHTML = "▶️ " + nomeTemp;
                     }
                     
-                    // 🔌 MOTOR DE CLIQUE ADAPTADO PARA TV BOX (MÉTODO DO TOQUE LONGO)
-                    let timerClique;
-                    let foiCliqueLongo = false;
-
-                    // Evento para quando o usuário aperta o botão (Mouse ou Controle)
-                    div.onmousedown = div.ontouchstart = (e) => {
-                        foiCliqueLongo = false;
-                        timerClique = setTimeout(() => {
-                            foiCliqueLongo = true;
-                            indiceAtual = meuIndice;
-                            ejecutarCanal(infoCanal, true); // 💪 CLIQUE LONGO: AMPLIA DIRETO
-                        }, 800); // Se segurar por 800 milissegundos (menos de 1 segundo), vira tela cheia
+                    // Clique comum no canal: Abre na caixinha pequena
+                    divCanal.onclick = () => { 
+                        indiceAtual = meuIndice; 
+                        toggleSmartFull(true); // Garante que fecha a tela cheia
+                        ejecutarCanal(infoCanal, false);
                     };
 
-                    // Evento para quando o usuário solta o botão
-                    div.onmouseup = div.ontouchend = (e) => {
-                        clearTimeout(timerClique); // Cancela o cronômetro
-                        if (!foiCliqueLongo) {
-                            // 😎 CLIQUE CURTO: Troca o canal normal e encolhe a tela
-                            indiceAtual = meuIndice; 
-                            toggleSmartFull(true); 
-                            ejecutarCanal(infoCanal, false);
-                        }
+                    // Botão 📺 do lado do canal: Abre direto em Tela Cheia
+                    const btnAmpliar = document.createElement('button');
+                    btnAmpliar.className = 'btn-ampliar';
+                    btnAmpliar.innerHTML = '<i class="fas fa-tv"></i>';
+                    btnAmpliar.onclick = () => {
+                        indiceAtual = meuIndice;
+                        ejecutarCanal(infoCanal, true); // Abre o player direto na frente de tudo
                     };
                     
-                    menu.appendChild(div);
+                    containerCanal.appendChild(divCanal);
+                    containerCanal.appendChild(btnAmpliar);
+                    menu.appendChild(containerCanal);
                 }
             });
 
