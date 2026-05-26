@@ -192,7 +192,6 @@
 </div>
 
 <script>
-<script>
     // 🛡️ TRANCA DE DOMÍNIO
     if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
@@ -311,10 +310,9 @@
             let nomeTemp = "Canal";
 
             linhas.forEach(l => {
-                const line = l.trim(); // Limpa os espaços da linha
+                const line = l.trim();
                 if (!line) return;
 
-                // 🔌 CIRCUITO CORRIGIDO AQUI: Agora usa "line" com E no final para tudo!
                 if(line.startsWith('IMG=')) {
                     let dadosImg = line.replace('IMG=', '');
                     const img = document.createElement('img');
@@ -353,9 +351,12 @@
                 }
             });
 
-            // 🚀 DISPARO AUTOMÁTICO DO CANAL
+     // 🔌 NOVO CIRCUITO AUTO CORRIGIDO:
             if (listaDeVideos.length > 0) {
+                // Caça o canal AUTO usando as informações da linha limpa
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+                
+                // Se o sistema achar, inicia o AUTO. Se não achar, abre o primeiro canal (0)
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
                 ejecutarCanal(listaDeVideos[indiceAtual]);
             }
@@ -371,6 +372,7 @@
         imagens[slideIndex-1].style.display = "block";
         setTimeout(showSlides, 10000); 
     }
-    
     carregarTV();
 </script>
+</body>
+</html>
