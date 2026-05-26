@@ -70,7 +70,7 @@
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
-        /* 📺 VISOR DO PLAYER CORRIGIDO (PREENCHE AS LATERAIS) */
+        /* 📺 VISOR DO PLAYER FLUTUANTE PREMIUM */
         #player {
             border-radius: 12px;          
             overflow: hidden;             
@@ -79,24 +79,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
             transition: all 0.3s ease;
             width: 100%;
-            
-            /* Nova fiação mecânica para manter proporção de TV sem esmagar nas laterais */
-            position: relative !important;
-            padding-bottom: 56.25% !important; 
-            height: 0 !important;               
+            height: 220px;                
         }
-
-     /* 📺 COMANDO PARA O VÍDEO ENGOLIR A TELA DA TV COBRINDO AS TARJAS PRETAS */
-#player iframe, 
-#player video {
-    width: 100vw !important;      /* Obriga a ocupar toda a largura da TV Box */
-    height: 100vh !important;     /* Obriga a ocupar toda a altura da TV Box */
-    position: fixed !important;   /* Fixa o vídeo na tela inteira */
-    top: 0 !important;
-    left: 0 !important;
-    z-index: 999999 !important;   /* Joga o vídeo para a frente de tudo */
-    object-fit: fill !important;  /* O PULO DO GATO: Estica a imagem do canal para sumir com o fundo preto */
-}
 
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
@@ -152,7 +136,7 @@
             100% { transform: scale(1); }
         }
 
-        /* 📺 CONEXÃO DA MOLDURA EXPANDIDA PARA TELA CHEIA NA TV */
+        /* 📺 CONEXÃO DA MOLDURA EXPANDIDA CORRIGIDA PARA TV BOX (ABSOLUTO) */
         .video-expandido {
             position: fixed !important;
             top: 0 !important;
@@ -162,19 +146,28 @@
             z-index: 99999 !important;
             border-radius: 0px !important;
             border: none !important;
-            padding-bottom: 0 !important; /* Desativa a proporção para assumir a TV toda */
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #000000 !important;
+        }
+        
+        /* Força qualquer tipo de player (YouTube Iframe ou Clappr) a engolir a TV toda */
+        .video-expandido iframe,
+        .video-expandido video,
+        .video-expandido .clappr-video,
+        .video-expandido > div {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            width: 100vw !important;
             height: 100vh !important;
         }
         
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
-            #player { 
-                width: 75%; 
-                /* No computador ajusta a altura dinamicamente */
-                padding-bottom: 42% !important; 
-                position: sticky; 
-                top: 0; 
-            }
+            #player { width: 75%; height: 100%; position: sticky; top: 0; }
             #canais { height: 100%; width: 25%; }
         }
     </style>
@@ -219,7 +212,7 @@
             parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
 
-        function avancarAuto() {
+        function avanzarAuto() {
             let canalAtual = listaDeVideos[indiceAtual];
             if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
                 indiceAtual++;
@@ -271,7 +264,7 @@
             let videoPropaganda = partes[0].trim();
             let linkAfiliado = partes[1].trim();
 
-            playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: fill; background:#000;"></video>`;
+            playerDiv.innerHTML = `<video src="${videoPropaganda}" width="100%" height="100%" autoplay controls style="object-fit: contain; background:#000;"></video>`;
             
             canaisDiv.insertAdjacentHTML('afterbegin', `
                 <a id="btn-compra-shopee" href="${linkAfiliado}" target="_blank">
@@ -297,7 +290,7 @@
         }
     }
 
-    // 🔄 CIRCUITO SMART FULL NA MOLDURA INTEIRA
+    // 🔄 REATIVANDO O CIRCUITO SMART FULL NA MOLDURA INTEIRA
     function toggleSmartFull() {
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
@@ -317,11 +310,11 @@
             let nomeTemp = "Canal";
 
             linhas.forEach(l => {
-                const linha = l.trim();
-                if (!linha) return;
+                const line = l.trim();
+                if (!line) return;
 
-                if(linha.startsWith('IMG=')) {
-                    let dadosImg = linha.replace('IMG=', '');
+                if(line.startsWith('IMG=')) {
+                    let dadosImg = line.replace('IMG=', '');
                     const img = document.createElement('img');
                     img.className = 'promo-slide';
                     
@@ -338,11 +331,11 @@
                     imagens.push(img);
                 }
                 
-                if(linha.includes("#EXTINF")) { 
-                    nomeTemp = linha.split(',')[1] || "Canal"; 
+                if(line.includes("#EXTINF")) { 
+                    nomeTemp = line.split(',')[1] || "Canal"; 
                 }
-                else if(linha.startsWith("http")) {
-                    let infoCanal = { nome: nomeTemp, link: linha };
+                else if(line.startsWith("http")) {
+                    let infoCanal = { nome: nomeTemp, link: line };
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
                     
