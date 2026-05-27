@@ -77,7 +77,7 @@
             transition: all 0.3s ease;
             width: 100%;
             height: 220px;                
-            cursor: pointer; 
+            cursor: pointer; /* Deixa a mãozinha indicando que dá para clicar e voltar */
         }
 
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -153,7 +153,7 @@
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            pointer-events: none; 
+            pointer-events: none; /* Faz o clique atravessar o vídeo e bater direto na div #player */
         }
         
         @media (min-width: 800px) {
@@ -171,7 +171,7 @@
 </header>
 
 <div id="main">
-    <div id="player" onclick="gerenciarToquePlayer()"></div> 
+    <div id="player" onclick="verificarSaidaTelaCheia()"></div> 
     <div id="canais">
         <button class="btn-youtube" onclick="abrirYoutube()">
             <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
@@ -230,7 +230,10 @@
         indiceAtual++;
         if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
         
-        // Mantém rodando no estado de tela atual sem forçar fechamento brusco na troca automática
+        // Se avançar automaticamente para um canal comum ou auto, tira da tela cheia pra não travar o app
+        if (!listaDeVideos[indiceAtual].link.includes("|")) {
+            toggleSmartFull(true); 
+        }
         ejecutarCanal(listaDeVideos[indiceAtual]);
     }
 
@@ -242,27 +245,18 @@
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
         
-        // Inicia direto em tela cheia conforme o comportamento padrão
-        toggleSmartFull(false);
+        // Abre o Youtube direto em tela cheia
+        const p = document.getElementById('player');
+        p.classList.add('video-expandido');
+        document.getElementById('cabecalho').style.display = 'none';
+        document.getElementById('canais').style.display = 'none';
     }
 
-    // 🔥 GERENCIADOR DE TOQUE PRINCIPAL (A MÁGICA QUE VOCÊ PEDIU)
-    function gerenciarToquePlayer() {
+    // 🔌 SENSOR DE TOQUE PARA VOLTAR: Se clicar no player em tela cheia, ele encolhe na hora!
+    function verificarSaidaTelaCheia() {
         const p = document.getElementById('player');
-        
         if (p.classList.contains('video-expandido')) {
-            // 1. Se já está ampliado, ao clicar na tela ele encolhe
             toggleSmartFull(true);
-            
-            // 2. E volta para a primeira tela onde iniciou (Carrega o Canal AUTO)
-            if (listaDeVideos.length > 0) {
-                let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-                indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-                ejecutarCanal(listaDeVideos[indiceAtual]);
-            }
-        } else {
-            // Se está pequeno no canto, ao clicar na tela ele amplia
-            toggleSmartFull(false);
         }
     }
 
@@ -282,11 +276,18 @@
         }
     }
 
-    function ejecutarCanal(canalObj) {
+    function ejecutarCanal(canalObj, ampliarDireto = false) {
         const playerDiv = document.getElementById("player");
         const canaisDiv = document.getElementById("canais");
         const botaoAntigo = document.getElementById("btn-compra-shopee");
         if (botaoAntigo) botaoAntigo.remove();
+
+        if (ampliarDireto) {
+            const p = document.getElementById('player');
+            p.classList.add('video-expandido');
+            document.getElementById('cabecalho').style.display = 'none';
+            canaisDiv.style.display = 'none';
+        }
 
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
@@ -303,6 +304,7 @@
             playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
             
             document.getElementById('video-propaganda').onended = function() {
+                toggleSmartFull(true); // Encolhe a tela ao terminar a propaganda promocional
                 avancarAuto();
             };
             
@@ -398,7 +400,13 @@
                     div.onclick = (e) => { 
                         e.stopPropagation();
                         indiceAtual = meuIndice; 
-                        ejecutarCanal(infoCanal); // Roda no player local sem forçar tela cheia automática
+                        
+                        if (infoCanal.nome.toUpperCase().includes("AUTO")) {
+                            toggleSmartFull(true); 
+                            ejecutarCanal(infoCanal, false);
+                        } else {
+                            ejecutarCanal(infoCanal, true); 
+                        }
                     };
                     
                     menu.appendChild(div);
@@ -408,7 +416,7 @@
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-                ejecutarCanal(listaDeVideos[indiceAtual]); 
+                ejecutarCanal(listaDeVideos[indiceAtual], false); 
             }
 
             if(imagens.length > 0) showSlides();
