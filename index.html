@@ -189,7 +189,7 @@
     const LARGURA_LOGO_3D = "150%"; 
     // =========================================================================
 
-    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
+   if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
         document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
     }
 
@@ -204,26 +204,11 @@
         espacoSelo.innerHTML = `<img src="${LINK_LOGO_3D}" style="height: 100%; width: ${LARGURA_LOGO_3D}; object-fit: contain;">`;
     }
 
-   function iniciarPlayer(link) {
+    function iniciarPlayer(link) {
         if (clapprPlayer) clapprPlayer.destroy();
         
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", 
-            source: link, 
-            width: '100%', 
-            height: '100%', 
-            autoPlay: true, 
-            mute: true,
-            // 🔥 Configurações vitais para evitar o erro de CORS:
-            playback: {
-                playInline: true,
-                crossOrigin: 'anonymous',
-                hlsjsConfig: {
-                    xhrSetup: function(xhr, url) {
-                        xhr.withCredentials = false; // Garante que não barra em servidores estritos
-                    }
-                }
-            }
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
@@ -233,14 +218,13 @@
         clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
             const videoTag = document.querySelector('#player video');
             if (videoTag) {
-                // Reaplica a permissão de CORS direto na tag de vídeo que o Clappr cria
-                videoTag.setAttribute('crossorigin', 'anonymous');
                 videoTag.onended = function() {
                     avancarAuto();
                 };
             }
         });
     }
+
     function avancarAuto() {
         if (listaDeVideos.length === 0) return;
         indiceAtual++;
