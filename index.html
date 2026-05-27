@@ -252,12 +252,13 @@
         document.getElementById('cabecalho').style.display = 'none';
         document.getElementById('canais').style.display = 'none';
     }
+
 // 🔌 SENSOR DE TOQUE E CONTROLE: Gerencia se o player deve ampliar ou encolher e resetar
     function gerenciarToquePlayer() {
         const p = document.getElementById('player');
         
         if (p.classList.contains('video-expandido')) {
-            // 1. Se já está ampliado, ao clicar ele encolhe
+            // 1. Se já está ampliado, ao clicar ele encolhe voltando para o quadro flutuante
             toggleSmartFull(true);
             
             // 2. E volta para a primeira tela onde iniciou (Reseta carregando o Canal AUTO)
@@ -267,10 +268,10 @@
                 ejecutarCanal(listaDeVideos[indiceAtual]);
             }
         } else {
-            // Se o player está pequeno, ao clicar ele amplia
+            // Se o player está pequeno no canto, ao clicar ele amplia
             toggleSmartFull(false);
         }
-    }
+    } 
 
     function toggleSmartFull(forçarFechar = false) {
         const p = document.getElementById('player');
