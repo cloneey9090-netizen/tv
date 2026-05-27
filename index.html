@@ -96,6 +96,7 @@
             margin-bottom: 4px;
         }
 
+        /* Voltou a ser DIV com o seu design original impecável */
         .canal { 
             border-radius: 8px;           
             border: 1px solid #222;       
@@ -108,12 +109,11 @@
             font-weight: 500;
         }
 
-        .canal:hover, .canal:active, .canal:focus {
+        .canal:hover, .canal:active {
             background: #111111;
             border-color: #ff5722;        
             box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); 
             transform: scale(1.01);
-            outline: none;
         }
 
         #btn-compra-shopee {
@@ -158,7 +158,7 @@
             pointer-events: none; 
         }
 
-        /* 🔥 BOTÃO INVISÍVEL COBRE A TELA INTEIRA SÓ QUANDO EXPANDIDO */
+        /* Botão invisível focado no controle, sem estragar o layout */
         #btn-controle-tv {
             display: none;
             position: absolute;
@@ -271,12 +271,10 @@
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
         
-        // Coloca o botão invisível por cima para o controle voltar do Youtube também
         playerDiv.appendChild(document.getElementById('btn-controle-tv')); 
         toggleSmartFull(false);
     }
 
-    // Clique no player pequeno (Mobile/Web) amplia a tela
     function gerenciarToquePlayer() {
         const p = document.getElementById('player');
         if (!p.classList.contains('video-expandido')) {
@@ -284,14 +282,10 @@
         }
     }
 
-    // 🔥 ESSE COMANDO RODA QUANDO VOCÊ CLICA "OK" NO FILME AMPLIADO
     function origemControleVoltar(event) {
-        event.stopPropagation(); // Trava para não bugar a div de baixo
-        
-        // 1. Encolhe o layout imediatamente
+        event.stopPropagation();
         toggleSmartFull(true);
         
-        // 2. Reseta para o Canal AUTO inicial
         if (listaDeVideos.length > 0) {
             let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
             indiceAtual = idxAuto !== -1 ? idxAuto : 0;
@@ -309,14 +303,13 @@
             p.classList.remove('video-expandido');
             c.style.display = 'flex';
             lista.style.display = 'flex';
-            btnTv.style.display = 'none'; // Esconde o botão invisível
+            btnTv.style.display = 'none';
         } else {
             p.classList.add('video-expandido');
             c.style.display = 'none';
             lista.style.display = 'none';
-            btnTv.style.display = 'block'; // Mostra o botão cobrindo a tela cheia
+            btnTv.style.display = 'block';
             
-            // 🔥 SEQUESTRA O FOCO DA TV DE VERDADE: O controle cai direto no botão invisível!
             setTimeout(() => {
                 btnTv.focus();
             }, 150);
@@ -373,7 +366,6 @@
             clapprPlayer.play();
         }
 
-        // Garante que o botão de controle continue existindo dentro do player após limpar a área
         playerDiv.appendChild(document.getElementById('btn-controle-tv'));
     }
 
@@ -425,7 +417,8 @@
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
                     
-                    const div = document.createElement('button'); // Mudado para BUTTON para melhor resposta na TV
+                    // Voltou a ser o seu modelo original de DIV estável
+                    const div = document.createElement('div');
                     div.className = 'canal'; 
                     
                     if (infoCanal.logo) {
