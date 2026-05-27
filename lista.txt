@@ -21,8 +21,7 @@ https://www.youtube.com/embed/SpwiHTbwa-g
 
 
 
-
-#EXTINF:-1,📺sbt youtube (AO VIVO)
+#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
 https://www.youtube.com/embed/LLpNUqHVam8
 
 #EXTINF:-1,📺 ACESSAR YOUTUBE
@@ -34,26 +33,29 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
 #EXTINF:-1,📺 Casé TV LINK 2
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u8
 
-#EXTINF:-1 tvg-language="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo Youtube
-https://www.youtube.com/embed/vN0SIBjWWoU
+#EXTINF:-1 tvg-language="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo 
+https://cdn-2.nxplay.com.br/GLOBO_SP_TK/index.m3u8
 
-#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | interior de SP 
-https://cdn.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8
+#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT 
+https://live.eu-north-1a.cf.dmcdn.net/sec2(Vb21vB0VWLMPoVnhEPkg69DrSzlhPSxptZO8I8IoXptqq7QMYIUYNutoTDsRpjYYvitWR745wcgnvB-ZIWgWknYtBcffLmCsrNDaY97F6RDkcHjjUdsnH04JcxTwjM1X)/dm/3/x8u8n0m/d/live-480.m3u8
 
 #EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta",TV SIM SBT
 https://www.youtube.com/embed/Wtkr6T_sKS8
 
-#EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta",Record
-http://tvconquistalrv.duckdns.org:8080/hls/tvconquistalrv.m3u8
+#EXTINF:-1 tvg-id="TVConquista.br" tvg-logo="https://i.imgur.com/RDekR7e.png" group-title="Brasil: variedades",Record | TV Conquista | MT Brasil
+https://tvconquistalrv.duckdns.org:3334/hls/tvconquistalrv.m3u8
 
-
-#EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta",Rede tv
+#EXTINF:-1 tvg-id="RedeTV.br" tvg-logo="https://images.pluto.tv/channels/6048fc47a44e540007745d2b/colorLogoPNG.png" group-title="Brasil: variedades",Rede TV | TO
 https://tv02.zas.media:1936/redetvparana/redetvparana/playlist.m3u8
 
-#EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta",Band RBA
-https://5cf4a2c2512a2.streamlock.net/rbatv/rbatv/playlist.m3u8
+#EXTINF:-1 tvg-id="RBATV.br" tvg-logo="https://i.imgur.com/ewJjke2.jpg" group-title="Brasil: educativos e documentários",RBA TV | Rio do Sul | SC
+https://cdn.live.br1.jmvstream.com/w/LVW-15748/LVW15748_Yed7yzLuRC/chunklist.m3u8
 
-#EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta", Cultura
+
+#EXTINF:-1 tvg-id="RBATV.br" tvg-logo="https://i.imgur.com/ewJjke2.jpg" group-title="Brasil: educativos e documentários",RBA TV | Rio do Sul | SC
+https://vod3.cf.dmcdn.net/sec2(CwQQzNsgOPady_g_Ys78qlJ1d75myMlTCLphz2HBpksmZ1M2iZK4ksr-Yyhd6y3KgzNsngY2Isg0gh-pUj5CE-_jt8O201IPVKM-MMC7LkxdOB60t8IvWvMdfxltzc3qB-HIUjnSjg1td-3cIyPqgMv0KvD4vGsZLkorMNKq_jFK-qPqOx4XPeZz498H7C4I)/frag(33)/video/711/815/525518117_mp4_h264_aac_hq_1.ts
+
+#EXTINF:-1 tvg-id="TVCulturaNacional.br" tvg-logo="https://i.imgur.com/zmheeSl.png" group-title="Brasil: educativos e documentários",TV Cultura | São Paulo
 https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8
 
 #EXTINF:-1 tvg-id="Bolos Naty" tvg-logo="https://i.postimg.cc/mkSBb0tQ/IMG-20WA0000.jpg231203-" group-title="TV Aberta", Rede Brasil
