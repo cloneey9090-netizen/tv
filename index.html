@@ -80,20 +80,19 @@
             position: relative;
         }
 
-        /* 🔘 CAMADA INVISÍVEL PARA FECHAR A TELA CHEIA NA TV BOX */
+        /* 🔘 CAMADA INVISÍVEL NO TOPO DA TELA CHEIA */
         #capa-fechar-fullscreen {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
-            height: 80px; /* Cria uma linha de toque invisível no topo da tela */
-            background: rgba(0, 0, 0, 0.01); /* Quase invisível, mas intercepta o clique */
+            height: 90px; /* Aumentei um pouco a área para o controle da TV Box pegar mais fácil */
+            background: rgba(0, 0, 0, 0.01); 
             z-index: 999999;
             cursor: pointer;
         }
 
-        /* Um pequeno indicador visual discreto só para o usuário saber onde clicar se passar o mouse */
         #capa-fechar-fullscreen:hover {
             background: rgba(255, 87, 34, 0.1);
         }
@@ -197,7 +196,7 @@
     </div> 
 </div>
 
-<div id="capa-fechar-fullscreen" onclick="verificarSaidaTelaCheia()"></div>
+<div id="capa-fechar-fullscreen" onclick="voltarParaTelaInicial()"></div>
 
 <script>
     // =========================================================================
@@ -250,9 +249,10 @@
         if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
         
         if (!listaDeVideos[indiceAtual].link.includes("|")) {
-            toggleSmartFull(true); 
+            voltarParaTelaInicial(); // Se pular sozinho pra canal comum, dá o reset pra tela inicial
+        } else {
+            ejecutarCanal(listaDeVideos[indiceAtual]);
         }
-        ejecutarCanal(listaDeVideos[indiceAtual]);
     }
 
     function abrirYoutube() {
@@ -266,9 +266,16 @@
         toggleSmartFull(false); 
     }
 
-    // 🔌 Função disparada ao clicar na barra invisível do topo
-    function verificarSaidaTelaCheia() {
-        toggleSmartFull(true);
+    // 🔌 RESET ABSOLUTO: Fecha a tela cheia e força o player a voltar pro canal "AUTO" original na tela inicial
+    function voltarParaTelaInicial() {
+        toggleSmartFull(true); // Reduz o tamanho e exibe banners/menus
+        
+        if (listaDeVideos.length > 0) {
+            // Localiza o canal AUTO e inicia ele na janelinha pequena padrão
+            let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+            indiceAtual = idxAuto !== -1 ? idxAuto : 0;
+            ejecutarCanal(listaDeVideos[indiceAtual], false); 
+        }
     }
 
     function toggleSmartFull(forçarFechar = false) {
@@ -281,12 +288,12 @@
             p.classList.remove('video-expandido');
             c.style.display = 'flex';
             lista.style.display = 'flex';
-            capaFechar.style.display = 'none'; // Some com a barra invisível
+            capaFechar.style.display = 'none'; 
         } else {
             p.classList.add('video-expandido');
             c.style.display = 'none';
             lista.style.display = 'none';
-            capaFechar.style.display = 'block'; // Ativa a barra invisível por cima do vídeo
+            capaFechar.style.display = 'block'; 
         }
     }
 
@@ -315,8 +322,7 @@
             playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
             
             document.getElementById('video-propaganda').onended = function() {
-                toggleSmartFull(true); 
-                avancarAuto();
+                voltarParaTelaInicial(); // Ao acabar o comercial, dá o reset pra home
             };
             
             canaisDiv.insertAdjacentHTML('afterbegin', `
