@@ -230,11 +230,8 @@
         indiceAtual++;
         if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
         
-        if (!listaDeVideos[indiceAtual].link.includes("|")) {
-            voltarParaTelaInicial(); 
-        } else {
-            ejecutarCanal(listaDeVideos[indiceAtual]);
-        }
+        // Mantém rodando no estado de tela atual sem forçar fechamento brusco na troca automática
+        ejecutarCanal(listaDeVideos[indiceAtual]);
     }
 
     function abrirYoutube() {
@@ -245,29 +242,26 @@
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
         
-        const p = document.getElementById('player');
-        p.classList.add('video-expandido');
-        document.getElementById('cabecalho').style.display = 'none';
-        document.getElementById('canais').style.display = 'none';
+        // Inicia direto em tela cheia conforme o comportamento padrão
+        toggleSmartFull(false);
     }
 
-    function voltarParaTelaInicial() {
-        toggleSmartFull(true);
-        if (listaDeVideos.length > 0) {
-            let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-            indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-            ejecutarCanal(listaDeVideos[indiceAtual], false);
-        }
-    }
-
-    // 🔌 SENSOR DE TOQUE INTELIGENTE: Controla o clique no player baseado no estado da tela
+    // 🔥 GERENCIADOR DE TOQUE PRINCIPAL (A MÁGICA QUE VOCÊ PEDIU)
     function gerenciarToquePlayer() {
         const p = document.getElementById('player');
+        
         if (p.classList.contains('video-expandido')) {
-            // Se já está grande, encolhe e volta pro canal inicial (AUTO)
-            voltarParaTelaInicial();
+            // 1. Se já está ampliado, ao clicar na tela ele encolhe
+            toggleSmartFull(true);
+            
+            // 2. E volta para a primeira tela onde iniciou (Carrega o Canal AUTO)
+            if (listaDeVideos.length > 0) {
+                let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+                indiceAtual = idxAuto !== -1 ? idxAuto : 0;
+                ejecutarCanal(listaDeVideos[indiceAtual]);
+            }
         } else {
-            // Se está pequeno, expande para tela cheia imediatamente
+            // Se está pequeno no canto, ao clicar na tela ele amplia
             toggleSmartFull(false);
         }
     }
@@ -288,18 +282,11 @@
         }
     }
 
-    function ejecutarCanal(canalObj, ampliarDireto = false) {
+    function ejecutarCanal(canalObj) {
         const playerDiv = document.getElementById("player");
         const canaisDiv = document.getElementById("canais");
         const botaoAntigo = document.getElementById("btn-compra-shopee");
         if (botaoAntigo) botaoAntigo.remove();
-
-        if (ampliarDireto) {
-            const p = document.getElementById('player');
-            p.classList.add('video-expandido');
-            document.getElementById('cabecalho').style.display = 'none';
-            canaisDiv.style.display = 'none';
-        }
 
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
@@ -316,7 +303,7 @@
             playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
             
             document.getElementById('video-propaganda').onended = function() {
-                voltarParaTelaInicial();
+                avancarAuto();
             };
             
             canaisDiv.insertAdjacentHTML('afterbegin', `
@@ -411,13 +398,7 @@
                     div.onclick = (e) => { 
                         e.stopPropagation();
                         indiceAtual = meuIndice; 
-                        
-                        if (infoCanal.nome.toUpperCase().includes("AUTO")) {
-                            toggleSmartFull(true); 
-                            ejecutarCanal(infoCanal, false);
-                        } else {
-                            ejecutarCanal(infoCanal, true); 
-                        }
+                        ejecutarCanal(infoCanal); // Roda no player local sem forçar tela cheia automática
                     };
                     
                     menu.appendChild(div);
@@ -427,7 +408,7 @@
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-                ejecutarCanal(listaDeVideos[indiceAtual], false); 
+                ejecutarCanal(listaDeVideos[indiceAtual]); 
             }
 
             if(imagens.length > 0) showSlides();
