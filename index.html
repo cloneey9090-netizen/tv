@@ -251,12 +251,23 @@
         document.getElementById('cabecalho').style.display = 'none';
         document.getElementById('canais').style.display = 'none';
     }
-
-    // 🔌 SENSOR DE TOQUE PARA VOLTAR: Se clicar no player em tela cheia, ele encolhe na hora!
-    function verificarSaidaTelaCheia() {
+// 🔌 SENSOR DE TOQUE E CONTROLE: Gerencia se o player deve ampliar ou encolher e resetar
+    function gerenciarToquePlayer() {
         const p = document.getElementById('player');
+        
         if (p.classList.contains('video-expandido')) {
+            // 1. Se já está ampliado, ao clicar ele encolhe
             toggleSmartFull(true);
+            
+            // 2. E volta para a primeira tela onde iniciou (Reseta carregando o Canal AUTO)
+            if (listaDeVideos.length > 0) {
+                let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
+                indiceAtual = idxAuto !== -1 ? idxAuto : 0;
+                ejecutarCanal(listaDeVideos[indiceAtual]);
+            }
+        } else {
+            // Se o player está pequeno, ao clicar ele amplia
+            toggleSmartFull(false);
         }
     }
 
@@ -269,13 +280,20 @@
             p.classList.remove('video-expandido');
             c.style.display = 'flex';
             lista.style.display = 'flex';
+            
+            // Tira o foco do player para liberar as setas do controle na lista de canais novamente
+            p.blur(); 
         } else {
             p.classList.add('video-expandido');
             c.style.display = 'none';
             lista.style.display = 'none';
+            
+            // 🔥 MARCAÇÃO DE FOCO DA TV: Joga o controle automático para dentro do player ampliado
+            setTimeout(() => {
+                p.focus();
+            }, 100);
         }
     }
-
     function ejecutarCanal(canalObj, ampliarDireto = false) {
         const playerDiv = document.getElementById("player");
         const canaisDiv = document.getElementById("canais");
