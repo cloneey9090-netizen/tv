@@ -186,6 +186,9 @@
 </div>
 
 <script>
+    // 🛡️ TRANCA DE DOMÍNIO (Para desativar, basta colocar // no início da linha abaixo)
+    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") { document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>"; }
+
     // =========================================================================
     // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
     // =========================================================================
@@ -193,7 +196,6 @@
     const LINK_LOGO_3D = "https://i.postimg.cc/PqKbmKV5/0514.gif"; 
     const LARGURA_LOGO_3D = "150%"; 
     // =========================================================================
-
 
     let imagens = [];
     let slideIndex = 0;
@@ -437,7 +439,6 @@
                         e.stopPropagation();
                         const p = document.getElementById('player');
                         
-                        // 🔥 QUANDO O USUÁRIO CLICA EM QUALQUER CANAL, O LOOP DO AUTO MORRE NA HORA!
                         modoLoopAutoAtivo = false; 
                         indiceAtual = meuIndice; 
                         
@@ -446,7 +447,6 @@
                             ejecutarCanal(infoCanal, false); 
                         } else {
                             if (infoCanal.nome.toUpperCase().includes("AUTO")) {
-                                // Se por acaso clicar em um AUTO manualmente, ativa o loop dele de novo
                                 modoLoopAutoAtivo = true;
                                 toggleSmartFull(true); 
                                 ejecutarCanal(infoCanal, false);
@@ -464,7 +464,6 @@
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
                 
-                // Garante que inicia no modo loop se achou o canal AUTO
                 if(idxAuto !== -1) { modoLoopAutoAtivo = true; }
                 
                 ejecutarCanal(listaDeVideos[indiceAtual], false); 
