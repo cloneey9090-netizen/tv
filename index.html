@@ -403,10 +403,14 @@
                         e.stopPropagation();
                         const p = document.getElementById('player');
                         
+                        // 🔥 CORRIGIDO: Agora o clique de fato muda o canal!
+                        indiceAtual = meuIndice; 
+                        
                         if (p.classList.contains('video-expandido')) {
                             toggleSmartFull(true);
+                            // Encolhe a tela cheia E executa o novo canal que foi clicado no quadro normal
+                            ejecutarCanal(infoCanal, false); 
                         } else {
-                            indiceAtual = meuIndice; 
                             if (infoCanal.nome.toUpperCase().includes("AUTO")) {
                                 toggleSmartFull(true); 
                                 ejecutarCanal(infoCanal, false);
@@ -420,11 +424,8 @@
                 }
             });
 
-            // 🔥 INTELIGÊNCIA DE BUSCA ATIVADA:
-            // O sistema varre toda a lista e acha o primeiro canal AUTO, não importa a posição dele no TXT!
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-                // Se achou o AUTO, inicia com ele. Se não achar por algum motivo, inicia com o primeiro da lista.
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
                 ejecutarCanal(listaDeVideos[indiceAtual], false); 
             }
