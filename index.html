@@ -158,7 +158,7 @@
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            pointer-events: auto; 
+            pointer-events: none; 
         }
         
         @media (min-width: 800px) {
@@ -187,13 +187,6 @@
 
 <script>
     // =========================================================================
-    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (ANTI-CLONE DISCRETO)
-    // =========================================================================
-    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
-        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
-    }
-
-    // =========================================================================
     // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
     // =========================================================================
     const urlLista = "lista.txt"; 
@@ -220,46 +213,28 @@
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-            verificarProximoPasso();
+            avancarAuto();
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
             const videoTag = document.querySelector('#player video');
             if (videoTag) {
                 videoTag.onended = function() {
-                    verificarProximoPasso();
+                    avancarAuto();
                 };
             }
         });
     }
 
-    function verificarProximoPasso() {
+    function avancarAuto() {
         if (listaDeVideos.length === 0) return;
-
-        let proximoIndice = indiceAtual + 1;
-
-        // Se o próximo vídeo também for AUTO, continua a reprodução automática
-        if (proximoIndice < listaDeVideos.length && listaDeVideos[proximoIndice].nome.toUpperCase().includes("AUTO")) {
-            indiceAtual = proximoIndice;
-            if (!listaDeVideos[indiceAtual].link.includes("|")) {
-                toggleSmartFull(true); 
-            }
-            ejecutarCanal(listaDeVideos[indiceAtual]);
-        } else {
-            // Se o próximo NÃO for AUTO, congela a imagem do último frame na tela e aguarda!
-            pausarImagemEAguardar();
+        indiceAtual++;
+        if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+        
+        if (!listaDeVideos[indiceAtual].link.includes("|")) {
+            toggleSmartFull(true); 
         }
-    }
-
-    function pausarImagemEAguardar() {
-        // Se for um player de vídeo comum, removemos o "muted" para quando ele clicar no canal o som funcionar, mas mantemos o frame na tela
-        const videoTag = document.querySelector('#player video');
-        if (videoTag) {
-            videoTag.pause(); // Garante que o vídeo pare exatamente no último frame
-        }
-
-        // Tira da tela cheia discretamente para o usuário ver a lista, mantendo a última imagem visível no player
-        toggleSmartFull(true);
+        ejecutarCanal(listaDeVideos[indiceAtual]);
     }
 
     function abrirYoutube() {
@@ -331,7 +306,8 @@
             playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
             
             document.getElementById('video-propaganda').onended = function() {
-                verificarProximoPasso();
+                toggleSmartFull(true); 
+                avancarAuto();
             };
             
             canaisDiv.insertAdjacentHTML('afterbegin', `
@@ -347,7 +323,7 @@
             } else { 
                 clapprPlayer.load(canalObj.link); 
                 clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-                    verificarProximoPasso();
+                    avancarAuto();
                 });
             }
             
@@ -425,13 +401,18 @@
                     
                     div.onclick = (e) => { 
                         e.stopPropagation();
-                        indiceAtual = meuIndice; 
+                        const p = document.getElementById('player');
                         
-                        if (infoCanal.nome.toUpperCase().includes("AUTO")) {
-                            toggleSmartFull(true); 
-                            ejecutarCanal(infoCanal, false);
+                        if (p.classList.contains('video-expandido')) {
+                            toggleSmartFull(true);
                         } else {
-                            ejecutarCanal(infoCanal, true); 
+                            indiceAtual = meuIndice; 
+                            if (infoCanal.nome.toUpperCase().includes("AUTO")) {
+                                toggleSmartFull(true); 
+                                ejecutarCanal(infoCanal, false);
+                            } else {
+                                ejecutarCanal(infoCanal, true); 
+                            }
                         }
                     };
                     
@@ -439,12 +420,13 @@
                 }
             });
 
+            // 🔥 INTELIGÊNCIA DE BUSCA ATIVADA:
+            // O sistema varre toda a lista e acha o primeiro canal AUTO, não importa a posição dele no TXT!
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-                if (idxAuto !== -1) {
-                    indiceAtual = idxAuto;
-                    ejecutarCanal(listaDeVideos[indiceAtual], false); 
-                }
+                // Se achou o AUTO, inicia com ele. Se não achar por algum motivo, inicia com o primeiro da lista.
+                indiceAtual = idxAuto !== -1 ? idxAuto : 0;
+                ejecutarCanal(listaDeVideos[indiceAtual], false); 
             }
 
             if(imagens.length > 0) showSlides();
