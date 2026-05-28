@@ -187,11 +187,11 @@
 
 <script>
     // =========================================================================
-    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (ANTI-CLONE DISCRETO)
+    // 🛡️ TRANCA DE DOMÍNIO DESATIVADA
     // =========================================================================
-   if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
-        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
-    }
+    // if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
+    //     document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
+    // }
 
     // =========================================================================
     // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
@@ -233,12 +233,11 @@
         });
     }
 
-    // Gerencia se deve avançar ou parar dependendo do tipo do canal
+    // Verifica se o canal atual é AUTO para poder passar sozinho
     function verificarEAvancar() {
         if (listaDeVideos.length === 0) return;
-        
         let canalAtual = listaDeVideos[indiceAtual];
-        // Só avança sozinho se o nome do canal atual contiver "AUTO"
+        
         if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
             avancarAuto();
         }
