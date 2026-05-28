@@ -9,23 +9,6 @@ IMG=https://i.postimg.cc/wTvSfmc2/minhalogo.png | https://wa.me/5528988049598
 
 EXTM3U # TV 
 
-#EXTINF:-1, AUTO 
-https://i.postimg.cc/wMKV8pYB/petshow.png
-#EXTINF:-1, AUTO 
-https://archive.org/download/propaganda_202605/propaganda.mp4
-#EXTINF:-1, AUTO 
-https://i.postimg.cc/wMKV8pYB/petshow.png
-#EXTINF:-1, AUTO 
-https://archive.org/download/propaganda_202605/propaganda.mp4
-#EXTINF:-1, AUTO 
-https://i.postimg.cc/wMKV8pYB/petshow.png
-
-
-### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
-### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
-
-
-
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
 https://www.youtube.com/embed/LLpNUqHVam8
 
@@ -463,3 +446,18 @@ https://video02.logicahost.com.br/wtjtvminas/wtjtvminas/playlist.m3u8
 #EXTINF:-1 tvg-language="Portuguese" tvg-logo="https://i.imgur.com/gNt3xcI.png" group-title="Brasil: variedades",Zoom
 https://cdn.jmvstream.com/w/LVW-9730/LVW9730_LmUwslM8jt/playlist.m3u8
 
+
+
+### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
+### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
+
+#EXTINF:-1, AUTO 
+https://i.postimg.cc/wMKV8pYB/petshow.png
+#EXTINF:-1, AUTO 
+https://archive.org/download/propaganda_202605/propaganda.mp4
+#EXTINF:-1, AUTO 
+https://i.postimg.cc/wMKV8pYB/petshow.png
+#EXTINF:-1, AUTO 
+https://archive.org/download/propaganda_202605/propaganda.mp4
+#EXTINF:-1, AUTO 
+https://i.postimg.cc/wMKV8pYB/petshow.png
