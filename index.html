@@ -189,8 +189,8 @@
     // =========================================================================
     // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (ANTI-CLONE DISCRETO)
     // =========================================================================
-    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
-        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
+   // if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
+        document.body.innerHTML =// "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
     }
 
     // =========================================================================
@@ -216,7 +216,7 @@
         if (clapprPlayer) clapprPlayer.destroy();
         
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, muted: true 
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
@@ -233,18 +233,19 @@
         });
     }
 
-    // Realiza a checagem se o canal que acabou de terminar é realmente um canal AUTO
+    // Gerencia se deve avançar ou parar dependendo do tipo do canal
     function verificarEAvancar() {
         if (listaDeVideos.length === 0) return;
         
-        // 🔒 ALTERAÇÃO CRUCIAL: Só avança sozinho se o canal atual tiver "AUTO" no nome
         let canalAtual = listaDeVideos[indiceAtual];
+        // Só avança sozinho se o nome do canal atual contiver "AUTO"
         if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
             avancarAuto();
         }
     }
 
     function avancarAuto() {
+        if (listaDeVideos.length === 0) return;
         indiceAtual++;
         if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
         
