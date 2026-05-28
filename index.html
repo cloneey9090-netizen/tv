@@ -158,7 +158,7 @@
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            pointer-events: none; 
+            pointer-events: auto; 
         }
         
         @media (min-width: 800px) {
@@ -186,6 +186,13 @@
 </div>
 
 <script>
+    // =========================================================================
+    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (ANTI-CLONE DISCRETO)
+    // =========================================================================
+    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
+        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
+    }
+
     // =========================================================================
     // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
     // =========================================================================
@@ -255,9 +262,6 @@
     function verificarSaidaTelaCheia() {
         const p = document.getElementById('player');
         if (p.classList.contains('video-expandido')) {
-            // 🔥 MODIFICAÇÃO PRINCIPAL: Apenas desfaz a tela cheia.
-            // Removemos a função 'voltarParaCanalAuto()' daqui de dentro.
-            // Desse modo, o canal que o usuário escolheu continua tocando direto no quadro!
             toggleSmartFull(true);
         }
     }
@@ -407,8 +411,6 @@
                         const p = document.getElementById('player');
                         
                         if (p.classList.contains('video-expandido')) {
-                            // 🔥 Se o usuário clicar em um canal enquanto estiver em tela cheia,
-                            // o sistema encolhe e mantém a reprodução estável.
                             toggleSmartFull(true);
                         } else {
                             indiceAtual = meuIndice; 
@@ -448,7 +450,6 @@
         const p = document.getElementById('player');
         if (p.classList.contains('video-expandido') && (event.keyCode === 13 || event.key === 'Enter')) {
             event.preventDefault();
-            // 🔥 Ao apertar OK no controle, apenas encolhemos sem dar reset no vídeo!
             toggleSmartFull(true);
         }
     });
