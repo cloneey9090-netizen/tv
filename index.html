@@ -199,6 +199,9 @@
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
+    
+    // 🔥 Variável de controle: define se o app está no modo loop do AUTO ou no modo livre
+    let modoLoopAutoAtivo = true; 
 
     const espacoSelo = document.getElementById("espaco-selo-3d");
     if(espacoSelo) {
@@ -228,8 +231,37 @@
 
     function avancarAuto() {
         if (listaDeVideos.length === 0) return;
-        indiceAtual++;
-        if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+
+        // 🔥 INTELIGÊNCIA DO LOOP DO AUTO ACTIVADA:
+        if (modoLoopAutoAtivo) {
+            // Cria uma lista contendo apenas os índices de canais que são AUTO
+            let indicesAuto = [];
+            listaDeVideos.forEach((v, idx) => {
+                if (v.nome.toUpperCase().includes("AUTO")) {
+                    indicesAuto.push(idx);
+                }
+            });
+
+            if (indicesAuto.length > 0) {
+                // Descobre a posição do AUTO atual dentro da sublista de AUTOS
+                let posicaoNaSublista = indicesAuto.indexOf(indiceAtual);
+                posicaoNaSublista++; // Avança para o próximo AUTO
+                
+                // Se estourar a quantidade de canais AUTO, volta para o primeiro AUTO da lista
+                if (posicaoNaSublista >= indicesAuto.length || posicaoNaSublista < 0) {
+                    posicaoNaSublista = 0;
+                }
+                
+                indiceAtual = indicesAuto[posicaoNaSublista];
+            } else {
+                // Caso não existam canais AUTO por erro na lista, avança normalmente
+                indiceAtual = (indiceAtual + 1) >= listaDeVideos.length ? 0 : indiceAtual + 1;
+            }
+        } else {
+            // Se o usuário já escolheu um canal, o loop desativa e avança de forma sequencial padrão
+            indiceAtual++;
+            if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+        }
         
         if (!listaDeVideos[indiceAtual].link.includes("|")) {
             toggleSmartFull(true); 
@@ -238,6 +270,7 @@
     }
 
     function abrirYoutube() {
+        modoLoopAutoAtivo = false; // Desativa o loop automático ao abrir o YouTube geral
         const playerDiv = document.getElementById("player");
         const botaoAntigo = document.getElementById("btn-compra-shopee");
         if (botaoAntigo) botaoAntigo.remove();
@@ -403,15 +436,17 @@
                         e.stopPropagation();
                         const p = document.getElementById('player');
                         
-                        // 🔥 CORRIGIDO: Agora o clique de fato muda o canal!
+                        // 🔥 QUANDO O USUÁRIO CLICA EM QUALQUER CANAL, O LOOP DO AUTO MORRE NA HORA!
+                        modoLoopAutoAtivo = false; 
                         indiceAtual = meuIndice; 
                         
                         if (p.classList.contains('video-expandido')) {
                             toggleSmartFull(true);
-                            // Encolhe a tela cheia E executa o novo canal que foi clicado no quadro normal
                             ejecutarCanal(infoCanal, false); 
                         } else {
                             if (infoCanal.nome.toUpperCase().includes("AUTO")) {
+                                // Se por acaso clicar em um AUTO manualmente, ativa o loop dele de novo
+                                modoLoopAutoAtivo = true;
                                 toggleSmartFull(true); 
                                 ejecutarCanal(infoCanal, false);
                             } else {
@@ -427,6 +462,10 @@
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
+                
+                // Garante que inicia no modo loop se achou o canal AUTO
+                if(idxAuto !== -1) { modoLoopAutoAtivo = true; }
+                
                 ejecutarCanal(listaDeVideos[indiceAtual], false); 
             }
 
