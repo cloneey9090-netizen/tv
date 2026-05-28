@@ -187,12 +187,14 @@
 
 <script>
     // =========================================================================
-    // 🛡️ TRANCA DE DOMÍNIO DESATIVADA
+    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (ANTI-CLONE DISCRETO)
     // =========================================================================
-    // Código da tranca limpo para evitar erros de leitura estrutural
+    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
+        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
+    }
 
     // =========================================================================
-    // 🎛️ PAINEL DE CONTROLE CENTRAL
+    // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
     // =========================================================================
     const urlLista = "lista.txt"; 
     const LINK_LOGO_3D = "https://i.postimg.cc/PqKbmKV5/0514.gif"; 
@@ -218,38 +220,50 @@
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-            verificarEAvancar();
+            verificarProximoPasso();
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
             const videoTag = document.querySelector('#player video');
             if (videoTag) {
                 videoTag.onended = function() {
-                    verificarEAvancar();
+                    verificarProximoPasso();
                 };
             }
         });
     }
 
-    function verificarEAvancar() {
+    // Nova função inteligente para controlar o fluxo de paradas
+    function verificarProximoPasso() {
         if (listaDeVideos.length === 0) return;
-        let canalAtual = listaDeVideos[indiceAtual];
-        
-        // Verifica se o canal atual guardado na lista possui AUTO no nome
-        if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
-            avancarAuto();
+
+        // Olha qual seria o próximo item na lista
+        let proximoIndice = indiceAtual + 1;
+
+        // Se existirem mais vídeos e o PRÓXIMO também tiver "AUTO", ele continua rodando sozinho
+        if (proximoIndice < listaDeVideos.length && listaDeVideos[proximoIndice].nome.toUpperCase().includes("AUTO")) {
+            indiceAtual = proximoIndice;
+            if (!listaDeVideos[indiceAtual].link.includes("|")) {
+                toggleSmartFull(true); 
+            }
+            ejecutarCanal(listaDeVideos[indiceAtual]);
+        } else {
+            // Se o próximo vídeo NÃO for AUTO (ou a lista acabou), o player para e limpa a tela!
+            pararPlayerEAguardar();
         }
     }
 
-    function avancarAuto() {
-        if (listaDeVideos.length === 0) return;
-        indiceAtual++;
-        if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+    function pararPlayerEAguardar() {
+        if (clapprPlayer) clapprPlayer.destroy();
+        const playerDiv = document.getElementById("player");
+        playerDiv.innerHTML = ""; // Limpa o player antigo
         
-        if (!listaDeVideos[indiceAtual].link.includes("|")) {
-            toggleSmartFull(true); 
-        }
-        ejecutarCanal(listaDeVideos[indiceAtual]);
+        // Remove botões de ofertas antigos se houverem
+        const botaoAntigo = document.getElementById("btn-compra-shopee");
+        if (botaoAntigo) botaoAntigo.remove();
+
+        // Força a tela a voltar ao normal para aparecer a lista de canais
+        toggleSmartFull(true);
     }
 
     function abrirYoutube() {
@@ -321,8 +335,7 @@
             playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
             
             document.getElementById('video-propaganda').onended = function() {
-                toggleSmartFull(true); 
-                avancarAuto();
+                verificarProximoPasso();
             };
             
             canaisDiv.insertAdjacentHTML('afterbegin', `
@@ -338,7 +351,7 @@
             } else { 
                 clapprPlayer.load(canalObj.link); 
                 clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-                    verificarEAvancar();
+                    verificarProximoPasso();
                 });
             }
             
@@ -416,18 +429,13 @@
                     
                     div.onclick = (e) => { 
                         e.stopPropagation();
-                        const p = document.getElementById('player');
+                        indiceAtual = meuIndice; 
                         
-                        if (p.classList.contains('video-expandido')) {
-                            toggleSmartFull(true);
+                        if (infoCanal.nome.toUpperCase().includes("AUTO")) {
+                            toggleSmartFull(true); 
+                            ejecutarCanal(infoCanal, false);
                         } else {
-                            indiceAtual = meuIndice; 
-                            if (infoCanal.nome.toUpperCase().includes("AUTO")) {
-                                toggleSmartFull(true); 
-                                ejecutarCanal(infoCanal, false);
-                            } else {
-                                ejecutarCanal(infoCanal, true); 
-                            }
+                            ejecutarCanal(infoCanal, true); 
                         }
                     };
                     
@@ -435,10 +443,13 @@
                 }
             });
 
+            // Inicialização: Procura o primeiro vídeo "AUTO" do arquivo para dar o Start inicial
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-                indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-                ejecutarCanal(listaDeVideos[indiceAtual], false); 
+                if (idxAuto !== -1) {
+                    indiceAtual = idxAuto;
+                    ejecutarCanal(listaDeVideos[indiceAtual], false); 
+                }
             }
 
             if(imagens.length > 0) showSlides();
