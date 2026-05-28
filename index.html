@@ -220,21 +220,31 @@
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-            avancarAuto();
+            verificarEAvancar();
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
             const videoTag = document.querySelector('#player video');
             if (videoTag) {
                 videoTag.onended = function() {
-                    avancarAuto();
+                    verificarEAvancar();
                 };
             }
         });
     }
 
-    function avancarAuto() {
+    // Realiza a checagem se o canal que acabou de terminar é realmente um canal AUTO
+    function verificarEAvancar() {
         if (listaDeVideos.length === 0) return;
+        
+        // 🔒 ALTERAÇÃO CRUCIAL: Só avança sozinho se o canal atual tiver "AUTO" no nome
+        let canalAtual = listaDeVideos[indiceAtual];
+        if (canalAtual && canalAtual.nome.toUpperCase().includes("AUTO")) {
+            avancarAuto();
+        }
+    }
+
+    function avancarAuto() {
         indiceAtual++;
         if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
         
@@ -330,7 +340,7 @@
             } else { 
                 clapprPlayer.load(canalObj.link); 
                 clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
-                    avancarAuto();
+                    verificarEAvancar();
                 });
             }
             
