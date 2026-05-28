@@ -71,7 +71,6 @@
         #player {
             border-radius: 12px;          
             overflow: hidden;             
-            /* 🔥 CORRIGIDO: Agora usa o cinza grafite (#1a1a1a) igual ao fundo dos seus botões */
             border: 2px solid #1a1a1a;    
             background-color: #000000;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
@@ -81,7 +80,6 @@
             cursor: pointer; 
         }
 
-        /* Mantém uma resposta visual sutil de brilho laranja ao interagir com o player */
         #player:hover, #player:active {
             border-color: #ff5722;
             box-shadow: 0 0 12px rgba(255, 87, 34, 0.4);
@@ -257,16 +255,10 @@
     function verificarSaidaTelaCheia() {
         const p = document.getElementById('player');
         if (p.classList.contains('video-expandido')) {
+            // 🔥 MODIFICAÇÃO PRINCIPAL: Apenas desfaz a tela cheia.
+            // Removemos a função 'voltarParaCanalAuto()' daqui de dentro.
+            // Desse modo, o canal que o usuário escolheu continua tocando direto no quadro!
             toggleSmartFull(true);
-            voltarParaCanalAuto();
-        }
-    }
-
-    function voltarParaCanalAuto() {
-        if (listaDeVideos.length > 0) {
-            let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
-            indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-            ejecutarCanal(listaDeVideos[indiceAtual], false); 
         }
     }
 
@@ -415,8 +407,9 @@
                         const p = document.getElementById('player');
                         
                         if (p.classList.contains('video-expandido')) {
+                            // 🔥 Se o usuário clicar em um canal enquanto estiver em tela cheia,
+                            // o sistema encolhe e mantém a reprodução estável.
                             toggleSmartFull(true);
-                            voltarParaCanalAuto();
                         } else {
                             indiceAtual = meuIndice; 
                             if (infoCanal.nome.toUpperCase().includes("AUTO")) {
@@ -455,8 +448,8 @@
         const p = document.getElementById('player');
         if (p.classList.contains('video-expandido') && (event.keyCode === 13 || event.key === 'Enter')) {
             event.preventDefault();
+            // 🔥 Ao apertar OK no controle, apenas encolhemos sem dar reset no vídeo!
             toggleSmartFull(true);
-            voltarParaCanalAuto();
         }
     });
 </script>
