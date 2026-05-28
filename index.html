@@ -71,13 +71,20 @@
         #player {
             border-radius: 12px;          
             overflow: hidden;             
-            border: 2px solid #ff5722;    
+            /* 🔥 CORRIGIDO: Agora usa o cinza grafite (#1a1a1a) igual ao fundo dos seus botões */
+            border: 2px solid #1a1a1a;    
             background-color: #000000;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
             transition: all 0.3s ease;
             width: 100%;
             height: 220px;                
             cursor: pointer; 
+        }
+
+        /* Mantém uma resposta visual sutil de brilho laranja ao interagir com o player */
+        #player:hover, #player:active {
+            border-color: #ff5722;
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.4);
         }
 
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -238,7 +245,8 @@
         if (botaoAntigo) botaoAntigo.remove();
 
         if (clapprPlayer) clapprPlayer.destroy();
-        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+        
+        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
         
         const p = document.getElementById('player');
         p.classList.add('video-expandido');
@@ -293,8 +301,11 @@
 
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
+            
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
-            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            let mudoParam = canalObj.nome.toUpperCase().includes("AUTO") ? "&mute=1" : "&mute=0";
+            
+            playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1${mudoParam}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
         } 
         else if (canalObj.link.includes("|")) {
             if (clapprPlayer) clapprPlayer.destroy();
@@ -440,10 +451,8 @@
     }
     carregarTV();
 
-    // 🔥 O ANJO DA GUARDA DA TV: Captura o botão central do controle de qualquer maneira!
     document.addEventListener('keydown', function(event) {
         const p = document.getElementById('player');
-        // Se a tela estiver cheia e o usuário apertar OK/Enter (código 13) no controle:
         if (p.classList.contains('video-expandido') && (event.keyCode === 13 || event.key === 'Enter')) {
             event.preventDefault();
             toggleSmartFull(true);
