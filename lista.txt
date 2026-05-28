@@ -448,16 +448,13 @@ https://cdn.jmvstream.com/w/LVW-9730/LVW9730_LmUwslM8jt/playlist.m3u8
 
 
 
+### Propaganda ###Propaganda  ### Propaganda ###Propaganda ### Propaganda ### Propaganda ###Propaganda ### Propaganda
 ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
-### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
+### Propaganda ###Propaganda  ### Propaganda ###Propaganda ### Propaganda ### Propaganda ###Propaganda ### Propaganda
 
 #EXTINF:-1, AUTO 
 https://i.postimg.cc/wMKV8pYB/petshow.png
 #EXTINF:-1, AUTO 
 https://archive.org/download/propaganda_202605/propaganda.mp4
-#EXTINF:-1, AUTO 
-https://i.postimg.cc/wMKV8pYB/petshow.png
-#EXTINF:-1, AUTO 
-https://archive.org/download/propaganda_202605/propaganda.mp4
-#EXTINF:-1, AUTO 
-https://i.postimg.cc/wMKV8pYB/petshow.png
+#EXTINF:-1, AUTO
+https://www.youtube.com/embed/SpwiHTbwa-g
