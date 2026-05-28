@@ -78,7 +78,6 @@
             width: 100%;
             height: 220px;                
             cursor: pointer; 
-            position: relative;
         }
 
         #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -96,7 +95,6 @@
             margin-bottom: 4px;
         }
 
-        /* Voltou a ser DIV com o seu design original impecável */
         .canal { 
             border-radius: 8px;           
             border: 1px solid #222;       
@@ -157,18 +155,6 @@
             display: block !important;
             pointer-events: none; 
         }
-
-        /* Botão invisível focado no controle, sem estragar o layout */
-        #btn-controle-tv {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            z-index: 100000;
-            cursor: pointer;
-        }
         
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
@@ -185,9 +171,7 @@
 </header>
 
 <div id="main">
-    <div id="player" onclick="gerenciarToquePlayer()">
-        <button id="btn-controle-tv" onclick="origemControleVoltar(event)"></button>
-    </div> 
+    <div id="player" onclick="verificarSaidaTelaCheia()"></div> 
     <div id="canais">
         <button class="btn-youtube" onclick="abrirYoutube()">
             <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
@@ -205,10 +189,6 @@
     const LARGURA_LOGO_3D = "150%"; 
     // =========================================================================
 
-    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost") {
-        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
-    }
-
     let imagens = [];
     let slideIndex = 0;
     let listaDeVideos = [];
@@ -224,21 +204,7 @@
         if (clapprPlayer) clapprPlayer.destroy();
         
         clapprPlayer = new Clappr.Player({ 
-            parentId: "#player", 
-            source: link, 
-            width: '100%', 
-            height: '100%', 
-            autoPlay: true, 
-            mute: true,
-            playback: {
-                playInline: true,
-                crossOrigin: 'anonymous',
-                hlsjsConfig: {
-                    xhrSetup: function(xhr, url) {
-                        xhr.withCredentials = false;
-                    }
-                }
-            }
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
 
         clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
@@ -248,7 +214,6 @@
         clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
             const videoTag = document.querySelector('#player video');
             if (videoTag) {
-                videoTag.setAttribute('crossorigin', 'anonymous');
                 videoTag.onended = function() {
                     avancarAuto();
                 };
@@ -260,6 +225,10 @@
         if (listaDeVideos.length === 0) return;
         indiceAtual++;
         if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
+        
+        if (!listaDeVideos[indiceAtual].link.includes("|")) {
+            toggleSmartFull(true); 
+        }
         ejecutarCanal(listaDeVideos[indiceAtual]);
     }
 
@@ -271,25 +240,27 @@
         if (clapprPlayer) clapprPlayer.destroy();
         playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1&mute=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
         
-        playerDiv.appendChild(document.getElementById('btn-controle-tv')); 
-        toggleSmartFull(false);
+        const p = document.getElementById('player');
+        p.classList.add('video-expandido');
+        document.getElementById('cabecalho').style.display = 'none';
+        document.getElementById('canais').style.display = 'none';
     }
 
-    function gerenciarToquePlayer() {
+    // 🔌 SENSOR DE TOQUE PARA VOLTAR (Mantido exatamente como estava para PC/Celular)
+    function verificarSaidaTelaCheia() {
         const p = document.getElementById('player');
-        if (!p.classList.contains('video-expandido')) {
-            toggleSmartFull(false);
+        if (p.classList.contains('video-expandido')) {
+            fecharEVoltarProAuto();
         }
     }
 
-    function origemControleVoltar(event) {
-        event.stopPropagation();
+    // 🔥 NOVA FUNÇÃO CENTRAL PARA RECOLHER A TELA E RESETAR PRO CANAL AUTO
+    function fecharEVoltarProAuto() {
         toggleSmartFull(true);
-        
         if (listaDeVideos.length > 0) {
             let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
             indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-            ejecutarCanal(listaDeVideos[indiceAtual]);
+            ejecutarCanal(listaDeVideos[indiceAtual], false);
         }
     }
 
@@ -297,30 +268,30 @@
         const p = document.getElementById('player');
         const c = document.getElementById('cabecalho');
         const lista = document.getElementById('canais');
-        const btnTv = document.getElementById('btn-controle-tv');
         
         if (forçarFechar) {
             p.classList.remove('video-expandido');
             c.style.display = 'flex';
             lista.style.display = 'flex';
-            btnTv.style.display = 'none';
         } else {
             p.classList.add('video-expandido');
             c.style.display = 'none';
             lista.style.display = 'none';
-            btnTv.style.display = 'block';
-            
-            setTimeout(() => {
-                btnTv.focus();
-            }, 150);
         }
     }
 
-    function ejecutarCanal(canalObj) {
+    function ejecutarCanal(canalObj, ampliarDireto = false) {
         const playerDiv = document.getElementById("player");
         const canaisDiv = document.getElementById("canais");
         const botaoAntigo = document.getElementById("btn-compra-shopee");
         if (botaoAntigo) botaoAntigo.remove();
+
+        if (ampliarDireto) {
+            const p = document.getElementById('player');
+            p.classList.add('video-expandido');
+            document.getElementById('cabecalho').style.display = 'none';
+            canaisDiv.style.display = 'none';
+        }
 
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
@@ -337,6 +308,7 @@
             playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
             
             document.getElementById('video-propaganda').onended = function() {
+                toggleSmartFull(true); 
                 avancarAuto();
             };
             
@@ -365,8 +337,6 @@
             }
             clapprPlayer.play();
         }
-
-        playerDiv.appendChild(document.getElementById('btn-controle-tv'));
     }
 
     async function carregarTV() {
@@ -417,7 +387,6 @@
                     listaDeVideos.push(infoCanal);
                     let meuIndice = listaDeVideos.length - 1;
                     
-                    // Voltou a ser o seu modelo original de DIV estável
                     const div = document.createElement('div');
                     div.className = 'canal'; 
                     
@@ -432,10 +401,25 @@
                         div.innerHTML = "▶️ " + nomeTemp;
                     }
                     
+                    // 🛡️ MODIFICAÇÃO CIRÚRGICA APENAS NO CLIQUE DO BOTÃO
                     div.onclick = (e) => { 
                         e.stopPropagation();
-                        indiceAtual = meuIndice; 
-                        ejecutarCanal(infoCanal); 
+                        
+                        const p = document.getElementById('player');
+                        // Se JÁ ESTÁ em tela cheia, o segundo clique funciona para ENCOLHER!
+                        if (p.classList.contains('video-expandido')) {
+                            fecharEVoltarProAuto();
+                        } 
+                        // Se não estiver, roda a sua lógica padrão de abrir ampliando
+                        else {
+                            indiceAtual = meuIndice; 
+                            if (infoCanal.nome.toUpperCase().includes("AUTO")) {
+                                toggleSmartFull(true); 
+                                ejecutarCanal(infoCanal, false);
+                            } else {
+                                ejecutarCanal(infoCanal, true); 
+                            }
+                        }
                     };
                     
                     menu.appendChild(div);
@@ -445,7 +429,7 @@
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-                ejecutarCanal(listaDeVideos[indiceAtual]); 
+                ejecutarCanal(listaDeVideos[indiceAtual], false); 
             }
 
             if(imagens.length > 0) showSlides();
