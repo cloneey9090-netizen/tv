@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV COMUNIDADE</title>
+    <title>TV C </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
@@ -185,14 +185,20 @@
     </div> 
 </div>
 
+<!-- ... resto do código HTML acima ... -->
+
 <script>
+    // 🛡️ TRANCA DE DOMÍNIO DO COMANDANTE (Coloque bem aqui!)
+    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
+    }
+
     // =========================================================================
-    // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
+    // 🎛️ PAINEL DE CONTROLE CENTRAL (O resto do seu código continua aqui para baixo)
     // =========================================================================
     const urlLista = "lista.txt"; 
     const LINK_LOGO_3D = "https://i.postimg.cc/PqKbmKV5/0514.gif"; 
-    const LARGURA_LOGO_3D = "150%"; 
-    // =========================================================================
+    // ... todo o resto do script continua igual ...
 
     let imagens = [];
     let slideIndex = 0;
