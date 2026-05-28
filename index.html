@@ -233,14 +233,12 @@
         });
     }
 
-    // Nova função inteligente para controlar o fluxo de paradas
     function verificarProximoPasso() {
         if (listaDeVideos.length === 0) return;
 
-        // Olha qual seria o próximo item na lista
         let proximoIndice = indiceAtual + 1;
 
-        // Se existirem mais vídeos e o PRÓXIMO também tiver "AUTO", ele continua rodando sozinho
+        // Se o próximo vídeo também for AUTO, continua a reprodução automática
         if (proximoIndice < listaDeVideos.length && listaDeVideos[proximoIndice].nome.toUpperCase().includes("AUTO")) {
             indiceAtual = proximoIndice;
             if (!listaDeVideos[indiceAtual].link.includes("|")) {
@@ -248,21 +246,19 @@
             }
             ejecutarCanal(listaDeVideos[indiceAtual]);
         } else {
-            // Se o próximo vídeo NÃO for AUTO (ou a lista acabou), o player para e limpa a tela!
-            pararPlayerEAguardar();
+            // Se o próximo NÃO for AUTO, congela a imagem do último frame na tela e aguarda!
+            pausarImagemEAguardar();
         }
     }
 
-    function pararPlayerEAguardar() {
-        if (clapprPlayer) clapprPlayer.destroy();
-        const playerDiv = document.getElementById("player");
-        playerDiv.innerHTML = ""; // Limpa o player antigo
-        
-        // Remove botões de ofertas antigos se houverem
-        const botaoAntigo = document.getElementById("btn-compra-shopee");
-        if (botaoAntigo) botaoAntigo.remove();
+    function pausarImagemEAguardar() {
+        // Se for um player de vídeo comum, removemos o "muted" para quando ele clicar no canal o som funcionar, mas mantemos o frame na tela
+        const videoTag = document.querySelector('#player video');
+        if (videoTag) {
+            videoTag.pause(); // Garante que o vídeo pare exatamente no último frame
+        }
 
-        // Força a tela a voltar ao normal para aparecer a lista de canais
+        // Tira da tela cheia discretamente para o usuário ver a lista, mantendo a última imagem visível no player
         toggleSmartFull(true);
     }
 
@@ -443,7 +439,6 @@
                 }
             });
 
-            // Inicialização: Procura o primeiro vídeo "AUTO" do arquivo para dar o Start inicial
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 if (idxAuto !== -1) {
