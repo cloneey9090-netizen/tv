@@ -1,4 +1,5 @@
- 
+ BANNER
+
 IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/5528988049598
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshowracoes1?igsh=andkOXh5YXJhZzQz
 IMG=https://i.postimg.cc/wTvSfmc2/minhalogo.png | https://wa.me/5528988049598
@@ -456,5 +457,4 @@ https://cdn.jmvstream.com/w/LVW-9730/LVW9730_LmUwslM8jt/playlist.m3u8
 https://i.postimg.cc/wMKV8pYB/petshow.png
 #EXTINF:-1, AUTO 
 https://archive.org/download/propaganda_202605/propaganda.mp4
-#EXTINF:-1, AUTO
-https://www.youtube.com/embed/SpwiHTbwa-g
+
