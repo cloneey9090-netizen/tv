@@ -1,3 +1,4 @@
+
 import os
 import re
 import requests
@@ -6,37 +7,74 @@ import datetime
 # =====================================================================
 #                      PAINEL DE CONTROLE DO COMANDANTE
 # =====================================================================
-# Mude para True para LIGAR a busca automática de canais.
-# Mude para False para DESLIGAR a busca (mantém a lista viva e limpa).
-ROBO_ATIVO =  False 
-
-# Canais que o robô vai monitorar quando estiver LIGADO
-CANAIS_ALVO = {
-    "Premiere": "https://redecanaistv.be/player3/ch.php?canal=premiereclubes",
-    "Globoplay Novelas": "https://rdcanais.com/globoplaynovelas",
-    "Gloob": "https://redecanaistv.be/player3/ch.php?canal=gloob",
-    "Globo SP": "https://redecanaistv.be/player3/ch.php?canal=bobosp"
-}
+# LIGADO (True): O robô caça os links mastigados nos repositórios aliados.
+# DESLIGADO (False): O robô fica em repouso e mantém a sua lista intacta.
+ROBO_ATIVO = True  
 # =====================================================================
 
-def pegar_link_dinamico(url_canal):
-    sessao = requests.Session()
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Mobile Safari/537.36",
-        "X-Requested-With": "com.redecanais.app",
-        "Referer": "https://redecanaistv.be/",
-        "Origin": "https://redecanaistv.be"
-    }
-    try:
-        resposta = sessao.get(url_canal, headers=headers, timeout=12)
-        if resposta.status_code == 200:
-            html = resposta.text
-            match_m3u8 = re.search(r'(https?://[^\s"\']+\.m3u8[^\s"\']*)', html)
-            if match_m3u8 and "exemplo" not in match_m3u8.group(1):
-                return match_m3u8.group(1).replace("\\/", "/")
-    except Exception:
-        pass
-    return None
+# Lista de fontes aliadas abertas (GitHub) que atualizam canais diariamente
+REPOSITORIOS_ALIADOS = [
+    "https://raw.githubusercontent.com/Guikiu/m3u8/main/canais.txt",
+    "https://raw.githubusercontent.com/Web-Premium/IPTV/master/canais.m3u",
+    "https://raw.githubusercontent.com/De縱o/Lista/main/canais.m3u"
+]
+
+# FROTA EXPANDIDA: Canais que o robô vai caçar de forma automática
+CANAIS_ALVO = [
+    "Premiere", 
+    "Globoplay Novelas", 
+    "Gloob", 
+    "Globo SP",
+    "Sportv 1",
+    "Sportv 2",
+    "Sportv 3",
+    "ESPN 1",
+    "ESPN 2",
+    "Fox Sports",
+    "Telecine Premium",
+    "Telecine Action",
+    "HBO",
+    "Warner Channel",
+    "Discovery Channel",
+    "Cartoon Network",
+    "Megapix"
+]
+
+def caçar_em_repositorios_aliados():
+    links_capturados = {}
+    
+    if not ROBO_ATIVO:
+        return links_capturados
+
+    print("🤖 Caçador ativo! Buscando frota de canais nos repositórios aliados...")
+    
+    for url_repo in REPOSITORIOS_ALIADOS:
+        try:
+            resposta = requests.get(url_repo, timeout=10)
+            if resposta.status_code != 200:
+                continue
+                
+            linhas = resposta.text.split("\n")
+            
+            for alvo in CANAIS_ALVO:
+                # Se já achamos esse canal em outro repo, pula para o próximo
+                if alvo in links_capturados:
+                    continue
+                    
+                for idx, linha in enumerate(linhas):
+                    # Procura o nome do canal de forma inteligente na linha do #EXTINF
+                    if alvo.lower() in linha.lower():
+                        if idx + 1 < len(linhas):
+                            link_candidato = linhas[idx + 1].strip()
+                            if link_candidato.startswith("http"):
+                                links_capturados[alvo] = link_candidato
+                                print(f"-> [SUCESSO] {alvo} capturado!")
+                                break
+        except Exception as e:
+            print(f"Erro ao varrer repositório: {e}")
+            continue
+            
+    return links_capturados
 
 def gerenciar_fortaleza():
     conteudo_antigo = []
@@ -47,7 +85,6 @@ def gerenciar_fortaleza():
     if not conteudo_antigo:
         conteudo_antigo = ["#EXTM3U\n"]
     
-    # Carimbo de data para manter o GitHub ativo
     data_atual = datetime.datetime.now().strftime("%d/%m/%Y às %H:%M")
     linha_data = f"# LISTA MANTIDA VIVA EM: {data_atual}\n"
     
@@ -60,30 +97,17 @@ def gerenciar_fortaleza():
         
     lista_canais_atualizada.append(linha_data)
     
-    novos_links = {}
-    
-    # SE O ROBÔ ESTIVER LIGADO, ELE BUSCA OS LINKS NOVOS
-    if ROBO_ATIVO:
-        print("🤖 [INTERRUPTOR: LIGADO] Iniciando pescaria de links...")
-        for nome_canal, url in CANAIS_ALVO.items():
-            link = pegar_link_dinamico(url)
-            if link:
-                novos_links[nome_canal] = link
-            else:
-                novos_links[nome_canal] = "MANTER_ANTIGO"
-    else:
-        print("😴 [INTERRUPTOR: DESLIGADO] Robô em repouso. Apenas limpando e mantendo a lista ativa.")
-        for nome_canal in CANAIS_ALVO:
-            novos_links[nome_canal] = "MANTER_ANTIGO"
+    # Executa a pescaria nos aliados
+    novos_links = caçar_em_repositorios_aliados()
 
-    # Processando o arquivo linha por linha
+    # Processa o arquivo existente mantendo seus canais intactos nas posições certas
     i = inicio
     canais_processados = set()
     
     while i < len(conteudo_antigo):
         linha = conteudo_antigo[i]
         
-        # Filtra e remove links antigos de "sem-sinal" para limpar o arquivo
+        # Remove sujeiras de links antigos que falharam
         if "exemplo.com/sem-sinal.m3u8" in linha:
             if lista_canais_atualizada and lista_canais_atualizada[-1].startswith("#EXTINF"):
                 lista_canais_atualizada.pop()
@@ -96,8 +120,8 @@ def gerenciar_fortaleza():
             if nome_canal_lista in CANAIS_ALVO:
                 lista_canais_atualizada.append(linha)
                 
-                # Se o robô achou link novo e está ligado, atualiza. Se não, mantém o seu atual liso.
-                if novos_links[nome_canal_lista] != "MANTER_ANTIGO":
+                # Atualiza com o link caçado ou mantém o que já funcionava antes
+                if nome_canal_lista in novos_links:
                     lista_canais_atualizada.append(f"{novos_links[nome_canal_lista]}\n")
                 else:
                     if i + 1 < len(conteudo_antigo):
@@ -110,16 +134,15 @@ def gerenciar_fortaleza():
         lista_canais_atualizada.append(linha)
         i += 1
 
-    # Se o robô estiver ligado e achar canais novos que não estavam na lista, joga no final
-    if ROBO_ATIVO:
-        for nome_canal, link_novo in novos_links.items():
-            if nome_canal not in canais_processados and link_novo != "MANTER_ANTIGO":
-                lista_canais_atualizada.append(f"#EXTINF:-1, {nome_canal}\n")
-                lista_canais_atualizada.append(f"{link_novo}\n")
+    # Todos os canais novos da nossa lista expandida vão entrar organizados aqui embaixo
+    for nome_canal in CANAIS_ALVO:
+        if nome_canal not in canais_processados and nome_canal in novos_links:
+            lista_canais_atualizada.append(f"#EXTINF:-1, {nome_canal}\n")
+            lista_canais_atualizada.append(f"{novos_links[nome_canal]}\n")
 
     with open("lista.txt", "w", encoding="utf-8") as f:
         f.writelines(lista_canais_atualizada)
-    print("👍 Processo concluído com sucesso!")
+    print("👍 Fortaleza expandida e atualizada com sucesso, comandante!")
 
 if __name__ == "__main__":
     gerenciar_fortaleza()
