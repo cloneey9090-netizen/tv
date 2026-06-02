@@ -1,5 +1,5 @@
 
-# LISTA MANTIDA VIVA EM: 02/06/2026 às 15:03
+# LISTA MANTIDA VIVA EM: 02/06/2026 às 19:02
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
 https://www.youtube.com/embed/LLpNUqHVam8
 #EXTINF:-1,📺 ACESSAR YOUTUBE
@@ -9,7 +9,7 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
 #EXTINF:-1,📺 Casé TV LINK 2
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u8
 #EXTINF:-1 tvg-language="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo
-https://cdn-2.nxplay.com.br/GLOBO_SP_TK/index.m3u8
+https://origin-fast.b-cdn.net/GLOBO_SP_TK/tracks-v1a1/mono.ts.m3u8
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT
 https://live.eu-north-1a.cf.dmcdn.net/sec2(Vb21vB0VWLMPoVnhEPkg69DrSzlhPSxptZO8I8IoXptqq7QMYIUYNutoTDsRpjYYvitWR745wcgnvB-ZIWgWknYtBcffLmCsrNDaY97F6RDkcHjjUdsnH04JcxTwjM1X)/dm/3/x8u8n0m/d/live-480.m3u8
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",TV SIM SBT youtube
@@ -377,22 +377,30 @@ https://i.postimg.cc/wMKV8pYB/petshow.png
 #EXTINF:-1, AUTO
 https://archive.org/download/propaganda_202605/propaganda.mp4
 #EXTINF:-1, Premiere
+
 https://stm.sinalmycn.com/20000/video.m3u8?token=EkP2qSi13ckjQRLSIDoxI5rMZsF5rZyEYzqWjxD248ScEUPYQ0
 #EXTINF:-1, Globoplay Novelas
+
 https://exemplo.com/sem-sinal.m3u8
 #EXTINF:-1, Gloob
+
 http://45.235.0.78/Gloob/playlist.m3u8
 #EXTINF:-1, Globo SP
+
 https://player-tvcultura.stream.uol.com.br/live/tvcultura.m3u8
 #EXTINF:-1, Sportv 1
-https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+https://origin-fast.b-cdn.net/BAND_HD_PFZ_NX/index.m3u8
 #EXTINF:-1, Sportv 2
+
 https://stm.sinalmycn.com/21003/video.m3u8?token=EkP2qSi13ckjQRLSIDoxI5rMZsF5rZyEYzqWjxD248ScEUPYQ0
 #EXTINF:-1, Sportv 3
+
 https://stm.sinalmycn.com/21006/video.m3u8?token=EkP2qSi13ckjQRLSIDoxI5rMZsF5rZyEYzqWjxD248ScEUPYQ0
 #EXTINF:-1, ESPN 1
+
 https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
 #EXTINF:-1, ESPN 2
+
 https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
 #EXTINF:-1, Fox Sports
 https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
