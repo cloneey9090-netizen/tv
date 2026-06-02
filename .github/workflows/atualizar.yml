@@ -1,42 +1,37 @@
 name: Atualizador Automatico da TV
 
-# Aqui a gente programa quando o robô vai rodar
 on:
   schedule:
-    # Programado para rodar todos os dias às 06:00 UTC (03:00 da manhã no horário de Brasília)
     - cron: '0 6 * * *'
-  # Esse botão permite que você rode o robô manualmente se quiser testar de dia
   workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Linha mágica que desliga o aviso do GitHub
 
 jobs:
   atualizar-lista:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Liga o computador virtual e puxa os seus arquivos do GitHub
     - name: Baixando os arquivos do repositorio
       uses: actions/checkout@v4
 
-    # 2. Instala o Python nessa máquina virtual
     - name: Configurando o Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    # 3. Instala a ferramenta que o robô usa para entrar nos sites (requests)
     - name: Instalandos as ferramentas do robo
       run: |
         python -m pip install --upgrade pip
         pip install requests
 
-    # 4. Coloca o robô para trabalhar na limpeza dos 4 canais
     - name: Rodando o Robo Raspador
       run: python robo.py
 
-    # 5. Salva o arquivo lista.txt atualizado de volta no seu GitHub
     - name: Salvando as alteracoes na lista.txt
       run: |
         git config --global user.name "Robo da TV"
         git config --global user.email "robo@tv.com"
         git add lista.txt
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Lista de canais updated" && git push)
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Lista atualizada mantendo os canais fixos" && git push)
