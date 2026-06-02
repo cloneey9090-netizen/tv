@@ -2,18 +2,21 @@ import os
 import re
 import requests
 import datetime
+import time  # <--- Nova ferramenta para dar um tempo de espera (delay) de segurança
 
 # =====================================================================
-#                      PAINEL DE CONTROLE DO COMANDANTE
+#                 PAINEL DE CONTROLE DO COMANDANTE
 # =====================================================================
 # LINK DIRETO DO SEU GOOGLE DRIVE (O ROBO VAI LER DAQUI)
 LINK_DRIVE_COMANDANTE = "https://drive.google.com/uc?id=1kk-OsN3R02flYm2Nl0kYZ7qI3JdzhwB_&export=download"
 
-# REPOSITORIOS ALIADOS PARA BUSCA AUTOMÁTICA
-REPOSITORIOS_ALIADOS = [
-    "https://raw.githubusercontent.com/Guikiu/m3u8/main/canais.txt",
-    "https://raw.githubusercontent.com/Web-Premium/IPTV/master/canais.m3u"
-]
+# MIRA SINTONIZADA NO PIRATETV (FONTES DE BUSCA)
+PIRATE_TV_URL = "https://piratetv.sk"
+
+# CABEÇALHO DE CAMUFLAGEM: Faz o robô fingir que é um celular Android comum
+HEADERS_CAMUFLAGEM = {
+    "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36"
+}
 
 # CANAIS QUE O ROBÔ VAI CAÇAR PARA JOGAR NA PARTE DE BAIXO
 CANAIS_ALVO = [
@@ -38,36 +41,42 @@ def baixar_lista_do_drive():
 
 def caçar_links():
     links_finais = {}
-    print("🤖 Caçador ativo buscando fiação nos repositórios aliados...")
+    print("🤖 Caçador ativo com camuflagem de celular de olho no PirateTV...")
     
-    for url_repo in REPOSITORIOS_ALIADOS:
-        try:
-            resposta = requests.get(url_repo, timeout=10)
-            if resposta.status_code != 200:
-                continue
-            linhas = resposta.text.split("\n")
+    try:
+        # Acessa o site usando a camuflagem para passar direto pela portaria
+        resposta = requests.get(PIRATE_TV_URL, headers=HEADERS_CAMUFLAGEM, timeout=15)
+        
+        if resposta.status_code == 200:
+            texto_do_site = resposta.text
             
             for alvo in CANAIS_ALVO:
-                if alvo in links_finais:
-                    continue 
-                    
-                for idx, linha in enumerate(linhas):
-                    if alvo.lower() in linha.lower():
-                        if idx + 1 < len(linhas):
-                            link_candidato = lines_finais_check = linhas[idx + 1].strip()
-                            if link_candidato.startswith("http"):
-                                links_finais[alvo] = link_candidato
-                                break
-        except Exception:
-            continue
+                # O robô procura pelo nome do canal e captura o link .m3u8 mais próximo dele
+                # Essa expressão regular vasculha o código HTML atrás da fiação oculta
+                padrao = rf'"{alvo}".*?(https?://[^\s"\']+\.m3u8)'
+                resultado = re.search(padrao, texto_do_site, re.IGNORECASE | re.DOTALL)
+                
+                if resultado:
+                    link_encontrado = resultado.group(1).strip()
+                    links_finais[alvo] = link_encontrado
+                    print(f"🎯 Canal encontrado com sucesso: {alvo}")
+                else:
+                    print(f"⚠️ Link do canal [{alvo}] não estava visível nesta ronda.")
+                
+                # LENTIDÃO PROGRAMADA: Espera 2 segundos antes de checar o próximo para não ativar o alarme do site
+                time.sleep(2)
+                
+        else:
+            print(f"❌ PirateTV recusou o acesso do robô (Status: {resposta.status_code})")
             
+    except Exception as e:
+        print(f"❌ Erro crítico na mineração do PirateTV: {e}")
+        
     return links_finais
 
 def gerenciar_fortaleza():
-    # O robô agora usa a lista do seu Drive como a base de tudo
     conteudo_base = baixar_lista_do_drive()
 
-    # Se o Drive falhar por algum motivo, ele tenta usar a lista local para não zerar o site
     if not conteudo_base and os.path.exists("lista.txt"):
         print("⚠️ Usando lista local como segurança pois o Drive não respondeu.")
         with open("lista.txt", "r", encoding="utf-8") as f:
@@ -80,7 +89,6 @@ def gerenciar_fortaleza():
     linha_data = f"# LISTA MANTIDA VIVA EM: {data_atual}\n"
     
     lista_canais_atualizada = []
-    # Garante o cabeçalho #EXTM3U na primeira linha
     primeira_linha = conteudo_base[0].strip() + "\n"
     lista_canais_atualizada.append(primeira_linha)
     
@@ -116,18 +124,15 @@ def gerenciar_fortaleza():
                 i += 2
                 continue
                 
-        # Mantém intacto tudo o que for canal vip do seu topo
         if linha.startswith("#EXTINF") or linha.startswith("http"):
             lista_canais_atualizada.append(f"{linha}\n")
         i += 1
 
-    # Se o robô achou canais novos que não estavam na sua lista do Drive, ele adiciona no fim
     for nome_canal in CANAIS_ALVO:
         if nome_canal not in canais_processados and nome_canal in novos_links:
             lista_canais_atualizada.append(f"#EXTINF:-1, {nome_canal}\n")
             lista_canais_atualizada.append(f"{novos_links[nome_canal]}\n")
 
-    # Salva o resultado final no arquivo que vai para o seu site da TV
     with open("lista.txt", "w", encoding="utf-8") as f:
         f.writelines(lista_canais_atualizada)
     print("👍 Sincronização com o Google Drive concluída com sucesso!")
