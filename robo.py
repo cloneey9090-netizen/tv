@@ -2,7 +2,7 @@ import os
 import re
 import requests
 
-# NOVA LISTA DE CANAIS ALVOS (REDECANAIS - ATUALIZADA PELO COMANDANTE)
+# LISTA DE CANAIS ALVOS - RE-CALIBRADA PARA CAÇAR LINKS DINÂMICOS
 CANAIS_ALVO = {
     "Premiere": "https://redecanaistv.be/player3/ch.php?canal=premiereclubes",
     "Globoplay Novelas": "https://rdcanais.com/globoplaynovelas",
@@ -10,39 +10,66 @@ CANAIS_ALVO = {
     "Globo SP": "https://redecanaistv.be/player3/ch.php?canal=bobosp"
 }
 
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    "Referer": "https://redecanaistv.be/"
-}
-
-def pegar_link_limpo(url_canal):
+def pegar_link_estilo_idm(url_canal):
+    # Criamos uma sessão para guardar cookies e parecer um navegador real
+    sessao = requests.Session()
+    
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+        "Accept-Language": "pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Referer": "https://redecanaistv.be/",
+        "Origin": "https://redecanaistv.be"
+    }
+    
     try:
-        resposta = requests.get(url_canal, headers=headers, timeout=15)
+        # 1ª Tentativa: Entrar na página principal do player
+        resposta = sessao.get(url_canal, headers=headers, timeout=15)
         if resposta.status_code != 200:
             return None
         
         html = resposta.text
-        # Procura por links m3u8 diretos ou com tokens na página
-        links_m3u8 = re.findall(r'(https?://[^\s"\']+\.m3u8[^\s"\']*)', html)
         
-        if links_m3u8:
-            return links_m3u8[0]
-            
-        # Se não achar de primeira, tenta caçar se tem outro player embutido (iframe)
+        # O IDM acha os links caçando padrões dentro do tráfego. Vamos vasculhar tudo:
+        # Padrão 1: Links diretos com qualquer tipo de token ou query
+        padrao_m3u8 = r'(https?://[^\s"\']+\.m3u8[^\s"\']*)'
+        links = re.findall(padrao_m3u8, html)
+        
+        if links:
+            # Filtra links falsos ou de exemplo
+            for l in links:
+                if "exemplo.com" not in l and "micineovs.com" in l:
+                    return l
+                    
+        # Padrão 2: Capturar se o link estiver escondido em variáveis JavaScript (como 'file:', 'source:', etc)
+        js_match = re.search(r'(?:file|source|src)\s*:\s*["\']([^"\']+\.m3u8[^"\']*)["\']', html, re.IGNORECASE)
+        if js_match:
+            return js_match.group(1)
+
+        # 2ª Tentativa: Se tiver iframe embutido, vamos seguir o rastro dele
         iframe_match = re.search(r'iframe[^>]+src=["\']([^"\']+)["\']', html)
         if iframe_match:
             url_iframe = iframe_match.group(1)
             if url_iframe.startswith('//'):
                 url_iframe = 'https:' + url_iframe
             
-            res_iframe = requests.get(url_iframe, headers=headers, timeout=15)
-            links_m3u8_iframe = re.findall(r'(https?://[^\s"\']+\.m3u8[^\s"\']*)', res_iframe.text)
-            if links_m3u8_iframe:
-                return links_m3u8_iframe[0]
-                
+            # Atualiza o Referer para parecer que estamos dentro do iframe
+            headers["Referer"] = url_canal
+            res_iframe = sessao.get(url_iframe, headers=headers, timeout=15)
+            
+            links_iframe = re.findall(padrao_m3u8, res_iframe.text)
+            if links_iframe:
+                for l in links_iframe:
+                    if "exemplo.com" not in l:
+                        return l
+                        
+            js_match_iframe = re.search(r'(?:file|source|src)\s*:\s*["\']([^"\']+\.m3u8[^"\']*)["\']', res_iframe.text, re.IGNORECASE)
+            if js_match_iframe:
+                return js_match_iframe.group(1)
+
         return None
     except Exception as e:
-        print(f"Erro ao raspar canal: {e}")
+        print(f"Erro na varredura: {e}")
         return None
 
 def atualizar_lista_inteligente():
@@ -58,16 +85,18 @@ def atualizar_lista_inteligente():
         lista_canais_atualizada.append("#EXTM3U\n")
     
     novos_links = {}
-    print("Iniciando a varredura inteligente na RedeCanais, comandante...")
+    print("Iniciando a varredura estilo IDM...")
+    
     for nome_canal, url in CANAIS_ALVO.items():
-        print(f"Buscando sinal atualizado para: {nome_canal}...")
-        link = pegar_link_limpo(url)
+        link = pegar_link_estilo_idm(url)
         if link:
+            # Garante que o link use HTTPS se necessário e limpa espaços
+            link = link.strip().replace("\\/", "/")
             novos_links[nome_canal] = link
-            print(f"-> Sinal encontrado com sucesso para {nome_canal}!")
+            print(f"-> Sucesso! Capturado link dinâmico para {nome_canal}")
         else:
             novos_links[nome_canal] = "https://exemplo.com/sem-sinal.m3u8"
-            print(f"-> Canal {nome_canal} protegido por token pesado. Usando link reserva.")
+            print(f"-> Bloqueio detectado para {nome_canal}. Usando link reserva.")
 
     i = 0
     while i < len(conteudo_antigo):
@@ -99,7 +128,7 @@ def atualizar_lista_inteligente():
     with open("lista.txt", "w", encoding="utf-8") as f:
         f.writelines(lista_canais_atualizada)
     
-    print("Sua lista foi atualizada com a nova fonte sem mexer nos canais fixos!")
+    print("Processo concluído, comandante!")
 
 if __name__ == "__main__":
     atualizar_lista_inteligente()
