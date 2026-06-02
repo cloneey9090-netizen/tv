@@ -14,7 +14,7 @@ REPOSITORIOS_ALIADOS = [
     "https://raw.githubusercontent.com/Guikiu/m3u8/main/canais.txt",
     "https://raw.githubusercontent.com/Web-Premium/IPTV/master/canais.m3u",
     "https://raw.githubusercontent.com/De縱o/Lista/main/canais.m3u",
-    "https://iptv-org.github.io/iptv/countries/br.m3u" # Fonte internacional reserva para o Brasil
+    "https://iptv-org.github.io/iptv/countries/br.m3u"
 ]
 
 # Canais expandidos que o robô vai caçar
@@ -126,9 +126,7 @@ def gerenciar_fortaleza():
         lista_canais_atualizada.append(linha)
         i += 1
 
-    # FORÇAR OS NOVOS CANAIS: Se o robô não achou o link na internet hoje,
-    # ele vai criar o canal assim mesmo no final do arquivo com um link temporário,
-    # garantindo que a sua lista cresça e os canais apareçam na sua TV!
+    # FORÇAR OS NOVOS CANAIS NO FINAL DO ARQUIVO
     for nome_canal in CANAIS_ALVO:
         if nome_canal not in canais_processados:
             link_final = novos_links.get(nome_canal, "https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8")
