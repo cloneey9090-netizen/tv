@@ -1,5 +1,5 @@
  BANNER
-# LISTA MANTIDA VIVA EM: 02/06/2026 às 12:43
+# LISTA MANTIDA VIVA EM: 02/06/2026 às 12:55
 
 IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/5528988049598
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshowracoes1?igsh=andkOXh5YXJhZzQz
@@ -460,10 +460,36 @@ https://i.postimg.cc/wMKV8pYB/petshow.png
 https://archive.org/download/propaganda_202605/propaganda.mp4
 
 #EXTINF:-1, Premiere
-https://exemplo.com/sem-sinal.m3u8
+https://stm.sinalmycn.com/20000/video.m3u8?token=EkP2qSi13ckjQRLSIDoxI5rMZsF5rZyEYzqWjxD248ScEUPYQ0
 #EXTINF:-1, Globoplay Novelas
 https://exemplo.com/sem-sinal.m3u8
 #EXTINF:-1, Gloob
-https://exemplo.com/sem-sinal.m3u8
+http://45.235.0.78/Gloob/playlist.m3u8
 #EXTINF:-1, Globo SP
 https://exemplo.com/sem-sinal.m3u8
+#EXTINF:-1, Sportv 1
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Sportv 2
+https://stm.sinalmycn.com/21003/video.m3u8?token=EkP2qSi13ckjQRLSIDoxI5rMZsF5rZyEYzqWjxD248ScEUPYQ0
+#EXTINF:-1, Sportv 3
+https://stm.sinalmycn.com/21006/video.m3u8?token=EkP2qSi13ckjQRLSIDoxI5rMZsF5rZyEYzqWjxD248ScEUPYQ0
+#EXTINF:-1, ESPN 1
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, ESPN 2
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Fox Sports
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Telecine Premium
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Telecine Action
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, HBO
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Warner Channel
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Discovery Channel
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Cartoon Network
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
+#EXTINF:-1, Megapix
+https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
