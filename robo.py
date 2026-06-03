@@ -4,9 +4,10 @@ import requests
 import datetime
 
 # =====================================================================
-#                      PAINEL DE CONTROLE DO COMANDANTE
+#                 PAINEL DE CONTROLE DO COMANDANTE
 # =====================================================================
-# LINK DIRETO DO SEU GOOGLE DRIVE (O ROBO VAI LER DAQUI)
+
+# LINK DIRETO DO SEU GOOGLE DRIVE (O ROBO VAI LER DAQUI COMO ORDEM FINAL)
 LINK_DRIVE_COMANDANTE = "https://drive.google.com/uc?id=1kk-OsN3R02flYm2Nl0kYZ7qI3JdzhwB_&export=download"
 
 # REPOSITORIOS ALIADOS PARA BUSCA AUTOMÁTICA
@@ -15,7 +16,7 @@ REPOSITORIOS_ALIADOS = [
     "https://raw.githubusercontent.com/Web-Premium/IPTV/master/canais.m3u"
 ]
 
-# CANAIS QUE O ROBÔ VAI CAÇAR PARA JOGAR NA PARTE DE BAIXO
+# CANAIS QUE O ROBÔ VAI VALIDAR OU CAÇAR AUTOMATICAMENTE
 CANAIS_ALVO = [
     "Premiere", "Globoplay Novelas", "Gloob", "Globo SP",
     "Sportv 1", "Sportv 2", "Sportv 3", "ESPN 1", "ESPN 2"
@@ -28,7 +29,7 @@ def baixar_lista_do_drive():
         resposta = requests.get(LINK_DRIVE_COMANDANTE, timeout=15)
         if resposta.status_code == 200:
             print("👍 Lista do Drive baixada com sucesso!")
-            return resposta.text.split("\n")
+            return resposta.text.splitlines()
         else:
             print(f"❌ Erro ao acessar o Drive (Status: {resposta.status_code})")
             return []
@@ -45,16 +46,16 @@ def caçar_links():
             resposta = requests.get(url_repo, timeout=10)
             if resposta.status_code != 200:
                 continue
-            linhas = resposta.text.split("\n")
+            linhas = response_text = resposta.text.splitlines()
             
             for alvo in CANAIS_ALVO:
                 if alvo in links_finais:
                     continue 
                     
                 for idx, linha in enumerate(linhas):
-                    if alvo.lower() in linha.lower():
+                    if f", {alvo}" in linha or f",{alvo}" in list(linha) or alvo.lower() in linha.lower():
                         if idx + 1 < len(linhas):
-                            link_candidato = lines_finais_check = linhas[idx + 1].strip()
+                            link_candidato = linhas[idx + 1].strip()
                             if link_candidato.startswith("http"):
                                 links_finais[alvo] = link_candidato
                                 break
@@ -64,73 +65,73 @@ def caçar_links():
     return links_finais
 
 def gerenciar_fortaleza():
-    # O robô agora usa a lista do seu Drive como a base de tudo
     conteudo_base = baixar_lista_do_drive()
 
-    # Se o Drive falhar por algum motivo, ele tenta usar a lista local para não zerar o site
     if not conteudo_base and os.path.exists("lista.txt"):
         print("⚠️ Usando lista local como segurança pois o Drive não respondeu.")
         with open("lista.txt", "r", encoding="utf-8") as f:
-            conteudo_base = f.readlines()
+            conteudo_base = f.read().splitlines()
 
     if not conteudo_base:
-        conteudo_base = ["#EXTM3U\n"]
-    
-    data_atual = datetime.datetime.now().strftime("%d/%m/%Y às %H:%M")
-    linha_data = f"# LISTA MANTIDA VIVA EM: {data_atual}\n"
-    
-    lista_canais_atualizada = []
-    # Garante o cabeçalho #EXTM3U na primeira linha
-    primeira_linha = conteudo_base[0].strip() + "\n"
-    lista_canais_atualizada.append(primeira_linha)
-    
-    inicio = 1
-    if len(conteudo_base) > 1 and conteudo_base[1].startswith("# LISTA MANTIDA VIVA"):
-        inicio = 2
-        
-    lista_canais_atualizada.append(linha_data)
+        print("❌ Sem dados para processar.")
+        return
     
     novos_links = caçar_links()
-    i = inicio
-    canais_processados = set()
+    lista_canais_atualizada = []
     
+    # Processamento Inteligente Linha por Linha
+    i = 0
     while i < len(conteudo_base):
         linha = conteudo_base[i].strip()
+        
+        # 1. Preserva linhas vazias para manter a formatação do Comandante
         if not linha:
+            lista_canais_atualizada.append("\n")
             i += 1
             continue
             
-        match = re.search(r'#EXTINF:.*,\s*(.*)', linha)
-        if match:
-            nome_canal_lista = match.group(1).strip()
-            if nome_canal_lista in CANAIS_ALVO:
+        # 2. Setor do Topo: Mantém intacto qualquer Banner ou link de imagem
+        if linha.upper().startswith("IMG="):
+            lista_canais_atualizada.append(f"{linha}\n")
+            i += 1
+            continue
+
+        # 3. Processamento dos blocos de canais
+        if linha.startswith("#EXTINF"):
+            # Verifica se é a função AUTO (Sistema Sagrado de Loop)
+            if ", AUTO" in linha or ",AUTO" in linha:
                 lista_canais_atualizada.append(f"{linha}\n")
-                
-                if nome_canal_lista in novos_links:
-                    lista_canais_atualizada.append(f"{novos_links[nome_canal_lista]}\n")
-                else:
-                    if i + 1 < len(conteudo_base):
-                        lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
-                        
-                canais_processados.add(nome_canal_lista)
+                if i + 1 < len(conteudo_base):
+                    lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
                 i += 2
                 continue
+            
+            # Captura o nome do canal para verificar se é um Alvo de atualização
+            match = re.search(r'#EXTINF:.*,\s*(.*)', linha)
+            if match:
+                nome_canal_lista = match.group(1).strip()
                 
-        # Mantém intacto tudo o que for canal vip do seu topo
-        if linha.startswith("#EXTINF") or linha.startswith("http"):
-            lista_canais_atualizada.append(f"{linha}\n")
+                if nome_canal_lista in CANAIS_ALVO:
+                    lista_canais_atualizada.append(f"{linha}\n")
+                    # Se tiver link novo vindo dos repositórios, atualiza
+                    if nome_canal_lista in novos_links:
+                        lista_canais_atualizada.append(f"{novos_links[nome_canal_lista]}\n")
+                    else:
+                        # Se não achou nada novo, mantém o link que já estava no Drive
+                        if i + 1 < len(conteudo_base):
+                            lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
+                    i += 2
+                    continue
+
+        # 4. Mantém intacto tudo o que for Comentário, Divisor de Categoria ou Links Fixos
+        lista_canais_atualizada.append(f"{linha}\n")
         i += 1
 
-    # Se o robô achou canais novos que não estavam na sua lista do Drive, ele adiciona no fim
-    for nome_canal in CANAIS_ALVO:
-        if nome_canal not in canais_processados and nome_canal in novos_links:
-            lista_canais_atualizada.append(f"#EXTINF:-1, {nome_canal}\n")
-            lista_canais_atualizada.append(f"{novos_links[nome_canal]}\n")
-
-    # Salva o resultado final no arquivo que vai para o seu site da TV
+    # Salva o arquivo final estruturado de volta para alimentar o site HTML
     with open("lista.txt", "w", encoding="utf-8") as f:
         f.writelines(lista_canais_atualizada)
-    print("👍 Sincronização com o Google Drive concluída com sucesso!")
+        
+    print("👍 Sincronização e proteção de estrutura concluídas com sucesso!")
 
 if __name__ == "__main__":
     gerenciar_fortaleza()
