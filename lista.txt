@@ -1,3 +1,12 @@
+EXTM3U # TV 
+
+IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/5528988049598
+IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshowracoes1?igsh=andkOXh5YXJhZzQz
+IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/5528988049598
+
+### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade 
+### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade ### A novidade
+
 
 # LISTA MANTIDA VIVA EM: 02/06/2026 às 19:02
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
