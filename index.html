@@ -152,7 +152,7 @@
     justify-content: center !important;
 }
 
-/* 🌟 AQUI ESTÁ A BLINDAGEM: Aplicamos a correção para o YouTube (iframe), propagandas (video) e Clappr (.clappr-video) */
+/* 🛡️ ESSA PARTE ABAIXO PRECISA IR JUNTO PARA PROTEGER O YOUTUBE, CLAPPR E PROPAGANDAS */
 .video-expandido iframe,
 .video-expandido video,
 .video-expandido .clappr-video,
@@ -163,7 +163,7 @@
     max-width: 100vw !important;
     max-height: 100vh !important;
     display: block !important;
-    object-fit: contain !important; /* Garante que o vídeo do Clappr ou MP4 não distorça */
+    object-fit: contain !important; /* Faz o vídeo respeitar os botões do celular sem distorcer */
     pointer-events: none; 
 }
         @media (min-width: 800px) {
