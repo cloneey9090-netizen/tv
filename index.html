@@ -70,101 +70,67 @@
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
-     #player {
+/* 📺 1. ESTADO NORMAL: Player na tela com a lista de canais */
+#player {
     border-radius: 12px;          
     overflow: hidden;             
-    border: 2px solid #ff5722 !important;  
+    border: 2px solid #ff5722; /* 🌟 Fica sempre laranja por padrão */   
     background-color: #000000;
-    /* Aqui está o segredo: uma sombra grafite bem marcada para dar o contraste flutuante */
-    box-shadow: 0 0 20px rgba(255, 87, 34, 0.5), 0 12px 28px rgba(40, 40, 40, 0.8);
+    box-shadow: 0 0 20px rgba(255, 87, 34, 0.5), 0 12px 28px rgba(40, 40, 40, 0.8); /* 🌟 Fundo grafite flutuante */
     transition: all 0.3s ease;
     width: 100%;
     height: 220px;                
     cursor: pointer; 
-    margin-bottom: 15px; /* Abre um espaço elegante entre o player e a lista */
+    margin-bottom: 15px; /* Respiro que substitui o botão vermelho */
+    position: relative;
 }
 
-/* Mantém a cor vibrante e o contorno bem vivo quando o player está ativo */
+/* Garante o brilho se passar o mouse ou o controle */
 #player:hover, #player:active, #player:focus-within {
-    border-color: #ff5722 !important;
-   box-shadow: 0 0 25px rgba(255, 87, 34, 0.7), 0 12px 28px rgba(40, 40, 40, 0.8) !important;
+    border-color: #ff5722;
+    box-shadow: 0 0 25px rgba(255, 87, 34, 0.7), 0 12px 28px rgba(40, 40, 40, 0.8);
 }
 
-        #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-
-        .btn-youtube {
-            display: none !important;
-        }
-
-        .canal { 
-            border-radius: 8px;           
-            border: 1px solid #222;       
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a); 
-            color: #ffffff;
-            padding: 12px 14px;                
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
-            transition: all 0.2s ease;    
-            font-weight: 500;
-        }
-
-        .canal:hover, .canal:active {
-            background: #111111;
-            border-color: #ff5722;        
-            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); 
-            transform: scale(1.01);
-        }
-
-        #btn-compra-shopee {
-            display: block;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 8px;
-            background: #ff5722;          
-            color: white;
-            padding: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
-            animation: pulsar 2s infinite;
-        }
-        @keyframes pulsar {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 5px 20px rgba(255, 87, 34, 0.7); }
-            100% { transform: scale(1); }
-        }
-
-.video-expandido {
+/* 🚀 2. ESTADO EXPANDIDO: Quando o player vai para a frente em Tela Cheia */
+#player.video-expandido {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
     z-index: 99999 !important;
-    border-radius: 0px !important;
-    border: none !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #000000 !important;
-    /* 🌟 O SEGREDO MÁGICO: Força o container a centralizar QUALQUER player no meio exato da tela */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+
+    /* 🛡️ AQUI ESTÁ A CHAVE: Força a retirada total da borda e da sombra na tela cheia */
+    border: none !important;          
+    box-shadow: none !important;      
+    border-radius: 0px !important;    
+    overflow: hidden !important;
 }
 
-/* 🛡️ ESSA PARTE ABAIXO PRECISA IR JUNTO PARA PROTEGER O YOUTUBE, CLAPPR E PROPAGANDAS */
-.video-expandido iframe,
-.video-expandido video,
-.video-expandido .clappr-video,
-.video-expandido playerDiv,
-.video-expandido > * {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
+/* Centralização absoluta de qualquer vídeo na tela cheia (YouTube, Clappr ou MP4) */
+#player.video-expandido iframe,
+#player.video-expandido video,
+#player.video-expandido .clappr-video,
+#player.video-expandido > * {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     display: block !important;
-    object-fit: contain !important; /* Faz o vídeo respeitar os botões do celular sem distorcer */
-    pointer-events: none; 
+    object-fit: contain !important; 
+    pointer-events: none;
 }
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
