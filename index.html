@@ -70,68 +70,99 @@
         
         #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
         
-/* 📺 1. ESTADO NORMAL: Player na tela com a lista de canais */
-#player {
-    border-radius: 12px;          
-    overflow: hidden;             
-    border: 2px solid #ff5722; /* 🌟 Fica sempre laranja por padrão */   
-    background-color: #000000;
-    box-shadow: 0 0 20px rgba(255, 87, 34, 0.5), 0 12px 28px rgba(40, 40, 40, 0.8); /* 🌟 Fundo grafite flutuante */
-    transition: all 0.3s ease;
-    width: 100%;
-    height: 220px;                
-    cursor: pointer; 
-    margin-bottom: 15px; /* Respiro que substitui o botão vermelho */
-    position: relative;
-}
+        #player {
+            border-radius: 12px;          
+            overflow: hidden;             
+            border: 2px solid #1a1a1a;    
+            background-color: #000000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8); 
+            transition: all 0.3s ease;
+            width: 100%;
+            height: 220px;                
+            cursor: pointer; 
+        }
 
-/* Garante o brilho se passar o mouse ou o controle */
-#player:hover, #player:active, #player:focus-within {
-    border-color: #ff5722;
-    box-shadow: 0 0 25px rgba(255, 87, 34, 0.7), 0 12px 28px rgba(40, 40, 40, 0.8);
-}
+        #player:hover, #player:active {
+            border-color: #ff5722;
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.4);
+        }
 
-/* 🚀 2. ESTADO EXPANDIDO: Quando o player vai para a frente em Tela Cheia */
-#player.video-expandido {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    z-index: 99999 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #000000 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+        #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
 
-    /* 🛡️ AQUI ESTÁ A CHAVE: Força a retirada total da borda e da sombra na tela cheia */
-    border: none !important;          
-    box-shadow: none !important;      
-    border-radius: 0px !important;    
-    overflow: hidden !important;
-}
+        .btn-youtube {
+            border-radius: 8px;
+            border: 1px solid #c00;
+            background: linear-gradient(145deg, #cc181e, #990000);
+            color: #fff;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
 
-/* Centralização absoluta de qualquer vídeo na tela cheia (YouTube, Clappr ou MP4) */
-#player.video-expandido iframe,
-#player.video-expandido video,
-#player.video-expandido .clappr-video,
-#player.video-expandido > * {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: block !important;
-    object-fit: contain !important; 
-    pointer-events: none;
-}
+        .canal { 
+            border-radius: 8px;           
+            border: 1px solid #222;       
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a); 
+            color: #ffffff;
+            padding: 12px 14px;                
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+            transition: all 0.2s ease;    
+            font-weight: 500;
+        }
+
+        .canal:hover, .canal:active {
+            background: #111111;
+            border-color: #ff5722;        
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); 
+            transform: scale(1.01);
+        }
+
+        #btn-compra-shopee {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            background: #ff5722;          
+            color: white;
+            padding: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            animation: pulsar 2s infinite;
+        }
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 5px 20px rgba(255, 87, 34, 0.7); }
+            100% { transform: scale(1); }
+        }
+
+        .video-expandido {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            border-radius: 0px !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #000000 !important;
+        }
+        
+        .video-expandido iframe,
+        .video-expandido video,
+        .video-expandido .clappr-video {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+            pointer-events: none; 
+        }
+        
         @media (min-width: 800px) {
             #main { flex-direction: row; height: calc(100vh - 120px); }
             #player { width: 75%; height: 100%; position: sticky; top: 0; }
