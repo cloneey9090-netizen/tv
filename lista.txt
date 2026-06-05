@@ -6,7 +6,7 @@ IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/
 
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshowracoes1?igsh=andkOXh5YXJhZzQz
 
-IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
+IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/5528988049598
 
 
 
@@ -899,8 +899,9 @@ https://cdn.jmvstream.com/w/LVW-9730/LVW9730_LmUwslM8jt/playlist.m3u8
 
 https://i.postimg.cc/wMKV8pYB/petshow.png
 
-#EXTINF:-1 tvg-logo="https://i.postimg.cc/QMz92TDz/large-Icon-png.png", 🐱 SHORTS DE PETS AUTO
-https://www.youtube.com/watch?v=Nd5rGKTCKks?playlist=Nd5rGKTCKks,CÓDIGO_2,CÓDIGO_3
+#EXTINF:-1, AUTO
+https://www.youtube.com/embed/Nd5rGKTCKks?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0
+
 
 #EXTINF:-1, AUTO
 
