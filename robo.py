@@ -79,20 +79,24 @@ def gerenciar_fortaleza():
     novos_links = caçar_links()
     lista_canais_atualizada = []
     
+    # Processamento Inteligente Linha por Linha
     i = 0
     while i < len(conteudo_base):
         linha = conteudo_base[i].strip()
         
+        # 1. Preserva linhas vazias
         if not linha:
             lista_canais_atualizada.append("\n")
             i += 1
             continue
             
+        # 2. Setor do Topo: Mantém intacto qualquer Banner ou link de imagem
         if linha.upper().startswith("IMG="):
             lista_canais_atualizada.append(f"{linha}\n")
             i += 1
             continue
 
+        # 3. Processamento dos blocos de canais
         if linha.startswith("#EXTINF"):
             if ", AUTO" in linha or ",AUTO" in linha:
                 lista_canais_atualizada.append(f"{linha}\n")
@@ -115,15 +119,15 @@ def gerenciar_fortaleza():
                     i += 2
                     continue
 
+        # 4. Mantém intacto o resto
         lista_canais_atualizada.append(f"{linha}\n")
         i += 1
 
-    # --- ATUALIZAÇÃO DO SISTEMA ---
-    # Salva a lista principal
+    # Salva o arquivo final
     with open("lista.txt", "w", encoding="utf-8") as f:
         f.writelines(lista_canais_atualizada)
         
-    # Salva a Bússola (o arquivo config.json)
+    # --- A BÚSSOLA ---
     import json
     bussola = {
         "url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/lista.txt"
