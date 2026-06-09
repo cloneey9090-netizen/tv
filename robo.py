@@ -79,26 +79,21 @@ def gerenciar_fortaleza():
     novos_links = caçar_links()
     lista_canais_atualizada = []
     
-    # Processamento Inteligente Linha por Linha
     i = 0
     while i < len(conteudo_base):
         linha = conteudo_base[i].strip()
         
-        # 1. Preserva linhas vazias para manter a formatação do Comandante
         if not linha:
             lista_canais_atualizada.append("\n")
             i += 1
             continue
             
-        # 2. Setor do Topo: Mantém intacto qualquer Banner ou link de imagem
         if linha.upper().startswith("IMG="):
             lista_canais_atualizada.append(f"{linha}\n")
             i += 1
             continue
 
-        # 3. Processamento dos blocos de canais
         if linha.startswith("#EXTINF"):
-            # Verifica se é a função AUTO (Sistema Sagrado de Loop)
             if ", AUTO" in linha or ",AUTO" in linha:
                 lista_canais_atualizada.append(f"{linha}\n")
                 if i + 1 < len(conteudo_base):
@@ -106,32 +101,37 @@ def gerenciar_fortaleza():
                 i += 2
                 continue
             
-            # Captura o nome do canal para verificar se é um Alvo de atualização
             match = re.search(r'#EXTINF:.*,\s*(.*)', linha)
             if match:
                 nome_canal_lista = match.group(1).strip()
                 
                 if nome_canal_lista in CANAIS_ALVO:
                     lista_canais_atualizada.append(f"{linha}\n")
-                    # Se tiver link novo vindo dos repositórios, atualiza
                     if nome_canal_lista in novos_links:
                         lista_canais_atualizada.append(f"{novos_links[nome_canal_lista]}\n")
                     else:
-                        # Se não achou nada novo, mantém o link que já estava no Drive
                         if i + 1 < len(conteudo_base):
                             lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
                     i += 2
                     continue
 
-        # 4. Mantém intacto tudo o que for Comentário, Divisor de Categoria ou Links Fixos
         lista_canais_atualizada.append(f"{linha}\n")
         i += 1
 
-    # Salva o arquivo final estruturado de volta para alimentar o site HTML
+    # --- ATUALIZAÇÃO DO SISTEMA ---
+    # Salva a lista principal
     with open("lista.txt", "w", encoding="utf-8") as f:
         f.writelines(lista_canais_atualizada)
         
-    print("👍 Sincronização e proteção de estrutura concluídas com sucesso!")
+    # Salva a Bússola (o arquivo config.json)
+    import json
+    bussola = {
+        "url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/lista.txt"
+    }
+    with open("config.json", "w", encoding="utf-8") as f_json:
+        json.dump(bussola, f_json)
+        
+    print("👍 Sincronização e Bússola atualizadas com sucesso!")
 
 if __name__ == "__main__":
     gerenciar_fortaleza()
