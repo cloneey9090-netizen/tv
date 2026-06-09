@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # Linha mágica que desliga o aviso do GitHub
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   atualizar-lista:
@@ -29,9 +29,9 @@ jobs:
     - name: Rodando o Robo Raspador
       run: python robo.py
 
-    - name: Salvando as alteracoes na lista.txt
+    - name: Salvando as alteracoes na lista.txt e na bussola
       run: |
         git config --global user.name "Robo da TV"
         git config --global user.email "robo@tv.com"
-        git add lista.txt
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Lista atualizada mantendo os canais fixos" && git push)
+        git add lista.txt config.json
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Lista e Bússola atualizadas" && git push)
