@@ -6,7 +6,7 @@ IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/
 
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshowracoes1?igsh=andkOXh5YXJhZzQz
 
-IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/5528988049598
+IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
 
 
 
@@ -934,6 +934,7 @@ http://45.235.0.78/Gloob/playlist.m3u8
 
 
 #EXTINF:-1, Sportv 1
+https://92vhjue8.39564828.net:8443/hls/pq11l3p9wvhy.m3u8?s=rO_pENrLdtVUuHyOLgl_4A&e=1781053354
 
 
 #EXTINF:-1, Sportv 2
