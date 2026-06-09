@@ -934,7 +934,7 @@ http://45.235.0.78/Gloob/playlist.m3u8
 
 
 #EXTINF:-1, Sportv 1
-https://origin-fast.b-cdn.net/BAND_HD_PFZ_NX/index.m3u8
+
 
 #EXTINF:-1, Sportv 2
 
