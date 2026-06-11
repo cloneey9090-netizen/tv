@@ -38,7 +38,8 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u
 
 
 #EXTINF:-1 tvg-language="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo
-https://origin-fast.b-cdn.net/GLOBO_SP_TK/tracks-v1a1/mono.ts.m3u8
+https://cdn-3.nxplay.com.br/GLOBO_SP_TK/tracks-v1a1/mono.ts.m3u8
+
 
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT
