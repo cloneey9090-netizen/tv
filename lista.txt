@@ -904,10 +904,9 @@ https://archive.org/download/propaganda_202605/propaganda.mp4
 
 
 #EXTINF:-1, AUTO
-https://www.youtube.com/embed/79quxXUUwI4
+https://docs.google.com/uc?export=download&id=1CqdLGvsm6sXTPms_1kC4tpU6SqCluC3m
 
-#EXTINF:-1, AUTO
-https://www.youtube.com/embed/Nd5rGKTCKks?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0
+
 
 
 
