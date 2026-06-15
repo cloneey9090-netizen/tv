@@ -51,8 +51,9 @@ https://live.eu-north-1a.cf.dmcdn.net/sec2(Vb21vB0VWLMPoVnhEPkg69DrSzlhPSxptZO8I
 
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",TV SIM SBT youtube
+[https://www.youtube.com/embed/live_stream?channel=BzuJa-ZHoZQ?si=cw5Ow9J_FJPHaDir](https://www.youtube.com/embed/live_stream?channel=BzuJa-ZHoZQ?si=cw5Ow9J_FJPHaDir)
 
-https://www.youtube.com/embed/Wtkr6T_sKS8
+
 
 
 
