@@ -22,7 +22,8 @@ https://www.youtube.com/embed/LLpNUqHVam8
 https://www.youtube.com/embed/ZbpR91WRNMY
 
 
-
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/QMz92TDz/large-Icon-png.png",Sua Web TV Dailymotion
+https://geo.dailymotion.com/player/xgrus.html?video=kYe5OYErhldJ75Azib2
 
 
 #EXTINF:-1 tvg-id="Casé TV" tvg-logo="https://i.postimg.cc/SscT9vgX/transferir-(1).jpg " group-title="Brasil: Esporrtes",Casé TV
