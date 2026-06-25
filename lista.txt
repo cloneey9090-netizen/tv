@@ -48,11 +48,12 @@ https://cdn-3.nxplay.com.br/GLOBO_SP_TK/tracks-v1a1/mono.ts.m3u8
 https://agropesca.live/live/globosp/index.m3u8
 
 #EXTINF:-1,📺 ICL Notícias
+
 [https://www.youtube.com/embed/live_stream?channel=UFCTZPxfae1o51Cq](https://www.youtube.com/embed/live_stream?channel=UFCTZPxfae1o51Cq)
 
 
 ##$$$##
-https://www.youtube.com/embed//BzuJa-ZHoZQ
+https://www.youtube.com/embed/u1iVp0W4ygE
 
 
 
