@@ -5,7 +5,7 @@ import datetime
 import json
 
 # =====================================================================
-#                  PAINEL DE CONTROLE DO COMANDANTE
+#                 PAINEL DE CONTROLE DO COMANDANTE
 # =====================================================================
 
 # LINK DIRETO DO SEU GOOGLE DRIVE (O ROBO VAI LER DAQUI COMO ORDEM FINAL)
@@ -35,6 +35,26 @@ def baixar_lista_do_drive():
         print(f"❌ Falha na conexão com o Drive: {e}")
         return []
 
+def tratar_e_limpar_link(link_bruto):
+    """
+    ⚡ ESTEIRA DE TRATAMENTO DO ROBÔ PIE ⚡
+    Conserta os links antes de injetar na lista antiga sem mexer no HTML dos apps!
+    """
+    if not link_bruto:
+        return ""
+        
+    link_modificado = link_bruto.strip()
+    
+    # 1. TRATAMENTO DO 'S' (Injeta HTTPS se o link for HTTP bruto)
+    if link_modificado.startswith("http://"):
+        link_modificado = link_modificado.replace("http://", "https://", 1)
+        
+    # 2. LIMPADOR DE TOKENS (Corta tudo o que vem depois do .m3u8 se houver chaves de segurança)
+    if ".m3u8?" in link_modificado:
+        link_modificado = link_modificado.split(".m3u8?")[0] + ".m3u8"
+        
+    return link_modificado
+
 def caçar_links_iptv_org():
     links_finais = {}
     print("🤖 Caçador ativo sugando a fiação principal do iptv-org...")
@@ -60,8 +80,11 @@ def caçar_links_iptv_org():
                         if idx + 1 < len(linhas):
                             link_candidato = linhas[idx + 1].strip()
                             if link_candidato.startswith("http"):
-                                links_finais[alvo] = link_candidato
-                                print(f"🎯 [ACHADO] Canal {alvo} pescado com sucesso!")
+                                # 🔥 AQUI ENTRA O TRATAMENTO CIRÚRGICO DO ROBÔ:
+                                link_perfeito = tratar_e_limpar_link(link_candidato)
+                                
+                                links_finais[alvo] = link_perfeito
+                                print(f"🎯 [PERFEITO] Canal {alvo} tratado para HTTPS e injetado!")
                                 break
     except Exception as e:
         print(f"❌ Erro durante a caçada no iptv-org: {e}")
