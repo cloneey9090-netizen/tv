@@ -929,11 +929,12 @@ https://jmp2.uk/plu-5cf968040ab7d8f181e6a68b.m3u8
 https://stm.sinalmycn.com/20000/video.m3u8?token=EkP2qSi13ckjQRLSIDoxI5rMZsF5rZyEYzqWjxD248ScEUPYQ0
 
 #EXTINF:-1, Globoplay Novelas
-
+https://170.82.202.31/Viva/index.m3u8
 
 
 #EXTINF:-1, Gloob
-
+https://143.14.178.40:7777/Gloob_HD/index.m3u8
+http://45.235.0.78/Gloob/playlist.m3u8
 
 #EXTINF:-1, Globo SP
 
