@@ -2,19 +2,17 @@ import os
 import re
 import requests
 import datetime
+import json
 
 # =====================================================================
-#                 PAINEL DE CONTROLE DO COMANDANTE
+#                  PAINEL DE CONTROLE DO COMANDANTE
 # =====================================================================
 
 # LINK DIRETO DO SEU GOOGLE DRIVE (O ROBO VAI LER DAQUI COMO ORDEM FINAL)
 LINK_DRIVE_COMANDANTE = "https://drive.google.com/uc?id=1kk-OsN3R02flYm2Nl0kYZ7qI3JdzhwB_&export=download"
 
-# REPOSITORIOS ALIADOS PARA BUSCA AUTOMÁTICA
-REPOSITORIOS_ALIADOS = [
-    "https://raw.githubusercontent.com/Guikiu/m3u8/main/canais.txt",
-    "https://raw.githubusercontent.com/Web-Premium/IPTV/master/canais.m3u"
-]
+# A MINA DE OURO QUE VOCÊ ACHOU (IPTV-ORG) - FONTE AUTOMÁTICA PRINCIPAL
+FONTE_IPTV_ORG = "https://iptv-org.github.io/iptv/index.m3u"
 
 # CANAIS QUE O ROBÔ VAI VALIDAR OU CAÇAR AUTOMATICAMENTE
 CANAIS_ALVO = [
@@ -37,31 +35,37 @@ def baixar_lista_do_drive():
         print(f"❌ Falha na conexão com o Drive: {e}")
         return []
 
-def caçar_links():
+def caçar_links_iptv_org():
     links_finais = {}
-    print("🤖 Caçador ativo buscando fiação nos repositórios aliados...")
+    print("🤖 Caçador ativo sugando a fiação principal do iptv-org...")
     
-    for url_repo in REPOSITORIOS_ALIADOS:
-        try:
-            resposta = requests.get(url_repo, timeout=10)
-            if resposta.status_code != 200:
-                continue
-            linhas = response_text = resposta.text.splitlines()
+    try:
+        resposta = requests.get(FONTE_IPTV_ORG, timeout=20)
+        if resposta.status_code != 200:
+            print("❌ Não foi possível acessar o link do iptv-org.")
+            return links_finais
             
-            for alvo in CANAIS_ALVO:
-                if alvo in links_finais:
-                    continue 
+        linhas = resposta.text.splitlines()
+        
+        # Varre a lista gigante procurando nossos alvos
+        for idx, linha in enumerate(linhas):
+            if linha.startswith("#EXTINF"):
+                # Verifica se a linha pertence ao Brasil ou tem a marca que queremos
+                for alvo in CANAIS_ALVO:
+                    if alvo in links_finais:
+                        continue  # Se já achou esse canal, pula pro próximo
                     
-                for idx, linha in enumerate(linhas):
-                    if f", {alvo}" in linha or f",{alvo}" in list(linha) or alvo.lower() in linha.lower():
+                    # O pulo do gato: procura o nome do canal no fim da linha ou nas tags
+                    if alvo.lower() in linha.lower():
                         if idx + 1 < len(linhas):
                             link_candidato = linhas[idx + 1].strip()
                             if link_candidato.startswith("http"):
                                 links_finais[alvo] = link_candidato
+                                print(f"🎯 [ACHADO] Canal {alvo} pescado com sucesso!")
                                 break
-        except Exception:
-            continue
-            
+    except Exception as e:
+        print(f"❌ Erro durante a caçada no iptv-org: {e}")
+        
     return links_finais
 
 def gerenciar_fortaleza():
@@ -76,10 +80,10 @@ def gerenciar_fortaleza():
         print("❌ Sem dados para processar.")
         return
     
-    novos_links = caçar_links()
+    # Executa a busca na nova fonte que você descobriu
+    novos_links = caçar_links_iptv_org()
     lista_canais_atualizada = []
     
-    # Processamento Inteligente Linha por Linha
     i = 0
     while i < len(conteudo_base):
         linha = conteudo_base[i].strip()
@@ -90,13 +94,13 @@ def gerenciar_fortaleza():
             i += 1
             continue
             
-        # 2. Setor do Topo: Mantém intacto qualquer Banner ou link de imagem
+        # 2. Mantém os Banners/Imagens intactos
         if linha.upper().startswith("IMG="):
             lista_canais_atualizada.append(f"{linha}\n")
             i += 1
             continue
 
-        # 3. Processamento dos blocos de canais
+        # 3. Processamento inteligente dos blocos
         if linha.startswith("#EXTINF"):
             if ", AUTO" in linha or ",AUTO" in linha:
                 lista_canais_atualizada.append(f"{linha}\n")
@@ -105,37 +109,39 @@ def gerenciar_fortaleza():
                 i += 2
                 continue
             
+            # Captura o nome do canal que está na sua lista padrão
             match = re.search(r'#EXTINF:.*,\s*(.*)', linha)
             if match:
                 nome_canal_lista = match.group(1).strip()
                 
                 if nome_canal_lista in CANAIS_ALVO:
                     lista_canais_atualizada.append(f"{linha}\n")
+                    # Se o caçador achou o link atualizado no iptv-org, coloca ele!
                     if nome_canal_lista in novos_links:
                         lista_canais_atualizada.append(f"{novos_links[nome_canal_lista]}\n")
                     else:
+                        # Se não achou, mantém o link que já estava antes para não ficar preto
                         if i + 1 < len(conteudo_base):
                             lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
                     i += 2
                     continue
 
-        # 4. Mantém intacto o resto
+        # 4. Mantém o resto intacto
         lista_canais_atualizada.append(f"{linha}\n")
         i += 1
 
-    # Salva o arquivo final
+    # Salva o arquivo final limpo
     with open("lista.txt", "w", encoding="utf-8") as f:
         f.writelines(lista_canais_atualizada)
         
     # --- A BÚSSOLA ---
-    import json
     bussola = {
         "url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/lista.txt"
     }
     with open("config.json", "w", encoding="utf-8") as f_json:
-        json.dump(bussola, f_json)
+        json.dump(bussola, f_json, indent=4)
         
-    print("👍 Sincronização e Bússola atualizadas com sucesso!")
+    print("👍 Sincronização automática e Bússola calibradas com o iptv-org!")
 
 if __name__ == "__main__":
     gerenciar_fortaleza()
