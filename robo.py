@@ -60,8 +60,12 @@ def caçar_links_iptv_org():
                         if idx + 1 < len(linhas):
                             link_candidato = linhas[idx + 1].strip()
                             if link_candidato.startswith("http"):
-                                links_finais[alvo] = link_candidato
-                                print(f"🎯 [ACHADO] Canal {alvo} pescado com sucesso!")
+                                # 🔥 MÁSCARA AUTOMÁTICA DO ALLORIGINS SEM CADASTRO 🔥
+                                # Transforma o link em HTTPS seguro através do túnel proxy
+                                link_seguro = f"https://api.allorigins.win/raw?url={link_candidato}"
+                                
+                                links_finais[alvo] = link_seguro
+                                print(f"🎯 [MASCARADO] Canal {alvo} pronto para o WebView!")
                                 break
     except Exception as e:
         print(f"❌ Erro durante a caçada no iptv-org: {e}")
