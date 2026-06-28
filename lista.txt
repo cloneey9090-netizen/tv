@@ -971,8 +971,8 @@ https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
 
 https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
 
-#EXTINF:-1 tvg-logo="https://xstreamcp-assets-msp.streamready.in/assets/LIVETV/LIVECHANNEL/LIVETV_LIVETVCHANNEL_KHUSHBOO_BANGLA/images/LOGO_HD/image.png",HBO
-https://cdn-4.pishow.tv/live/1473/master.m3u8
+#EXTINF:-1,HBO
+https://d104o6d3ybbtr3.cloudfront.net/playlist.m3u8
 https://raw.githubusercontent.com/comunidade/links/main/sem-sinal.m3u8
 
 #EXTINF:-1, Warner Channel
