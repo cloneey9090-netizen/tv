@@ -34,30 +34,45 @@ def baixar_lista_do_drive():
 
 def caçar_links_iptv_org():
     links_finais = {}
-    print("🤖 Caçador com mira térmica ativo...")
+    print("🤖 Caçador de alta precisão ativo...")
     try:
         resposta = requests.get(FONTE_IPTV_ORG, timeout=20)
         linhas = resposta.text.splitlines()
+        
+        # Lista dos alvos que AINDA não pescamos
+        nao_pescados = [a for a in CANAIS_ALVO]
+        
         for idx, linha in enumerate(linhas):
             if linha.startswith("#EXTINF"):
                 match_github = re.search(r',(.+)$', linha)
                 if not match_github: continue
                 nome_github = match_github.group(1).strip().lower()
 
-                for alvo in CANAIS_ALVO:
-                    if alvo in links_finais: continue
+                for alvo in nao_pescados:
                     alvo_norm = re.sub(r'\(.*?\)', '', alvo).strip().lower()
-                    if alvo_norm in nome_github:
+                    
+                    # Comparação super flexível
+                    if alvo_norm in nome_github or (alvo_norm.replace(" ", "") in nome_github.replace(" ", "")):
                         if idx + 1 < len(linhas):
                             link = linhas[idx + 1].strip()
                             if link.startswith("http"):
                                 logo = ""
                                 match_logo = re.search(r'tvg-logo="([^"]+)"', linha)
                                 if match_logo: logo = match_logo.group(1).strip()
+                                
                                 links_finais[alvo] = {"video": link, "logo": logo}
-                                print(f"🎯 [PESCADO] {alvo} (GitHub: {nome_github})")
+                                print(f"🎯 [PESCADO] {alvo} -> ({nome_github})")
+                                nao_pescados.remove(alvo)
                                 break
-    except Exception as e: print(f"❌ Erro na caçada: {e}")
+        
+        # 🚨 RELATÓRIO DE MISSÃO (O que o robô não achou)
+        if nao_pescados:
+            print("\n⚠️ CANAIS NÃO ENCONTRADOS NO REPOSITÓRIO:")
+            for item in nao_pescados:
+                print(f"❌ {item}")
+            print("💡 Dica: Verifique se estes nomes existem no iptv-org.")
+            
+    except Exception as e: print(f"❌ Erro: {e}")
     return links_finais
 
 def gerenciar_fortaleza():
