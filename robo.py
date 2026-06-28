@@ -7,7 +7,7 @@ import json
 #                 PAINEL DE CONTROLE DO COMANDANTE
 # =====================================================================
 
-LINK_DRIVE_COMANDANTE = "https://drive.google.com/uc?id=1kk-OsN3R02flYm2Nl0kYZ7qI3JdzhwB_&export=download"
+LINK_DRIVE_COMANDANTE = "https://iptv-org.github.io/iptv/index.m3u"
 FONTE_IPTV_ORG = "https://iptv-org.github.io/iptv/index.m3u"
 
 CANAIS_ALVO = [
