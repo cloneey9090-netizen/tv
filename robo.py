@@ -5,7 +5,7 @@ import datetime
 import json
 
 # =====================================================================
-#                  PAINEL DE CONTROLE DO COMANDANTE
+#                 PAINEL DE CONTROLE DO COMANDANTE
 # =====================================================================
 
 # LINK DIRETO DO SEU GOOGLE DRIVE (O ROBO VAI LER DAQUI COMO ORDEM FINAL)
@@ -16,130 +16,75 @@ FONTE_IPTV_ORG = "https://iptv-org.github.io/iptv/index.m3u"
 
 # CANAIS QUE O ROBÔ VAI VALIDAR OU CAÇAR AUTOMATICAMENTE
 CANAIS_ALVO = [
-    ⚽ Esportes (Expandido)
-"PremiereFC 1"
+    # ⚽ Esportes (Expandido)
+    "PremiereFC 1",
+    "PremiereFC 2",
+    "PremiereFC 3",
+    "PremiereFC 4",
+    "PremiereFC 5",
+    "Sportv 1",
+    "Sportv 2",
+    "Sportv 3",
+    "Sportv 4",
+    "ESPN 1",
+    "ESPN 2",
+    "ESPN 3",
+    "ESPN 4",
+    "BandSports",
+    "Nosso Futebol",
 
-"PremiereFC 2"
+    # 🎬 Filmes e Séries
+    "Telecine Premium",
+    "Telecine Action",
+    "Telecine Touch",
+    "Telecine Pipoca",
+    "Telecine Fun",
+    "Telecine Cult",
+    "HBO",
+    "HBO 2",
+    "HBO Plus",
+    "HBO Family",
+    "Warner Channel",
+    "Sony Channel",
+    "AXN",
+    "Universal TV",
+    "Studio Universal",
+    "TNT",
+    "Space",
+    "Megapix",
 
-"PremiereFC 3"
+    # 🧪 Documentários e Variedades
+    "Discovery Turbo Tv",
+    "Discovery Channel",
+    "Discovery Home & Health",
+    "Discovery ID",
+    "National Geographic",
+    "History Channel",
+    "History 2",
+    "Animal Planet",
+    "TLC",
+    "GNT",
+    "Viva",
+    "Globoplay Novelas",
 
-"PremiereFC 4"
+    # 👶 Infantis (1080p)
+    "Gloob (1080)",
+    "Globinho (1080)",
+    "Disney Channel (1080)",
+    "Cartoon Network (1080)",
+    "Discovery Kids (1080)",
+    "Nickelodeon (1080)",
+    "Nick Jr (1080)",
+    "Tooncast (1080)",
 
-"PremiereFC 5"
-
-"Sportv 1"
-
-"Sportv 2"
-
-"Sportv 3"
-
-"Sportv 4"
-
-"ESPN 1"
-
-"ESPN 2"
-
-"ESPN 3"
-
-"ESPN 4"
-
-"BandSports"
-
-"Nosso Futebol"
-
-🎬 Filmes e Séries
-"Telecine Premium"
-
-"Telecine Action"
-
-"Telecine Touch"
-
-"Telecine Pipoca"
-
-"Telecine Fun"
-
-"Telecine Cult"
-
-"HBO"
-
-"HBO 2"
-
-"HBO Plus"
-
-"HBO Family"
-
-"Warner Channel"
-
-"Sony Channel"
-
-"AXN"
-
-"Universal TV"
-
-"Studio Universal"
-
-"TNT"
-
-"Space"
-
-"Megapix"
-
-🧪 Documentários e Variedades
-"Discovery Turbo Tv"
-
-"Discovery Channel"
-
-"Discovery Home & Health"
-
-"Discovery ID"
-
-"National Geographic"
-
-"History Channel"
-
-"History 2"
-
-"Animal Planet"
-
-"TLC"
-
-"GNT"
-
-"Viva"
-
-"Globoplay Novelas"
-
-👶 Infantis (1080p)
-"Gloob (1080)"
-
-"Globinho (1080)"
-
-"Disney Channel (1080)"
-
-"Cartoon Network (1080)"
-
-"Discovery Kids (1080)"
-
-"Nickelodeon (1080)"
-
-"Nick Jr (1080)"
-
-"Tooncast (1080)"
-
-📺 Abertos / Premium Locais
-"Globo SP"
-
-"Globo RJ"
-
-"Globo Minas"
-
-"Record TV"
-
-"SBT"
-
-"Band"
-
-"RedeTV"
+    # 📺 Abertos / Premium Locais
+    "Globo SP",
+    "Globo RJ",
+    "Globo Minas",
+    "Record TV",
+    "SBT",
+    "Band",
+    "RedeTV"
 ]
 # =====================================================================
 
@@ -238,7 +183,7 @@ def gerenciar_fortaleza():
                 
                 if nome_canal_lista in CANAIS_ALVO:
                     lista_canais_atualizada.append(f"{linha}\n")
-                    # Se o caçador achou o link atualizado no iptv-org, coloca ele!
+                    # Se o caçador achou o link updated no iptv-org, coloca ele!
                     if nome_canal_lista in novos_links:
                         lista_canais_atualizada.append(f"{novos_links[nome_canal_lista]}\n")
                     else:
