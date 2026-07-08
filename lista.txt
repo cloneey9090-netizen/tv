@@ -418,10 +418,10 @@ https://archive.org/download/propaganda_202605/propaganda.mp4
 
 ### Propaganda ###Propaganda  ### Propaganda ###Propaganda ### Propaganda ### Propaganda ###Propaganda ### Propaganda
 
-#EXTINF:-1, gloob
+#EXTINF:-1 marcador="VLC",GLOOB
 http://143.14.178.40:7777/Gloob_HD/index.m3u8
 
-#EXTINF:-1, Axn
+#EXTINF:-1 marcador="VLC",AXN
 http://cdn.haititivi.com/AXN/index.m3u8
 
 #EXTINF:-1 marcador="VLC",FX
