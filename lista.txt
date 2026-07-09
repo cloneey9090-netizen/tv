@@ -16,7 +16,7 @@ IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
 https://www.youtube.com/embed/LLpNUqHVam8
 
 
-#EXTINF:-1,ðŸ“º ACESSAR YOUTUBE
+#EXTINF:-1,ACESSAR YOUTUBE
 
 https://www.youtube.com/embed/ZbpR91WRNMY
 
@@ -24,37 +24,21 @@ https://www.youtube.com/embed/ZbpR91WRNMY
 
 
 
-#EXTINF:-1 tvg-id="CasÃ© TV" tvg-logo="https://i.postimg.cc/SscT9vgX/transferir-(1).jpg " group-title="Brasil: Esporrtes",CasÃ© TV
+#EXTINF:-1 tvg-id="Casé TV" tvg-logo="https://i.postimg.cc/SscT9vgX/transferir-(1).jpg " group-title="Brasil: Esporrtes",CasÃ© TV
 
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
+###$$###
 
-
-
-#EXTINF:-1,ðŸ“º CasÃ© TV LINK 2
 
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u8
 
-
-#EXTINF:-1 marcador="VLC", ="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo
+#EXTINF:-1 tvg-logo="https://i.imgur.com/CwrWVjO.png"  marcador="VLC",Canal Globo São Paulo
 http://187.62.68.32:8080/GLOBO/index.m3u8
 
 ###$$###
 http://187.62.68.32:8080/GLOBO/index.m3u8
 ###$$$###
 http://187.62.68.32:8080/GLOBO/index.m3u8
-
-#EXTINF:-1,ðŸ“º ICL NotÃ­cias
-
-https://www.youtube.com/embed/vS0J_xys3ns
-
-
-
-
-#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",ICL NotÃ­cias youtube
-[https://www.youtube.com/embed/live_stream?channel=UCm6c-w6y2U667_d3713hZ3w&autoplay=1](https://www.youtube.com/embed/live_stream?channel=UCm6c-w6y2U667_d3713hZ3w&autoplay=1)
-
-
-
 
 
 
