@@ -166,18 +166,12 @@ https://stmv5.samcast.com.br/puctvgoias/puctvgoias/playlist.m3u8
 
 
 
-https://service.webvideocore.net/CL1olYogIrDWvwqiIKK7eHbBxDyYany25g-L4QOVH5_l5daXY9tfEZPDJS0YHgpW/a_50acwl5q0f0g.m3u8
-
-
 #EXTINF:-1 tvg-id="TVBrasil.br" tvg-logo="https://i.imgur.com/faZEzAh.png" group-title="Brasil: educativos e documentÃ¡rios",TV Brasil Web
 
 https://tvbrasil-stream.ebc.com.br/index.m3u8
 
-#EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/ewJjke2.jpg" group-title="Brasil: educativos e documentÃ¡rios",TV Brasil | RBA TV | Rio do Sul | SC
 
-https://cdn.live.br1.jmvstream.com/w/LVW-15748/LVW15748_Yed7yzLuRC/chunklist.m3u8
-
-#EXTINF:-1 tvg-id="TVCulturaNacional.br" tvg-logo="https://i.imgur.com/zmheeSl.png" group-title="Brasil: educativos e documentÃ¡rios",TV Cultura | SÃ£o Paulo
+#EXTINF:-1 tvg-id="TVCulturaNacional.br" tvg-logo="https://i.imgur.com/zmheeSl.png" group-title="Brasil: educativos e documentÃ¡rios",TV Cultura | São Paulo
 
 https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8
 
@@ -186,52 +180,6 @@ https://player-tvcultura.stream.uol.com.br/live/tvcultura_lsd.m3u8
 https://5b33b873179a2.streamlock.net:1443/live/livestream/playlist.m3u8
 
 
-
-#EXTINF:-1 tvg-id="TVParanaTurismo.br" tvg-logo="https://yt3.ggpht.com/ytc/AAUvwnjjKFPE1dR10rEbyAE2fus0Mu0iQ0mEwehWdlf6uQ=s250-c-k-c0x00ffffff-no-rj"group-title="Brasil: educativos e documentÃ¡rios",TV ParanÃ¡ Turismo | Brasil
-
-http://200.189.113.201/hls/tve.m3u8
-
-#EXTINF:-1 tvg-logo="https://i.imgur.com/cJdj9OP.png" group-title="Brasil: educativos e documentÃ¡rios",Universidade da Pessoa | Soul TV Brasil
-
-http://video01.soultv.com.br/universidadedapessoa/universidadedapessoa/playlist.m3u8
-
-#EXTINF:-1 tvg-id="UnivespTV.br" tvg-country="BR" tvg-language="Portuguese" tvg-logo="https://i.imgur.com/sOeMujX.png" group-title="Brasil: educativos e documentÃ¡rios",UniveSP TV | Brasil
-
-http://cdn.connectbr.com.br/UNIVESP/index.m3u8
-
-#EXTINF:-1 tvg-logo="https://i.imgur.com/0oUtwJz.png" group-title="Brasil: educativos e documentÃ¡rios",XR Health Brasil | Soul TV Brasil
-
-http://video01.soultv.com.br/xrhealth/xrhealth/playlist.m3u8
-
-
-
-#EXTINF:-1 tvg-id="PonTV.br" tvg-logo="https://i.imgur.com/kySWaiL.png" group-title="Brasil: esportes e e-sports",Ponte Preta | Campinas SP | Soul TV Brasil
-
-https://video01.soultv.com.br/pontepreta/pontepreta/playlist.m3u8
-
-#EXTINF:-1 tvg-id="RSNews.br" tvg-logo="https://i.imgur.com/m25TK0O.png" group-title="Brasil: esportes e e-sports",RS News Web | Brasil: esportes
-
-https://59f1cbe63db89.streamlock.net:1443/rsnews/_definst_/rsnews/playlist.m3u8
-
-#EXTINF:-1 tvg-id="RSNews.br" tvg-logo="https://i.imgur.com/m25TK0O.png" group-title="Brasil: esportes e e-sports",RS News Web 2 | Brasil: esportes
-
-https://59f1cbe63db89.streamlock.net:1443/rsnewssports/_definst_/rsnewssports/playlist.m3u8
-
-#EXTINF:-1 tvg-id="RSNews.br" tvg-logo="https://i.imgur.com/m25TK0O.png" group-title="Brasil: esportes e e-sports",RS News Web 3 | Brasil: esportes
-
-https://59f1cbe63db89.streamlock.net:1443/rsnews03/_definst_/rsnews03/playlist.m3u8
-
-#EXTINF:-1 tvg-id="Internacional.br" tvg-logo="https://i.imgur.com/FStHrVv.png" group-title="Brasil: esportes e e-sports",Sport Club Internacional | Porto Alegre RS | Brasil
-
-https://clubeinternacionalcod.akamaized.net/internacional/internacional/playlist.m3u8
-
-#EXTINF:-1 tvg-id="UniqueSports.br" tvg-logo="https://uniquetv.com.br/img/logo-uniquetv.png" group-title="Brasil: esportes e e-sports",Unique Sports | SC Brasil
-
-https://video05.logicahost.com.br/uniquetvsports/uniquetvsports/playlist.m3u8
-
-#EXTINF:-1 tvg-id="VitrineEsportiva.br" tvg-logo="https://i.imgur.com/zKi4iBj.png" group-title="Brasil: esportes e e-sports",Vitrine Esporte
-
-https://cdn.live.br1.jmvstream.com/w/AVJ-12930/playlist/chunklist.m3u8
 
 #### Brasil: humor; novelas e sÃ©ries ######### Brasil: humor; novelas e sÃ©ries ########### Brasil: humor; novelas e sÃ©ries ####### Brasil: humor; novelas e sÃ©ries #### Brasil: humor; novelas e sÃ©ries ########## Brasil: humor; novelas e sÃ©ries
 
@@ -255,11 +203,6 @@ https://stream.ads.ottera.tv/playlist.m3u8?network_id=5442
 
 
 
-
-#EXTINF:-1 tvg-id="TVR.br" tvg-logo="https://d14vd6r4ppsx57.cloudfront.net/media/brand/logo_CERTP_PNG__MOAFOfq.png" group-title="Brasil: infanto-juvenis",TV R | Brasil
-
-https://video01.soultv.com.br/tvr/tvr/playlist.m3u8
-
 #EXTINF:-1 tvg-id="" tvg-logo="https://i.imgur.com/HwwQeLo.png" group-title="Brasil: infanto-juvenis",TV ZYN - SBT | Brasil
 
 https://amg01391-sbtinfast-amg01391c2-runtime-latam-1337.playouts.now.amagi.tv/playlist/amg01391-addigital-tvzyn-runtimelatam/playlist.m3u8
@@ -267,9 +210,6 @@ https://amg01391-sbtinfast-amg01391c2-runtime-latam-1337.playouts.now.amagi.tv/p
 
 ############## BRASIL NOTÃCIAS ############## BRASIL NOTÃCIAS ############## BRASIL NOTÃCIAS ############## BRASIL NOTÃCIAS ############## BRASIL NOTÃCIAS ############## BRASIL NOTÃCIAS ############## BRASIL NOTÃCIAS ############## BRASIL NOTÃCIAS ##############
 
-#EXTINF:-1 tvg-id="BandNews.br" tvg-logo="https://i.imgur.com/WwSAtkh.png" group-title="Brasil: notÃ­cias",Band News | Brasil
-
-https://cdn2.connectbr.com.br/Band-News/tracks-v1a1/playlist.m3u8
 
 #EXTINF:-1 tvg-id="CanalGov.br" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Canal_Gov_Logo.png/640px-Canal_Gov_Logo.png" group-title="Brasil: notÃ­cias",Canal Gov | Brasil
 
@@ -279,10 +219,6 @@ https://canalgov-stream.ebc.com.br/playlist.m3u8
 
 http://video01.soultv.com.br/cnnbrasil/cnnbrasil/playlist.m3u8
 
-
-#EXTINF:-1 tvg-id="5e20b730f2f8d5003d739db7-6245cd154f27f4e9c76d67e9" tvg-logo="https://provider-static.plex.tv/epg/cms/production/ec2b06ac-61e3-4707-a17b-562d69044a5c/euronews_portuguese_logo.png" group-title="Brasil: notÃ­cias",Euronews | Samsung
-
-https://euronews-euronews-portugues-1-br.samsung.wurl.tv/playlist.m3u8
 
 
 #EXTINF:-1 tvg-id="RecordNews.br" tvg-logo="https://images.pluto.tv/channels/6102e04e9ab1db0007a980a1/colorLogoPNG.png" group-title="Brasil: notÃ­cias",Record News | RunTime Brasil
@@ -294,40 +230,27 @@ https://stream.ads.ottera.tv/playlist.m3u8?network_id=5431
 
 https://stream3.camara.gov.br/tv1/manifest.m3u8
 
-#EXTINF:-1 tvg-id="TVCamara.br" tvg-logo="https://logodownload.org/wp-content/uploads/2019/01/tv-camara-logo.png" group-title="Brasil: notÃ­cias",TV CÃ¢mara 2 | Brasil
 
-https://stream3.camara.gov.br/tv2/manifest.m3u8
-
-#EXTINF:-1 tvg-id="TVCamara.br" tvg-logo="https://logodownload.org/wp-content/uploads/2019/01/tv-camara-logo.png" group-title="Brasil: notÃ­cias",TV CÃ¢mara 3 | Brasil
-
-https://stream3.camara.gov.br/tv2/manifest.m3u8
 
 ############################### BRASIL:  .s em portuguÃªs ############################### BRASIL: variedades em portuguÃªs ############################### antes: BRASIL TV ABERTA ############################### BRASIL: variedades em portuguÃªs ############################### BRASIL TV ABERTA ############################### BRASIL: variedades em portuguÃªs ############################### antes: BRASIL TV ABERTA ###############################
 
 
 
-#EXTINF:-1 tvg-id="RBATV.br" tvg-logo="https://i.imgur.com/b92nQTD.png" group-title="Brasil: variedades",Band | RBA TV | PA Brasil
+#EXTINF:-1 tvg-id="RBATV.br" tvg-logo="https://i.imgur.com/b92nQTD.png"  marcador="VLC",Band RBA
 
 https://5cf4a2c2512a2.streamlock.net/rbatv/rbatv/playlist.m3u8
 
 
-#EXTINF:-1 tvg-id="CanalTVRio.br" tvg-logo="https://i.imgur.com/rm6HsPj.png" group-title="Brasil: variedades",Canal TV Rio
-
-https://cdn.live.br1.jmvstream.com/webtv/AVJ-18351/playlist/chunklist.m3u8
 
 
-#EXTINF:-1 tvg-language="Portuguese" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo SÃ£o Paulo | Brasil
+#EXTINF:-1 tvg-language="Portuguese" tvg-logo="https://i.imgur.com/CwrWVjO.png"  marcador="VLC", Globo
 
 https://cdn-2.nxplay.com.br/GLOBO_SP_TK/index.m3u8
 
 
-#EXTINF:-1 tvg-id="LifeChannel.br" tvg-logo="https://d14vd6r4ppsx57.cloudfront.net/media/brand/logo_pequeno_s1hYlfg.png" group-title="Brasil: variedades",Life Channel Brasil
-
-https://cdn2.connectbr.com.br/life/index.m3u8
 
 
-
-#EXTINF:-1 tvg-id="TVConquista.br" tvg-logo="https://i.imgur.com/RDekR7e.png" group-title="Brasil: variedades",Record | TV Conquista | MT Brasil
+#EXTINF:-1 tvg-id="TVConquista.br" tvg-logo="https://i.imgur.com/RDekR7e.png"  marcador="VLC", Record Tv Conquista
 
 http://tvconquistalrv.duckdns.org:8080/hls/tvconquistalrv.m3u8
 
@@ -348,29 +271,21 @@ https://tv02.zas.media:1936/redetvparana/redetvparana/playlist.m3u8
 https://59f1cbe63db89.streamlock.net:1443/redetvro/_definst_/redetvro/playlist.m3u8
 
 
-#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | Bem TV | TangarÃ¡ da Serra | MT
 
-https://5a2b083e9f360.streamlock.net/bemtv/bemtv.sdp/master.m3u8
 
-#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | interior de SP
+
+
+#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png"  marcador="VLC", SBT São Paulo
 
 https://cdn.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/chunklist.m3u8
 
-#EXTINF:-1 tvg-id="RedeMassa.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | Rede Massa | PR
 
-https://cdn-cdn-iguacu.ciclano.io:1443/cdn-iguacu/cdn-iguacu/master.m3u8
-
-#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | TV Cidade Verde | PiauÃ­
-
-https://stmv1.transmissaodigital.com/cidadeverdenovo/cidadeverdenovo/master.m3u8
 
 #EXTINF:-1 tvg-id="SBTPara.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | TV GuajarÃ¡ | TailÃ¢ndia | PA
 
 https://video05.logicahost.com.br/tvguajara/tvguajara/master.m3u8
 
-#EXTINF:-1 tvg-id="SBTPara.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT | TV Paraense | Castanhal | PA
 
-https://cdn.jmvstream.com/w/AVJ-13102/playlist/master.m3u8
 
 ### Propaganda ###Propaganda  ### Propaganda ###Propaganda ### Propaganda ### Propaganda ###Propaganda ### Propaganda
 
