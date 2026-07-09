@@ -35,8 +35,7 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u8
 
 
-
-#EXTINF:-1 tvg-language="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo
+#EXTINF:-1 marcador="VLC", ="" tvg-logo="https://i.imgur.com/CwrWVjO.png" group-title="Brasil: variedades",Globo
 http://187.62.68.32:8080/GLOBO/index.m3u8
 
 ###$$###
