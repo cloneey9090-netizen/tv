@@ -8,27 +8,32 @@ import json
 # =====================================================================
 
 LINK_DRIVE_COMANDANTE = "https://drive.google.com/uc?id=1kk-OsN3R02flYm2Nl0kYZ7qI3JdzhwB_&export=download"
-
 FONTE_IPTV_ORG = "https://iptv-org.github.io/iptv/index.m3u"
 
 CANAIS_ALVO = [
     "Premiere", "Globoplay Novelas", "Gloob", "Globo SP",
-    "Sportv 1", "Sportv 2", "Sportv 3", "ESPN 1", "ESPN 2"
-    "Premiere", "Globoplay Novelas", "Gloob", "Globo SP",
-    "Sportv 1", "Sportv 2", "Sportv 3", "ESPN 1", "ESPN 2"
-     "PremiereFC 1", "PremiereFC 2", "PremiereFC 3", "PremiereFC 4", "PremiereFC 5",
-    "Sportv 1", "Sportv 2", "Sportv 3", "Sportv 4", "ESPN 1", "ESPN 2", "ESPN 3", "ESPN 4",
-    "BandSports", "Nosso Futebol",
+    "Sportv 1", "Sportv 2", "Sportv 3", "ESPN 1", "ESPN 2",
+    "PremiereFC 1", "PremiereFC 2", "PremiereFC 3", "PremiereFC 4", "PremiereFC 5",
+    "Sportv 4", "ESPN 3", "ESPN 4", "BandSports", "Nosso Futebol",
     "Telecine Premium", "Telecine Action", "Telecine Touch", "Telecine Pipoca", "Telecine Fun", "Telecine Cult",
     "HBO", "HBO 2", "HBO Plus", "HBO Family", "Warner Channel", "Sony Channel", "AXN",
     "Universal TV", "Studio Universal", "TNT", "Space", "Megapix",
     "Discovery Turbo Tv", "Discovery Channel", "Discovery Home & Health", "Discovery ID",
     "National Geographic", "History Channel", "History 2", "Animal Planet", "TLC", "GNT", "Viva",
-    "Globoplay Novelas",
-    "Gloob (1080)", "Globinho ", "Disney Channel (1080)", "Cartoon Network (1080)",
-    "Discovery Kids (1080)", "Nickelodeon (1080)", "Nick Jr (1080)", "Tooncast (1080)",
+    "Gloob", "Globinho", "Disney Channel", "Cartoon Network",
+    "Discovery Kids", "Nickelodeon", "Nick Jr", "Tooncast",
     "Globo SP", "Globo RJ", "Globo Minas", "Record TV", "SBT", "Band", "RedeTV"
 ]
+
+def limpar_nome(texto):
+    texto_limpo = re.sub(r'\s*\([^)]*\)', '', texto)
+    return re.sub(r'\s+', ' ', texto_limpo).strip().lower()
+
+def injetar_marcador_vlc(linha):
+    # Se a linha começa com #EXTINF, injeta o marcador="VLC" após a duração/atributos
+    if linha.startswith("#EXTINF") and 'marcador=' not in linha:
+        return re.sub(r'(#EXTINF:[-\d]+)', r'\1 marcador="VLC"', linha)
+    return linha
 
 def baixar_lista_do_drive():
     print("📁 Conectando ao Google Drive do Comandante...")
@@ -51,7 +56,6 @@ def caçar_links_iptv_org():
         
         for idx, linha in enumerate(linhas):
             if linha.startswith("#EXTINF"):
-                # Captura o nome para filtrar
                 match_git = re.search(r',(.+)$', linha)
                 if not match_git: continue
                 nome_git = match_git.group(1).strip().lower()
@@ -59,15 +63,16 @@ def caçar_links_iptv_org():
                 for alvo in CANAIS_ALVO:
                     if alvo in links_finais: continue
                     
-                    # Mira Térmica: Filtro preciso usando \b (limite de palavra)
-                    # Isso evita que ele pegue "boxing" ou outros canais indesejados
                     if re.search(rf'\b{re.escape(alvo.lower())}\b', nome_git):
                         if any(x in nome_git for x in ["boxing", "test", "promo"]): continue
                         
                         if idx + 1 < len(linhas):
                             link = linhas[idx + 1].strip()
                             if link.startswith("http"):
-                                links_finais[alvo] = link
+                                links_finais[alvo] = {
+                                    "link": link,
+                                    "extinf_original": injetar_marcador_vlc(linha)
+                                }
                                 print(f"🎯 [ACHADO] Canal {alvo} pescado: {nome_git}")
                                 break
     except Exception as e:
@@ -94,37 +99,35 @@ def gerenciar_fortaleza():
         if linha.upper().startswith("IMG="):
             lista_canais_atualizada.append(f"{linha}\n"); i += 1; continue
 
-        # ... (dentro do seu loop while em gerenciar_fortaleza)
         if linha.startswith("#EXTINF"):
             match = re.search(r'#EXTINF:.*,\s*(.*)', linha)
             canal = match.group(1).strip() if match else ""
             
-            # Se o canal existe na nossa lista de busca (mesmo que o Drive esteja sem o link)
             if canal in CANAIS_ALVO:
-                lista_canais_atualizada.append(f"{linha}\n")
+                # Injeta o marcador na linha existente do Drive/base
+                lista_canais_atualizada.append(f"{injetar_marcador_vlc(linha)}\n")
                 
-                # SE O CAÇADOR ACHO O LINK, INJETA ELE!
                 if canal in novos_links:
-                    lista_canais_atualizada.append(f"{novos_links[canal]}\n")
-                    i += 2 # Pula o link antigo, se houver
+                    lista_canais_atualizada.append(f"{novos_links[canal]['link']}\n")
+                    i += 2
                     continue
                 else:
-                    # Se não achou na rede, mantém o que tinha ou pula
-                    if i + 1 < len(conteudo_base): lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
+                    if i + 1 < len(conteudo_base): 
+                        lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
                     i += 2
                     continue
 
-        lista_canais_atualizada.append(f"{linha}\n")
+        lista_canais_atualizada.append(f"{injetar_marcador_vlc(linha)}\n")
         i += 1
 
-    with open("lista.txt", "w", encoding="utf-8") as f: f.writelines(lista_canais_atualizada)
+    with open("lista.txt", "w", encoding="utf-8") as f: 
+        f.writelines(lista_canais_atualizada)
     
-    # Bússola Preservada
     bussola = {"url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/lista.txt"}
     with open("config.json", "w", encoding="utf-8") as f_json:
         json.dump(bussola, f_json, indent=4)
         
-    print("👍 Sincronização concluída com a estrutura original!")
+    print("👍 Sincronização concluída com a estrutura original e marcador VLC!")
 
 if __name__ == "__main__":
     gerenciar_fortaleza()
