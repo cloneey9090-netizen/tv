@@ -322,23 +322,6 @@ http://45.162.231.38:7779/AXN/index.m3u8
 http://45.162.231.38:7779/Studio_Universal/index.m3u8
 
 
-#EXTINF:-1 marcador="VLC",FX
-http://23.237.104.106:8080/USA_FX/index.m3u8
-
-#EXTINF:-1 marcador="VLC", Telecine Action
-http://45.162.231.38:7779/Telecine_Action/index.m3u8
-
-#EXTINF:-1 marcador="VLC", Telecine Pipoca
-http://45.162.231.38:7779/Telecine_Pipoca/index.m3u8
-
-#EXTINF:-1 marcador="VLC", Telecine Fun
-http://45.162.231.38:7779/Telecine_Fun/index.m3u8
-
-#EXTINF:-1 marcador="VLC", Telecine Premium
-http://45.162.231.38:7779/Telecine_Premium/index.m3u8
-
-#EXTINF:-1 marcador="VLC", Premier Clubes
-http://45.162.231.38:7779/Premiere_Clubes/index.m3u8
 
 
 
