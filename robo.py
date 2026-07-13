@@ -117,15 +117,15 @@ def gerenciar_fortaleza():
         lista_canais_atualizada.append(f"{linha}\n")
         i += 1
 
-    with open("lista.txt", "w", encoding="utf-8") as f: f.writelines(lista_canais_atualizada)
+  # 1. Salva a lista processada com a extensão camuflada
+    with open("dados.dat", "w", encoding="utf-8") as f: 
+        f.writelines(lista_canais_atualizada)
     
-    # Bússola Preservada
-    bussola = {"url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/lista.txt"}
-   # Salva com a extensão camuflada (o conteúdo continua sendo texto legível M3U)
-    with open("dados.dat", "w", encoding="utf-8") as f: f.writelines(lista_canais_atualizada)
+    # 2. Prepara e atualiza a Bússola apontando unicamente para o novo arquivo .dat
+    bussola = {
+        "url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/dados.dat"
+    }
     
-    # Atualiza a Bússola apontando para o novo arquivo .dat
-    bussola = {"url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/dados.dat"}
     with open("config.json", "w", encoding="utf-8") as f_json:
         json.dump(bussola, f_json, indent=4)
         
