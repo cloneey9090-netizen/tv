@@ -13,21 +13,17 @@ FONTE_IPTV_ORG = "https://iptv-org.github.io/iptv/index.m3u"
 
 CANAIS_ALVO = [
     "Premiere", "Globoplay Novelas", "Gloob", "Globo SP",
-    "Sportv 1", "Sportv 2", "Sportv 3", "ESPN 1", "ESPN 2"
-    "Premiere", "Globoplay Novelas", "Gloob", "Globo SP",
-    "Sportv 1", "Sportv 2", "Sportv 3", "ESPN 1", "ESPN 2"
-     "PremiereFC 1", "PremiereFC 2", "PremiereFC 3", "PremiereFC 4", "PremiereFC 5",
-    "Sportv 1", "Sportv 2", "Sportv 3", "Sportv 4", "ESPN 1", "ESPN 2", "ESPN 3", "ESPN 4",
-    "BandSports", "Nosso Futebol",
+    "Sportv 1", "Sportv 2", "Sportv 3", "ESPN 1", "ESPN 2",
+    "PremiereFC 1", "PremiereFC 2", "PremiereFC 3", "PremiereFC 4", "PremiereFC 5",
+    "Sportv 4", "ESPN 3", "ESPN 4", "BandSports", "Nosso Futebol",
     "Telecine Premium", "Telecine Action", "Telecine Touch", "Telecine Pipoca", "Telecine Fun", "Telecine Cult",
     "HBO", "HBO 2", "HBO Plus", "HBO Family", "Warner Channel", "Sony Channel", "AXN",
     "Universal TV", "Studio Universal", "TNT", "Space", "Megapix",
     "Discovery Turbo Tv", "Discovery Channel", "Discovery Home & Health", "Discovery ID",
     "National Geographic", "History Channel", "History 2", "Animal Planet", "TLC", "GNT", "Viva",
-    "Globoplay Novelas",
-    "Gloob (1080)", "Globinho ", "Disney Channel (1080)", "Cartoon Network (1080)",
+    "Gloob (1080)", "Globinho", "Disney Channel (1080)", "Cartoon Network (1080)",
     "Discovery Kids (1080)", "Nickelodeon (1080)", "Nick Jr (1080)", "Tooncast (1080)",
-    "Globo SP", "Globo RJ", "Globo Minas", "Record TV", "SBT", "Band", "RedeTV"
+    "Globo RJ", "Globo Minas", "Record TV", "SBT", "Band", "RedeTV"
 ]
 
 def baixar_lista_do_drive():
@@ -51,7 +47,6 @@ def caçar_links_iptv_org():
         
         for idx, linha in enumerate(linhas):
             if linha.startswith("#EXTINF"):
-                # Captura o nome para filtrar
                 match_git = re.search(r',(.+)$', linha)
                 if not match_git: continue
                 nome_git = match_git.group(1).strip().lower()
@@ -59,8 +54,6 @@ def caçar_links_iptv_org():
                 for alvo in CANAIS_ALVO:
                     if alvo in links_finais: continue
                     
-                    # Mira Térmica: Filtro preciso usando \b (limite de palavra)
-                    # Isso evita que ele pegue "boxing" ou outros canais indesejados
                     if re.search(rf'\b{re.escape(alvo.lower())}\b', nome_git):
                         if any(x in nome_git for x in ["boxing", "test", "promo"]): continue
                         
@@ -76,12 +69,15 @@ def caçar_links_iptv_org():
 
 def gerenciar_fortaleza():
     conteudo_base = baixar_lista_do_drive()
-    if not conteudo_base and os.path.exists("lista.txt"):
-        print("⚠️ Usando lista local como segurança.")
-        with open("lista.txt", "r", encoding="utf-8") as f:
+    if not conteudo_base and os.path.exists("dados.dat"):
+        print("⚠️ Usando dados locais anteriores como segurança.")
+        with open("dados.dat", "r", encoding="utf-8") as f:
             conteudo_base = f.read().splitlines()
 
-    if not conteudo_base: return
+    # TRAVA DE SEGURANÇA: Se não há conteúdo, aborta para não apagar o arquivo do GitHub
+    if not conteudo_base:
+        print("❌ Operação abortada: O conteúdo base veio vazio. Mantendo o arquivo anterior intacto.")
+        return
     
     novos_links = caçar_links_iptv_org()
     lista_canais_atualizada = []
@@ -94,22 +90,17 @@ def gerenciar_fortaleza():
         if linha.upper().startswith("IMG="):
             lista_canais_atualizada.append(f"{linha}\n"); i += 1; continue
 
-        # ... (dentro do seu loop while em gerenciar_fortaleza)
         if linha.startswith("#EXTINF"):
             match = re.search(r'#EXTINF:.*,\s*(.*)', linha)
             canal = match.group(1).strip() if match else ""
             
-            # Se o canal existe na nossa lista de busca (mesmo que o Drive esteja sem o link)
             if canal in CANAIS_ALVO:
                 lista_canais_atualizada.append(f"{linha}\n")
-                
-                # SE O CAÇADOR ACHO O LINK, INJETA ELE!
                 if canal in novos_links:
                     lista_canais_atualizada.append(f"{novos_links[canal]}\n")
-                    i += 2 # Pula o link antigo, se houver
+                    i += 2
                     continue
                 else:
-                    # Se não achou na rede, mantém o que tinha ou pula
                     if i + 1 < len(conteudo_base): lista_canais_atualizada.append(f"{conteudo_base[i+1].strip()}\n")
                     i += 2
                     continue
@@ -117,19 +108,20 @@ def gerenciar_fortaleza():
         lista_canais_atualizada.append(f"{linha}\n")
         i += 1
 
-  # 1. Salva a lista processada com a extensão camuflada
-    with open("dados.dat", "w", encoding="utf-8") as f: 
-        f.writelines(lista_canais_atualizada)
-    
-    # 2. Prepara e atualiza a Bússola apontando unicamente para o novo arquivo .dat
-    bussola = {
-        "url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/dados.dat"
-    }
-    
-    with open("config.json", "w", encoding="utf-8") as f_json:
-        json.dump(bussola, f_json, indent=4)
+    # GRAVAÇÃO SEGURA: Só atualiza se houver conteúdo processado
+    if len(lista_canais_atualizada) > 0:
+        with open("dados.dat", "w", encoding="utf-8") as f: 
+            f.writelines(lista_canais_atualizada)
         
-    print("👍 Sincronização concluída com a estrutura original!")
+        bussola = {
+            "url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/dados.dat"
+        }
+        with open("config.json", "w", encoding="utf-8") as f_json:
+            json.dump(bussola, f_json, indent=4)
+            
+        print("👍 Sincronização concluída com sucesso para o dados.dat!")
+    else:
+        print("❌ Erro: A lista processada ficou vazia. Nenhuma alteração foi salva.")
 
 if __name__ == "__main__":
     gerenciar_fortaleza()
