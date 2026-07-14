@@ -314,13 +314,13 @@ https://archive.org/download/propaganda_202605/propaganda.mp4
 
 
 #EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="AXN.br@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/AXN_logo_%282015%29.svg/960px-AXN_logo_%282015%29.svg.png" group-title="Movies",AXN (720p)
-http://45.190.28.50/AXN_HD/index.m3u8
+[http://45.190.28.50/AXN_HD/index.m3u8]
 
 #EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="Band.br@SD" tvg-logo="https://i.imgur.com/1r5T6Pw.png" group-title="General",Band (720p)
-http://45.190.28.50/BAND_HD/index.m3u8
+http://45.190.28.50/BAND_HD/index.m3u8 
 
 #EXTINF:-1 tvg-id="CinePremiere.us@SD" tvg-logo="https://i.imgur.com/PdhWTO6.png" group-title="Movies",Cine Premiere
-https://jmp2.uk/plu-5cf968040ab7d8f181e6a68b.m3u8
+[https://jmp2.uk/plu-5cf968040ab7d8f181e6a68b.m3u8 ]
 
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Undefined",Discovery Turbo TV
 https://jmp2.uk/plu-6400f731d200410008f9b339.m3u8
