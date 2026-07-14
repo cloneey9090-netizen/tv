@@ -32,7 +32,7 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
 
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-logo="https://i.imgur.com/CwrWVjO.png" marcador="VLC",Canal Globo São Paulo
+#EXTINF:-1 tvg-rec="false" tvg-logo="https://i.imgur.com/CwrWVjO.png"  marcador="VLC",Canal Globo São Paulo
 http://187.62.68.32:8080/GLOBO/index.m3u8
 
 
@@ -313,10 +313,10 @@ https://archive.org/download/propaganda_202605/propaganda.mp4
 
 
 
-#EXTINF:-1 tvg-rec="false" tvg-id="AXN.br@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/AXN_logo_%282015%29.svg/960px-AXN_logo_%282015%29.svg.png" group-title="Movies" marcador="VLC",AXN (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="AXN.br@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/AXN_logo_%282015%29.svg/960px-AXN_logo_%282015%29.svg.png" group-title="Movies",AXN (720p)
 http://45.190.28.50/AXN_HD/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="Band.br@SD" tvg-logo="https://i.imgur.com/1r5T6Pw.png" group-title="General" marcador="VLC",Band (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="Band.br@SD" tvg-logo="https://i.imgur.com/1r5T6Pw.png" group-title="General",Band (720p)
 http://45.190.28.50/BAND_HD/index.m3u8
 
 #EXTINF:-1 tvg-id="CinePremiere.us@SD" tvg-logo="https://i.imgur.com/PdhWTO6.png" group-title="Movies",Cine Premiere
@@ -325,22 +325,22 @@ https://jmp2.uk/plu-5cf968040ab7d8f181e6a68b.m3u8
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Undefined",Discovery Turbo TV
 https://jmp2.uk/plu-6400f731d200410008f9b339.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="DisneyChannel.cz@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/3/3d/2022_Disney_Channel_logo.svg" group-title="Kids" marcador="VLC",Disney Channel
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="DisneyChannel.cz@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/3/3d/2022_Disney_Channel_logo.svg" group-title="Kids",Disney Channel
 http://88.212.15.19/live/test_disney/playlist.m3u8
 
 #EXTINF:-1 tvg-id="EspaceTV.gn@SD" tvg-logo="https://i.imgur.com/R5tbzFI.png" group-title="News",Espace TV (1080p)
 https://edge11.vedge.infomaniak.com/livecast/ik:espacetv/manifest.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="ESPN3.br@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/ESPN3_Logo.png/960px-ESPN3_Logo.png" group-title="Sports" marcador="VLC",ESPN 3 (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="ESPN3.br@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/ESPN3_Logo.png/960px-ESPN3_Logo.png" group-title="Sports",ESPN 3 (720p)
 http://181.78.197.59:8000/play/a081/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="ESPN4.br@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/ESPN_4_logo.svg/960px-ESPN_4_logo.svg.png" group-title="Sports" marcador="VLC",ESPN 4 (1080p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="ESPN4.br@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/ESPN_4_logo.svg/960px-ESPN_4_logo.svg.png" group-title="Sports",ESPN 4 (1080p)
 http://181.78.197.59:8000/play/a07n/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="ImagenUniversalTV.do@SD" tvg-logo="https://i.imgur.com/DP6HmDV.png" group-title="General" marcador="VLC",Imagen Universal TV
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="ImagenUniversalTV.do@SD" tvg-logo="https://i.imgur.com/DP6HmDV.png" group-title="General",Imagen Universal TV
 https://imagenuniversaltv.net:3771/live/iutvlive.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="NationalGeographic.gr@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/960px-Natgeologo.svg.png" group-title="Documentary" marcador="VLC",National Geographic (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="NationalGeographic.gr@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Natgeologo.svg/960px-Natgeologo.svg.png" group-title="Documentary",National Geographic (720p)
 http://185.102.171.218/NatGeo/index.m3u8
 
 #EXTINF:-1 tvg-id="NickJr.ru@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nick_Jr._logo_2023_(outline).svg/960px-Nick_Jr._logo_2023_(outline).svg.png" group-title="Kids",Nick Jr.
@@ -349,45 +349,42 @@ https://stream8.cinerama.uz/1501/playlist.m3u8
 #EXTINF:-1 tvg-id="Nickelodeon.de@SD" tvg-logo="https://i.imgur.com/E84jnP8.png" group-title="Kids",Nickelodeon
 https://ma.anixa.tv/clips/stream/nickelodeon/playlist.php
 
-#EXTINF:-1 tvg-rec="false" tvg-id="RedeTVParana.br@SD" tvg-logo="https://i.imgur.com/D8R0Af4.png" group-title="Undefined" marcador="VLC",RedeTV! Parana
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="RedeTVParana.br@SD" tvg-logo="https://i.imgur.com/D8R0Af4.png" group-title="Undefined",RedeTV! Parana
 https://tv01.zas.media:1936/redetvparana/redetvparana/playlist.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="SonyChannel.ar@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Sony_Channel_Logo.png/960px-Sony_Channel_Logo.png" group-title="Undefined" marcador="VLC",Sony Channel (1080p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="SonyChannel.ar@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Sony_Channel_Logo.png/960px-Sony_Channel_Logo.png" group-title="Undefined",Sony Channel (1080p)
 http://138.121.15.230:9002/SONY/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="TNT.ru@SD" tvg-logo="https://i.imgur.com/T4A6rEI.png" group-title="Entertainment" marcador="VLC",TNT (576p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="TNT.ru@SD" tvg-logo="https://i.imgur.com/T4A6rEI.png" group-title="Entertainment",TNT (576p)
 http://94.230.129.31:8080/THT/index.m3u8
 
 #EXTINF:-1 tvg-id="" tvg-logo="" group-title="Undefined",True History Channel (720p)
 https://linear-188.frequency.stream/dist/xumo/188/hls/master/playlist.m3u8
 
 
-#EXTINF:-1 tvg-rec="false" tvg-id="AXN.br@SD" marcador="VLC",AXN (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="AXN.br@SD",AXN (720p)
 http://45.190.28.50/AXN_HD/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="Band.br@SD" marcador="VLC",Band (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="Band.br@SD",Band (720p)
 http://45.190.28.50/BAND_HD/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="ESPN3.br@SD" marcador="VLC",ESPN 3 (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="ESPN3.br@SD",ESPN 3 (720p)
 http://181.78.197.59:8000/play/a081/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="ESPN4.br@SD" marcador="VLC",ESPN 4 (1080p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="ESPN4.br@SD",ESPN 4 (1080p)
 http://181.78.197.59:8000/play/a07n/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="Gloob.br@SD" marcador="VLC",Gloob (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="Gloob.br@SD",Gloob (720p)
 http://45.190.156.152/GLOOB/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="Megapix.br@SD" marcador="VLC",Megapix (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="Megapix.br@SD",Megapix (720p)
 http://45.190.156.152/MEGAPIX/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="PremiereClubes.br@SD" marcador="VLC",Premiere Clubes (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="PremiereClubes.br@SD",Premiere Clubes (720p)
 http://45.190.156.152/PREMIERE_CLUBES/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="RedeTVParana.br@SD" marcador="VLC",RedeTV! Parana
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="RedeTVParana.br@SD",RedeTV! Parana
 https://tv01.zas.media:1936/redetvparana/redetvparana/playlist.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-id="SonyChannel.br@SD" marcador="VLC",Sony Channel (720p)
+#EXTINF:-1 tvg-rec="false" marcador="VLC" tvg-id="SonyChannel.br@SD",Sony Channel (720p)
 http://45.190.28.50/SONY_HD/index.m3u8
-
-
-
