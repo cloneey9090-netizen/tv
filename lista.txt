@@ -349,7 +349,7 @@ http://45.190.28.50/BAND_HD/index.m3u8
 #EXTINF:-1 tvg-id="CinePremiere.us@SD" tvg-logo="https://i.imgur.com/PdhWTO6.png" group-title="Movies"marcador="VLC",Cine Premiere
 https://jmp2.uk/plu-5cf968040ab7d8f181e6a68b.m3u8
 
-#EXTINF:-1 tvg-id="" tvg-logo="" group-title="Undefined",Discovery Turbo TV
+#EXTINF:-1 tvg-id="" tvg-logo="" group-title="marcador="VLC",Discovery Turbo TV
 https://jmp2.uk/plu-6400f731d200410008f9b339.m3u8
 
 #EXTINF:-1 tvg-id="DisneyChannel.cz@SD" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/3/3d/2022_Disney_Channel_logo.svg" group-title="Kids" marcador="VLC",Disney Channel
