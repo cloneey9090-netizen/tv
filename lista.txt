@@ -36,7 +36,7 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u
 http://187.62.68.32:8080/GLOBO/index.m3u8
 
 
-#EXTINF:-1 tvg-id="TVConquista.br" tvg-logo="https://i.imgur.com/RDekR7e.png" group-title="Brasil: variedades",Record | TV Conquista | MT Brasil
+#EXTINF:-1 tvg-id="TVConquista.br" tvg-logo="https://i.imgur.com/RDekR7e.png" marcador="VLC",Canal Tv conquista Record
 
 https://tvconquistalrv.duckdns.org:3334/hls/tvconquistalrv.m3u8
 
