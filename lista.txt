@@ -16,18 +16,18 @@ IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
 https://www.youtube.com/embed/LLpNUqHVam8
 
 
-#EXTINF:-1,ACESSAR YOUTUBE
 
-https://www.youtube.com/embed/ZbpR91WRNMY
-
-
+#EXTINF:-1 tvg-id="Filmes" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/YouTube_full-color_icon_%282024%29.svg/960px-YouTube_full-color_icon_%282024%29.svg.png" group-title="Brasil: variedades", Filmes Youtube
+https://www.youtube.com/embed/PL09285712CC2E73CD
 
 
 
 
 
 
-#EXTINF:-1 tvg-id="Casé TV" tvg-logo="https://i.postimg.cc/SscT9vgX/transferir-(1).jpg " group-title="Brasil: Esporrtes",CasÃ© TV
+
+
+#EXTINF:-1 tvg-id="Casé TV" tvg-logo="https://i.postimg.cc/SscT9vgX/transferir-(1).jpg " group-title="Brasil: Esporrtes",Casé TV
 
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
 ###$$###
