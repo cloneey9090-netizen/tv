@@ -17,7 +17,7 @@ https://www.youtube.com/embed/LLpNUqHVam8
 
 
 
-#EXTINF:-1 tvg-id="Filmes" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/YouTube_full-color_icon_%282024%29.svg/960px-YouTube_full-color_icon_%282024%29.svg.png" group-title="Brasil: variedades", Filmes Youtube
+#EXTINF:-1 tvg-id="Filmes" tvg-logo="" group-title="Brasil: variedades", Filmes Youtube
 https://www.youtube.com/embed/PLAla0FtYx490
 
 
