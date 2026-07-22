@@ -32,8 +32,13 @@ https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/playlist.m3u8
 
 https://amg01391-amg01391c10-tcl-br-9630.playouts.now.amagi.tv/240p-cc/index.m3u8
 
-#EXTINF:-1 tvg-rec="false" tvg-logo="https://i.imgur.com/CwrWVjO.png" marcador="VLC",Canal Globo São Paulo
-http://187.62.68.32:8080/GLOBO/index.m3u8
+#EXTINF:-1 tvg-rec="false" tvg-logo="https://i.imgur.com/CwrWVjO.png" marcador="VLC",Canal Globo
+http://45.190.28.50/GLOBO_HD/index.m3u8
+
+
+#EXTINF:-1 tvg-id="TVSimCachoeiro.br@SD" tvg-logo="https://i.imgur.com/t5oUK3C.png" group-title="Record",TV Sim  (720p)
+http://200.77.176.130:8000/udp/224.0.0.4:49152
+
 
 
 #EXTINF:-1 tvg-id="TVConquista.br" tvg-logo="https://i.imgur.com/RDekR7e.png" marcador="VLC",Canal Tv conquista Record
