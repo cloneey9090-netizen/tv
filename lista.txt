@@ -8,7 +8,7 @@ IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshow
 
 IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
 
-IMG=https://www.drogarias.net.br/imgempresas/drogaria-master-110300-f2J4.jpg| https://wa.me/https://www.instagram.com/drogariamaster_/?utm_source=ig_web_button_share_sheet
+IMG=https://www.drogarias.net.br/imgempresas/drogaria-master-110300-f2J4.jpg | https://wa.me/+55 28 99982-6007
 
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
