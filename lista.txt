@@ -2,7 +2,7 @@
 EXTM3U # TV
 
 BANNER
-IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/
+IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/+55 28 98804-9598
 
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshowracoes1?igsh=andkOXh5YXJhZzQz
 
