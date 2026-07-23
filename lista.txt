@@ -16,10 +16,13 @@ IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
 https://www.youtube.com/embed/LLpNUqHVam8
 
 
+#### Filme YouTube  ######## Filme YouTube ########  Filme YouTube ######## Filme YouTube ########  Filme YouTube ######## Filme YouTube ####
 
-#EXTINF:-1 tvg-id="Filmes" tvg-logo="https://i.ytimg.com/vi/gO9KVopLsE0/maxresdefault.jpg" group-title="Brasil: variedades", Filmes Youtube
+#EXTINF:-1 group-title="Filmes do YouTube" tvg-logo="https://i.ytimg.com/vi/gO9KVopLsE0/maxresdefault.jpg",Deu a Louca no Bichos
 https://www.youtube.com/embed/lydU59NBq1Q
 
+#EXTINF:-1 group-title="Filmes do YouTube" tvg-logo="https://p2.trrsf.com/image/fget/cf/1200/1600/middle/images.terra.com/2022/07/20/1721963511-osparcas2.jpg",Os Parça
+https://www.youtube.com/embed/yPDQ9fYYQG0
 
 
 
