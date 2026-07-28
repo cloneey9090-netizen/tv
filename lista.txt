@@ -21,7 +21,7 @@ IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
 IMG=https://www.drogarias.net.br/imgempresas/drogaria-master-110300-f2J4.jpg | https://wa.me/+55 28 99982-6007
 
 
-
+IMG=https://i.postimg.cc/8z4n54q5/ezgif-7ba4ba70778111ce.gif | https://wa.me/+55 28 99921-6912
 
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
@@ -610,16 +610,12 @@ https://video05.logicahost.com.br/tvguajara/tvguajara/master.m3u8
 
 https://ia601505.us.archive.org/26/items/tutorial-app/lv_0_20260723102743.mp4
 
-
+#EXTINF:-1, AUTO
+https://i.postimg.cc/8z4n54q5/ezgif-7ba4ba70778111ce.gif | https://wa.me/+55 28 99921-6912
 
 #EXTINF:-1, AUTO
 
 https://archive.org/download/propaganda_202605/propaganda.mp4
-
-
-
-
-
 
 
 
