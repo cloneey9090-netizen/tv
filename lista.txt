@@ -609,7 +609,7 @@ https://video05.logicahost.com.br/tvguajara/tvguajara/master.m3u8
 
 #EXTINF:-1, AUTO
 
-https://ia601505.us.archive.org/26/items/tutorial-app/lv_0_20260723102743.mp4  | https://wa.me/
+https://ia601505.us.archive.org/26/items/tutorial-app/lv_0_20260723102743.mp4
 
 
 #EXTINF:-1, AUTO
