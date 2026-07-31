@@ -917,7 +917,45 @@ https://linear-188.frequency.stream/dist/xumo/188/hls/master/playlist.m3u8
 canais ######## pluto#######sansung#######
 #### PLUTO TV - CANAIS OFICIAIS ####
 
-#### STREAMING (já existentes) ####
+
+
+# LG Channels
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://lgchannels.com/favicon.ico",LG Channels
+https://lgchannels.com/
+
+# Xumo (gratuito com anúncios)
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://xumo.tv/favicon.ico",Xumo TV
+https://xumo.tv/
+
+# FreeTV (Amazon)
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://freetv.com/favicon.ico",FreeTV
+https://freetv.com/
+
+# Peacock (gratuito com anúncios - EUA)
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://peacocktv.com/favicon.ico",Peacock TV
+https://www.peacocktv.com/
+
+# Crackle (gratuito)
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://crackle.com/favicon.ico",Crackle
+https://www.crackle.com/
+
+# Popsy (canais de música)
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://popsy.tv/favicon.ico",Popsy
+https://popsy.tv/
+
+#### CULTURAL/EDUCATIVO (WebView) ####
+
+# Internet Archive (filmes clássicos)
+#EXTINF:-1 group-title="Educativo" tvg-logo="https://archive.org/favicon.ico",Archive - Filmes
+https://archive.org/details/feature_films
+
+# Vimeo (conteúdo independente)
+#EXTINF:-1 group-title="Educativo" tvg-logo="https://vimeo.com/favicon.ico",Vimeo
+https://vimeo.com/
+
+# Dailymotion (vídeos curtos)
+#EXTINF:-1 group-title="Educativo" tvg-logo="https://www.dailymotion.com/favicon.ico",Dailymotion
+https://www.dailymotion.com/
 
 # Pluto TV
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/5f12136385bccc00070142ed/colorLogoPNG.png",Pluto - Anime
