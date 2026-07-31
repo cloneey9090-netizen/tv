@@ -24,11 +24,13 @@ IMG=https://www.drogarias.net.br/imgempresas/drogaria-master-110300-f2J4.jpg | h
 IMG=https://i.postimg.cc/WzQc5822/ezgif-513ff9d04e031185.gif | https://wa.me/+55 28 99921-6912
 
 
+#EXTINF:-1 group-title="Buscadores" tvg-logo="https://www.google.com/favicon.ico",Google
+https://www.google.com.br/
+
+#EXTINF:-1 group-title="Redes Sociais" tvg-logo="https://www.instagram.com/favicon.ico",Instagram
+https://www.instagram.com/
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
-
-
-
 https://www.youtube.com/embed/LLpNUqHVam8
 
 
