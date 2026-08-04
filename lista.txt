@@ -2,7 +2,8 @@
 
 EXTM3U # TV
 
-
+# ⭐ LOGO DO APP
+LOGO=https://i.postimg.cc/m2wSdYyn/minha-logo.png
 
 BANNER
 
