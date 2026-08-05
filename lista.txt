@@ -39,6 +39,8 @@ https://www.youtube.com/embed/LLpNUqHVam8
 
 
 #### Filme YouTube  ######## Filme YouTube ########  Filme YouTube ######## Filme YouTube ########  Filme YouTube ######## Filme YouTube ####
+#EXTINF:-1 group-title="Teste YouTube" tvg-logo="https://i.imgur.com/srURmsi.png",🧪 Teste - Me at the zoo
+https://www.youtube.com/watch?v=jNQXAC9IVRw
 
 #EXTINF:-1 group-title="YouTube" tvg-logo="https://i.imgur.com/srURmsi.png",SBT
 https://novelas.maissbt.com/v1/master/215c0da80606fed29372070168106400a6ca7e1a/Novelas_cmaf/index.m3u8
