@@ -34,6 +34,9 @@ https://www.instagram.com/
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
 https://www.youtube.com/embed/LLpNUqHVam8
 
+#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT YouTube2
+https://www.youtube.com/watch?v=LLpNUqHVam8
+
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT YouTube
 https://www.youtube.com/embed/LLpNUqHVam8?fs=1&autoplay=1
 
