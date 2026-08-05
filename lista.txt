@@ -34,6 +34,9 @@ https://www.instagram.com/
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
 https://www.youtube.com/embed/LLpNUqHVam8
 
+#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT YouTube
+https://www.youtube.com/embed/LLpNUqHVam8?fs=1&autoplay=1
+
 
 
 
@@ -46,7 +49,8 @@ https://www.youtube.com/watch?v=jNQXAC9IVRw
 https://www.sbt.com.br/ao-vivo
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT - +SBT
-https://www.sbt.com.br/aovivo
+
+https://www.sbt.com.br/ao-vivo
 
 #EXTINF:-1 group-title="Filmes do YouTube" tvg-logo="https://i.ytimg.com/vi/gO9KVopLsE0/maxresdefault.jpg",Deu a Louca no Bichos
 
