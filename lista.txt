@@ -43,7 +43,7 @@ https://www.youtube.com/embed/LLpNUqHVam8
 https://www.youtube.com/watch?v=jNQXAC9IVRw
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT - Site Oficial
-https://www.sbt.com.br/ao-vivo
+https://www.youtube.com/watch?v=LLpNUqHVam8
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT - +SBT
 https://www.sbt.com.br/aovivo
