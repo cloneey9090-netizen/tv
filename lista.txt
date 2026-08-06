@@ -31,7 +31,7 @@ https://www.google.com.br/
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original",YouTube - Mobile
 https://m.youtube.com/
 
-#EXTINF:-1 group-title="Buscadores" tvg-logo="https://www.instagram.com/favicon.ico",Instagram
+#EXTINF:-1 group-title="Buscadores" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original", Instagram
 https://www.instagram.com/
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
@@ -960,6 +960,9 @@ https://vimeo.com/
 #EXTINF:-1 group-title="Educativo" tvg-logo="https://www.dailymotion.com/favicon.ico",Dailymotion
 https://www.dailymotion.com/
 
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/...",Pluto TV
+https://pluto.tv/
+
 # Pluto TV
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/5f12136385bccc00070142ed/colorLogoPNG.png",Pluto - Anime
 https://pluto.tv/br/live-tv/anime
@@ -983,16 +986,9 @@ https://tubitv.com/
 #EXTINF:-1 group-title="Pluto TV" tvg-logo="https://images.pluto.tv/channels/5f12136385bccc00070142ed/colorLogoPNG.png",Pluto - Anime
 https://pluto.tv/br/live-tv/anime
 
-#EXTINF:-1 group-title="Pluto TV" tvg-logo="https://images.pluto.tv/channels/656f389c3944b60008e5bdab/colorLogoPNG.png",Pluto - Documentários
-https://pluto.tv/br/live-tv/documentaries
 
-#EXTINF:-1 group-title="Pluto TV" tvg-logo="https://images.pluto.tv/channels/5d49ccd3c3a97d00092b283a/colorLogoPNG.png",Pluto - Ação
-https://pluto.tv/br/live-tv/action
 
 #### PLEX (STREAMING GRÁTIS) ####
 #EXTINF:-1 group-title="Plex" tvg-logo="https://www.plex.tv/wp-content/uploads/2022/04/plex-logo.png",Plex - Filmes
 https://watch.plex.tv/
 
-#### SAMSUNG TV PLUS ####
-#EXTINF:-1 group-title="Samsung TV Plus" tvg-logo="https://www.samsungtvplus.com/favicon.ico",Samsung TV Plus
-https://www.samsungtvplus.com/
