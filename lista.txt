@@ -615,8 +615,9 @@ https://ia601505.us.archive.org/26/items/tutorial-app/lv_0_20260723102743.ia.mp4
 
 
 #EXTINF:-1, AUTO
+https://stream.ads.ottera.tv/playlist.m3u8?network_id=274
 
-https://i.postimg.cc/WzQc5822/ezgif-513ff9d04e031185.gif
+
 
 #EXTINF:-1, AUTO
 
