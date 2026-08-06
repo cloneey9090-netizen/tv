@@ -28,10 +28,10 @@ IMG=https://i.postimg.cc/WzQc5822/ezgif-513ff9d04e031185.gif | https://wa.me/+55
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://www.google.com/favicon.ico",Google
 https://www.google.com.br/
 
-#EXTINF:-1 group-title="Internet" tvg-logo="https://i.imgur.com/5AK7gLc.png",YouTube - Mobile
+#EXTINF:-1 group-title="Buscadores" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original",YouTube - Mobile
 https://m.youtube.com/
 
-#EXTINF:-1 group-title="Redes Sociais" tvg-logo="https://www.instagram.com/favicon.ico",Instagram
+#EXTINF:-1 group-title="Buscadores" tvg-logo="https://www.instagram.com/favicon.ico",Instagram
 https://www.instagram.com/
 
 #EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT youtube
@@ -103,19 +103,7 @@ http://45.190.28.50/GLOBO_HD/index.m3u8
 
 
 
-#EXTINF:-1 tvg-id="TVSimCachoeiro.br@SD" tvg-logo="https://i.imgur.com/t5oUK3C.png" group-title="" marcador="VLC",TV FOZ(720p)
-https://5cf4a2c2512a2.streamlock.net/8104/8104/playlist.m3u8
-
-
-
-
-
-
-
-
 #EXTINF:-1 tvg-id="TVConquista.br" tvg-logo="https://i.imgur.com/RDekR7e.png",Canal Tv conquista Record
-
-
 
 https://tvconquistalrv.duckdns.org:3334/hls/tvconquistalrv.m3u8
 
