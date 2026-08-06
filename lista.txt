@@ -28,6 +28,9 @@ IMG=https://i.postimg.cc/WzQc5822/ezgif-513ff9d04e031185.gif | https://wa.me/+55
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://www.google.com/favicon.ico",Google
 https://www.google.com.br/
 
+#EXTINF:-1 group-title="Internet" tvg-logo="https://i.imgur.com/5AK7gLc.png",YouTube - Mobile
+https://m.youtube.com/
+
 #EXTINF:-1 group-title="Redes Sociais" tvg-logo="https://www.instagram.com/favicon.ico",Instagram
 https://www.instagram.com/
 
@@ -46,15 +49,8 @@ https://www.sbt.com.br/ao-vivo
 
 
 #### Filme YouTube  ######## Filme YouTube ########  Filme YouTube ######## Filme YouTube ########  Filme YouTube ######## Filme YouTube ####
-#EXTINF:-1 group-title="Teste YouTube" tvg-logo="https://i.imgur.com/srURmsi.png",🧪 Teste - Me at the zoo
-https://www.youtube.com/watch?v=jNQXAC9IVRw
 
-#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT - Site Oficial
-https://www.sbt.com.br/ao-vivo
 
-#EXTINF:-1 tvg-id="SBTNacional.br" tvg-logo="https://i.imgur.com/srURmsi.png" group-title="Brasil: variedades",SBT - +SBT
-
-https://www.sbt.com.br/ao-vivo
 
 #EXTINF:-1 group-title="Filmes do YouTube" tvg-logo="https://i.ytimg.com/vi/gO9KVopLsE0/maxresdefault.jpg",Deu a Louca no Bichos
 
