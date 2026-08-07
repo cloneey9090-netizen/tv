@@ -918,78 +918,43 @@ http://94.230.129.31:8080/THT/index.m3u8
 
 https://linear-188.frequency.stream/dist/xumo/188/hls/master/playlist.m3u8
 
-canais ######## pluto#######sansung#######
-#### PLUTO TV - CANAIS OFICIAIS ####
+#### 🎬 STREAMING GRATUITO  ####
 
-
-
-# LG Channels
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://lgchannels.com/favicon.ico",LG Channels
-https://lgchannels.com/
-
-# Xumo (gratuito com anúncios)
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://xumo.tv/favicon.ico",Xumo TV
-https://xumo.tv/
-
-# FreeTV (Amazon)
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://freetv.com/favicon.ico",FreeTV
-https://freetv.com/
-
-# Peacock (gratuito com anúncios - EUA)
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://peacocktv.com/favicon.ico",Peacock TV
-https://www.peacocktv.com/
-
-# Crackle (gratuito)
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://crackle.com/favicon.ico",Crackle
-https://www.crackle.com/
-
-# Popsy (canais de música)
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://popsy.tv/favicon.ico",Popsy
-https://popsy.tv/
-
-#### CULTURAL/EDUCATIVO (WebView) ####
-
-# Internet Archive (filmes clássicos)
-#EXTINF:-1 group-title="Educativo" tvg-logo="https://archive.org/favicon.ico",Archive - Filmes
-https://archive.org/details/feature_films
-
-# Vimeo (conteúdo independente)
-#EXTINF:-1 group-title="Educativo" tvg-logo="https://vimeo.com/favicon.ico",Vimeo
-https://vimeo.com/
-
-# Dailymotion (vídeos curtos)
-#EXTINF:-1 group-title="Educativo" tvg-logo="https://www.dailymotion.com/favicon.ico",Dailymotion
-https://www.dailymotion.com/
-
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/...",Pluto TV
-https://pluto.tv/
-
-# Pluto TV
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/5f12136385bccc00070142ed/colorLogoPNG.png",Pluto - Anime
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/5f12136385bccc00070142ed/colorLogoPNG.png",Pluto TV - Anime
 https://pluto.tv/br/live-tv/anime
 
-# Plex
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/656f389c3944b60008e5bdab/colorLogoPNG.png",Pluto TV - Documentários
+https://pluto.tv/br/live-tv/documentaries
+
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/5d49ccd3c3a97d00092b283a/colorLogoPNG.png",Pluto TV - Ação
+https://pluto.tv/br/live-tv/action
+
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/5d49ccd3c3a97d00092b283b/colorLogoPNG.png",Pluto TV - Comédia
+https://pluto.tv/br/live-tv/comedy
+
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://images.pluto.tv/channels/5d49ccd3c3a97d00092b283c/colorLogoPNG.png",Pluto TV - Terror
+https://pluto.tv/br/live-tv/horror
+
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://www.plex.tv/favicon.ico",Plex - Filmes
 https://watch.plex.tv/
 
-# Samsung TV Plus
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://www.samsungtvplus.com/favicon.ico",Samsung TV Plus
 https://www.samsungtvplus.com/
 
-# Vix
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://lgchannels.com/favicon.ico",LG Channels
+https://lgchannels.com/
+
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://xumo.tv/favicon.ico",Xumo TV
+https://xumo.tv/
+
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://vix.com/favicon.ico",Vix - Filmes
 https://vix.com/
 
-# Tubi
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://tubitv.com/favicon.ico",Tubi - Filmes
 https://tubitv.com/
 
-#EXTINF:-1 group-title="Pluto TV" tvg-logo="https://images.pluto.tv/channels/5f12136385bccc00070142ed/colorLogoPNG.png",Pluto - Anime
-https://pluto.tv/br/live-tv/anime
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://vimeo.com/favicon.ico",Vimeo
+https://vimeo.com/
 
-
-
-#### PLEX (STREAMING GRÁTIS) ####
-#EXTINF:-1 group-title="Plex" tvg-logo="https://www.plex.tv/wp-content/uploads/2022/04/plex-logo.png",Plex - Filmes
-https://watch.plex.tv/
-
+#EXTINF:-1 group-title="Streaming" tvg-logo="https://www.dailymotion.com/favicon.ico",Dailymotion
+https://www.dailymotion.com/
