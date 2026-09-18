@@ -7,22 +7,21 @@ LOGO=https://i.postimg.cc/m2wSdYyn/minha-logo.png
 
 BANNER
 
-IMG=https://i.postimg.cc/Hk206vVB/0508.gif | https://wa.me/+55 28 98804-9598
+IMG=https://i.postimg.cc/7ZxXmHtZ/ezgif-1caa57a57ee83648.gif| https://wa.me/+55 28 98804-9598
 
+
+IMG=https://i.postimg.cc/ZRFC7SMt/grok-1789734417374.jpg|https://www.profitableratecpmnetwork.com/ih67c0tk?key=0fbe6afc2bc12224f11e10c034716ffb
 
 
 IMG=https://i.postimg.cc/wMKV8pYB/petshow.png |https://www.instagram.com/petshowracoes1?igsh=andkOXh5YXJhZzQz
 
 
-
-IMG=https://i.postimg.cc/PqKbmKV5/0514.gif | https://wa.me/
-
+IMG=https://i.postimg.cc/MGJ6hLRB/grok-1789734430316.jpg|https://omg10.com/4/11759860
 
 
-IMG=https://www.drogarias.net.br/imgempresas/drogaria-master-110300-f2J4.jpg | https://wa.me/+55 28 99982-6007
 
 
-IMG=https://i.postimg.cc/WzQc5822/ezgif-513ff9d04e031185.gif | https://wa.me/+55 28 99921-6912
+
 
 
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://www.google.com/favicon.ico",Google
