@@ -28,7 +28,7 @@ IMG=https://i.postimg.cc/MGJ6hLRB/grok-1789734430316.jpg|https://omg10.com/4/117
 https://www.google.com.br/
 
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original",YouTube - Tv
-https://www.youtube.com/tv
+https://m.youtube.com
 
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original", Instagram
 https://www.instagram.com/
