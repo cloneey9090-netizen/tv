@@ -29,8 +29,8 @@ https://www.google.com.br/
 
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original",YouTube - Tv
 https://www.youtube.com
-#$#$#$
-https://m.youtube.com
+
+
 
 
 #EXTINF:-1 group-title="Buscadores" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original", Instagram
@@ -617,13 +617,13 @@ https://video05.logicahost.com.br/tvguajara/tvguajara/master.m3u8
 
 
 #EXTINF:-1, AUTO
-https://stream.ads.ottera.tv/playlist.m3u8?network_id=274
+
 
 
 
 #EXTINF:-1, AUTO
 
-https://archive.org/download/propaganda_202605/propaganda.mp4
+
 
 
 
