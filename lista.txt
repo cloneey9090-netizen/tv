@@ -612,6 +612,7 @@ https://video05.logicahost.com.br/tvguajara/tvguajara/master.m3u8
 
 
 #EXTINF:-1, AUTO
+https://stream.ads.ottera.tv/playlist.m3u8?network_id=274
 
 
 
@@ -940,20 +941,9 @@ https://pluto.tv/br/live-tv/horror
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://www.plex.tv/favicon.ico",Plex - Filmes
 https://watch.plex.tv/
 
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://www.samsungtvplus.com/favicon.ico",Samsung TV Plus
-https://www.samsungtvplus.com/
-
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://lgchannels.com/favicon.ico",LG Channels
-https://lgchannels.com/
-
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://xumo.tv/favicon.ico",Xumo TV
-https://xumo.tv/
 
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://vix.com/favicon.ico",Vix - Filmes
 https://vix.com/
-
-#EXTINF:-1 group-title="Streaming" tvg-logo="https://tubitv.com/favicon.ico",Tubi - Filmes
-https://tubitv.com/
 
 #EXTINF:-1 group-title="Streaming" tvg-logo="https://vimeo.com/favicon.ico",Vimeo
 https://vimeo.com/
