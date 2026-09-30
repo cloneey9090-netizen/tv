@@ -612,7 +612,8 @@ https://video05.logicahost.com.br/tvguajara/tvguajara/master.m3u8
 
 
 #EXTINF:-1, AUTO
-http://45.190.156.152/GLOOB/index.m3u8
+https://stream.ads.ottera.tv/playlist.m3u8?network_id=274
+
 
 
 
