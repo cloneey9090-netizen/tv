@@ -1,3 +1,10 @@
 {
-    "url_lista": "https://raw.githubusercontent.com/cloneey9090-netizen/tv/refs/heads/main/lista.txt"
+  "url_lista": "https://raw.githubusercontent.com/.../lista.m3u",
+  "monetizacao": {
+    "ativa": true,
+    "tipo": "adsterra_banner",
+    "key": "c3dded2300d31f575aac2d9d189cfe03",
+    "largura": 320,
+    "altura": 50
+  }
 }
