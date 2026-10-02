@@ -2,304 +2,169 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>TV Comunidade</title>
-    <link rel="icon" type="image/png" href="https://i.postimg.cc/QMz92TDz/large-Icon-png.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Comunidade </title>
+    <!-- 🌐 ÍCONE DO NAVEGADOR (FAVICON) -->
+<link rel="icon" type="image/png" href="https://i.postimg.cc/QMz92TDz/large-Icon-png.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
     <style>
-        /* ============================================================
-           RESET E CONFIGURAÇÕES GERAIS
-           ============================================================ */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #000; color: #fff; font-family: sans-serif;
-            margin: 0; padding: 0; overflow: hidden;
-            height: 100vh; width: 100vw; position: relative;
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            overflow: hidden; 
         }
 
-        /* ============================================================
-           PLAYER
-           ============================================================ */
-        #player {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: 1; background: #000; cursor: pointer;
+        header { 
+            background: #000; 
+            height: 120px; 
+            display: flex; 
+            width: 100%; 
+            flex-shrink: 0; 
+        }        
+        
+        #espaco-selo-3d { 
+            width: 50%; 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            overflow: hidden; 
+            background: #000; 
+            border: none !important;          
+            outline: none !important;        
+            box-shadow: none !important;     
         }
-        #player iframe, #player video, #player .clappr-video {
-            width: 100% !important; height: 100% !important; display: block !important;
+        
+        #banner-container { 
+            width: 50%; 
+            height: 100%; 
+            position: relative; 
+            border-radius: 12px;          
+            overflow: hidden;             
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6); 
+            border: 1px solid #1a1a1a;    
+            background: #050505; 
         }
-
-        /* ============================================================
-           PLACEHOLDER
-           ============================================================ */
-        #placeholder {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            gap: 1px; z-index: 2; pointer-events: none;
-            transition: opacity 0.6s ease;
-        }
-        .mascote {
-            width: 200px; height: auto;
-            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.6));
-            animation: flutuar 3s ease-in-out infinite;
-        }
-        .placeholder-texto {
-            font-size: 22px; font-weight: bold; color: #ffffff;
-            letter-spacing: 3px; text-shadow: 0 0 15px rgba(255,255,255,0.4);
-        }
-        @keyframes flutuar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* ============================================================
-           LOGO + BANNER
-           ============================================================ */
-        #espaco-selo-3d {
-            position: fixed; top: 2px; left: 20px;
-            z-index: 10; width: 50px; height: 110px;
-            display: flex; align-items: center; justify-content: center;
-            background: transparent; pointer-events: none;
-        }
-        #espaco-selo-3d img { max-height: 100%; max-width: 100%; object-fit: contain; }
-        #banner-container {
-            position: fixed; top: 5px; right: 20px;
-            z-index: 10; width: 180px; height: 100px;
-            border-radius: 8px; overflow: hidden;
-            background: rgba(0,0,0,0.6); pointer-events: auto;
-        }
-        .promo-slide {
-            width: 100%; height: 100%; object-fit: cover;
-            display: none; cursor: pointer;
-            animation: zoomFade 1s ease-out;
-        }
-        .promo-slide:first-child { display: block; }
-        @keyframes zoomFade {
-            0% { transform: scale(0.7); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        
+        .promo-slide { 
+            height: 100%; 
+            width: 100%; 
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            object-fit: fill; 
+            animation: fade 1s; 
+            cursor: pointer; 
+            border-radius: 12px;          
         }
 
-        /* ============================================================
-           LISTA DE CANAIS
-           ============================================================ */
-        #canais {
-            position: fixed; bottom: 0; left: 0;
-            width: 100%; max-height: 65vh;
-            background: linear-gradient(to top,
-                rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.60) 50%, rgba(0,0,0,0) 100%);
-            z-index: 5; transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 60px 15px 20px 15px;
-            overflow-y: auto; pointer-events: none;
-        }
-        #canais.visivel { transform: translateY(0); pointer-events: auto; }
-        #lista-canais {
-            display: grid !important;
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 12px !important; padding: 10px 0 !important;
-        }
-        .pasta-grupo { grid-column: 1 / -1 !important; margin-bottom: 5px; pointer-events: auto; }
-        .pasta-header {
-            color: #ffffff; font-weight: bold; font-size: 10px;
-            padding: 8px 15px; background: rgba(0,0,0,0.50);
-            border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-            cursor: pointer; display: flex; justify-content: space-between;
-            align-items: center; transition: all 0.3s ease;
-            user-select: none; pointer-events: auto;
-        }
-        .pasta-header:hover, .pasta-header:focus {
-            background: rgba(255,255,255,0.15);
-            border-color: #ff5722; outline: none;
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+        
+        #main { display: flex; flex: 1; flex-direction: column; overflow: hidden; padding: 10px; gap: 10px; } 
+        
+     #player {
+    border-radius: 12px;          
+    overflow: hidden;             
+    border: 2px solid #1a1a1a;    
+    background-color: #000000;
+    /* Aqui está o segredo: uma sombra grafite bem marcada para dar o contraste flutuante */
+    box-shadow: 0 12px 28px rgba(40, 40, 40, 0.8), 0 4px 10px rgba(0, 0, 0, 0.5); 
+    transition: all 0.3s ease;
+    width: 100%;
+    height: 220px;                
+    cursor: pointer; 
+    margin-bottom: 15px; /* Abre um espaço elegante entre o player e a lista */
+}
+
+/* Mantém a cor vibrante e o contorno bem vivo quando o player está ativo */
+#player:hover, #player:active, #player:focus-within {
+    border-color: #ff5722 !important;
+    box-shadow: 0 0 20px rgba(255, 87, 34, 0.6) !important;
+}
+
+        #canais { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+
+        .btn-youtube {
+            display: none !important;
         }
 
-        /* ⭐ PASTA CONTEÚDO (ABERTO/FECHADO) */
-        .pasta-conteudo {
-            display: none;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px; padding: 10px 0 5px 0;
-            transition: all 0.3s ease; width: 100%;
-            pointer-events: auto;
-        }
-        .pasta-conteudo.aberto { display: grid; }
-
-        .pasta-conteudo .canal {
-            border-radius: 12px !important; border: none !important;
-            background: rgba(255,255,255,0.04) !important;
-            color: #ffffff !important; padding: 14px 8px !important;
-            cursor: pointer; transition: all 0.25s ease;
-            display: flex !important; flex-direction: column !important;
-            align-items: center !important; justify-content: center !important;
-            text-align: center !important; gap: 10px !important;
-            min-height: 100px !important; margin: 0 !important;
-            width: 100% !important;
-        }
-        .pasta-conteudo .canal img {
-            width: 56px !important; height: 56px !important;
-            object-fit: contain !important; border-radius: 10px !important;
-            background: rgba(0,0,0,0.4) !important; padding: 4px !important;
-            flex-shrink: 0 !important; display: block !important;
-        }
-        .pasta-conteudo .canal span {
-            display: block !important; font-size: 13px !important;
-            font-weight: 500 !important; color: #ffffff !important;
-            word-break: break-word !important; max-width: 100% !important;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
-        }
-        .pasta-conteudo .canal:hover, .pasta-conteudo .canal:focus {
-            background: rgba(0,0,0,0.60) !important;
-            transform: scale(1.05) !important;
-            box-shadow: 0 0 25px rgba(255,87,34,0.5) !important;
-            outline: none !important;
-        }
-        .pasta-conteudo .canal:hover img, .pasta-conteudo .canal:focus img {
-            transform: scale(1.08) !important;
+        .canal { 
+            border-radius: 8px;           
+            border: 1px solid #222;       
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a); 
+            color: #ffffff;
+            padding: 12px 14px;                
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+            transition: all 0.2s ease;    
+            font-weight: 500;
         }
 
-        /* ============================================================
-           SCROLLBAR
-           ============================================================ */
-        #canais::-webkit-scrollbar { width: 6px; }
-        #canais::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
-        #canais::-webkit-scrollbar-thumb { background: #ff5722; border-radius: 4px; }
-        #canais::-webkit-scrollbar-thumb:hover { background: #ff7043; }
-
-        /* ============================================================
-           BOTÃO MINHA LISTA (⚙️)
-           ============================================================ */
-        #btn-minha-lista {
-            position: fixed; bottom: 20px; right: 20px;
-            z-index: 20;
-            background: rgba(0,0,0,0.5); color: #ffffff;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%; width: 48px; height: 48px;
-            font-size: 24px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            padding: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: all 0.2s ease; font-family: sans-serif;
-        }
-        #btn-minha-lista:hover, #btn-minha-lista:focus {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.5);
-            transform: scale(1.1);
-            outline: 2px solid white; outline-offset: 2px;
+        .canal:hover, .canal:active {
+            background: #111111;
+            border-color: #ff5722;        
+            box-shadow: 0 0 12px rgba(255, 87, 34, 0.5); 
+            transform: scale(1.01);
         }
 
-        /* ============================================================
-           MODAL MINHA LISTA
-           ============================================================ */
-        #modal-minha-lista {
-            position: fixed; top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.85); z-index: 99999;
-            display: none; align-items: center; justify-content: center;
+        #btn-compra-shopee {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            background: #ff5722;          
+            color: white;
+            padding: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+            animation: pulsar 2s infinite;
         }
-        #modal-minha-lista.aberto { display: flex; }
-        .modal-conteudo {
-            background: #1a1a1a; border-radius: 16px; padding: 30px;
-            width: 90%; max-width: 600px;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
-            border: 1px solid rgba(255,87,34,0.3);
-            font-family: sans-serif;
-        }
-        .modal-conteudo h2 {
-            color: #ff5722; margin-bottom: 10px; font-size: 24px;
-        }
-        .modal-conteudo p {
-            color: #aaa; margin-bottom: 20px; font-size: 14px;
-        }
-        #input-url-lista {
-            width: 100%; padding: 14px; font-size: 16px;
-            border-radius: 8px; border: 2px solid #333;
-            background: #0a0a0a; color: white; outline: none;
-            font-family: monospace; box-sizing: border-box;
-        }
-        #input-url-lista:focus { border-color: #ff5722; }
-        .modal-botoes {
-            display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;
-        }
-        .modal-botoes button {
-            flex: 1; min-width: 120px; padding: 12px;
-            border-radius: 8px; border: none; font-weight: bold;
-            cursor: pointer; font-size: 14px;
-            transition: all 0.2s ease; font-family: sans-serif;
-        }
-        .btn-primario { background: #4caf50; color: white; }
-        .btn-primario:hover, .btn-primario:focus { background: #45a049; outline: 2px solid white; }
-        .btn-perigo { background: #e53935; color: white; }
-        .btn-perigo:hover, .btn-perigo:focus { background: #c62828; outline: 2px solid white; }
-        .btn-secundario { background: #444; color: white; }
-        .btn-secundario:hover, .btn-secundario:focus { background: #555; outline: 2px solid white; }
-        #modal-status {
-            margin-top: 15px; padding: 10px; border-radius: 6px;
-            font-size: 13px; display: none;
-        }
-        #modal-status.ok { background: rgba(76,175,80,0.2); color: #4caf50; display: block; }
-        #modal-status.erro { background: rgba(229,57,53,0.2); color: #e53935; display: block; }
-
-        /* ============================================================
-           RESPONSIVIDADE
-           ============================================================ */
-        @media (max-width: 600px) {
-            #espaco-selo-3d { width: 80px; height: 35px; top: 5px; left: 10px; }
-            #banner-container { width: 120px; height: 40px; top: 10px; right: 10px; }
-            #canais { max-height: 72vh; padding: 50px 10px 10px 10px; }
-            #lista-canais, .pasta-conteudo {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 8px !important;
-            }
-            .pasta-header { font-size: 16px; padding: 10px 12px; }
-            .pasta-conteudo .canal {
-                min-height: 80px !important; padding: 10px 6px !important;
-                font-size: 12px !important; gap: 6px !important;
-            }
-            .pasta-conteudo .canal img { width: 44px !important; height: 44px !important; }
-            .pasta-conteudo .canal span { font-size: 11px !important; }
-            .mascote { width: 140px; }
-            .placeholder-texto { font-size: 24px; }
-        }
-        @media (min-width: 800px) {
-            #canais { max-height: 55vh; padding: 80px 40px 20px 40px; }
-            #lista-canais, .pasta-conteudo {
-                grid-template-columns: repeat(4, 1fr) !important;
-                gap: 14px !important;
-            }
-        }
-        @media (min-width: 1200px) {
-            #lista-canais, .pasta-conteudo {
-                grid-template-columns: repeat(5, 1fr) !important;
-                gap: 16px !important;
-            }
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 5px 20px rgba(255, 87, 34, 0.7); }
+            100% { transform: scale(1); }
         }
 
-        /* ============================================================
-           TELA CHEIA
-           ============================================================ */
         .video-expandido {
-            position: fixed !important; top: 0 !important; left: 0 !important;
-            width: 100vw !important; height: 100vh !important;
-            z-index: 99999 !important; border-radius: 0 !important;
-            border: none !important; margin: 0 !important;
-            padding: 0 !important; background: #000 !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            border-radius: 0px !important;
+            border: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #000000 !important;
         }
-        .video-expandido iframe, .video-expandido video, .video-expandido .clappr-video {
-            width: 100% !important; height: 100% !important; display: block !important;
+        
+        .video-expandido iframe,
+        .video-expandido video,
+        .video-expandido .clappr-video {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+            pointer-events: none; 
+        }
+        
+        @media (min-width: 800px) {
+            #main { flex-direction: row; height: calc(100vh - 120px); }
+            #player { width: 75%; height: 100%; position: sticky; top: 0; }
+            #canais { height: 100%; width: 25%; }
         }
     </style>
 </head>
 <body>
-
-<!-- 🛡️ TRANCA DE DOMÍNIO -->
-<script>
-    if (!window.location.hostname.includes("github.io") &&
-        window.location.hostname !== "localhost" &&
-        window.location.hostname !== "127.0.0.1") {
-        document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>";
-    }
-</script>
 
 <header id="cabecalho">
     <div id="espaco-selo-3d"></div>
@@ -307,658 +172,319 @@
 </header>
 
 <div id="main">
-    <div id="player">
-        <div id="placeholder">
-            <img src="mascote.png" alt="Mascote" class="mascote">
-            <div class="placeholder-texto">BEM-VINDO</div>
-        </div>
-    </div>
+    <div id="player" onclick="verificarSaidaTelaCheia()"></div> 
     <div id="canais">
+        <button class="btn-youtube" onclick="abrirYoutube()">
+            <i class="fab fa-youtube"></i> ABRIR YOUTUBE NO PLAYER
+        </button>
         <div id="lista-canais"></div>
-    </div>
-</div>
-
-<button id="btn-minha-lista" title="Configurações">⚙️</button>
-
-<div id="modal-minha-lista">
-    <div class="modal-conteudo">
-        <h2>📋 Minha Lista</h2>
-        <p>Cole o endereço da sua lista M3U:</p>
-        <input type="text" id="input-url-lista" placeholder="https://..." autocomplete="off" spellcheck="false">
-        <div class="modal-botoes">
-            <button id="btn-salvar-lista" class="btn-primario">✅ Salvar</button>
-            <button id="btn-remover-lista" class="btn-perigo">🗑️ Remover</button>
-            <button id="btn-cancelar-lista" class="btn-secundario">✖ Cancelar</button>
-        </div>
-        <div id="modal-status"></div>
-    </div>
+    </div> 
 </div>
 
 <script>
-    // ============================================================
-    // ⭐ VARIÁVEIS GLOBAIS
-    // ============================================================
-    const urlLista = "lista.txt";
-    const LINK_LOGO_3D = "https://i.postimg.cc/PqKbmKV5/0514.gif";
-    const LARGURA_LOGO_3D = "150%";
+    // 🛡️ TRANCA DE DOMÍNIO (Para desativar, basta colocar // no início da linha abaixo)
+    if (!window.location.hostname.includes("github.io") && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") { document.body.innerHTML = "<div style='background:#000;color:#ff9900;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;'><h1>ACESSO RESTRITO<br>TV COMUNIDADE</h1></div>"; }
+
+    // =========================================================================
+    // 🎛️ PAINEL DE CONTROLE CENTRAL (ALTERE AQUI QUANDO QUISER MUDAR OS LINKS)
+    // =========================================================================
+    const urlLista = "lista.txt"; 
+    const LINK_LOGO_3D = "https://i.postimg.cc/PqKbmKV5/0514.gif"; 
+    const LARGURA_LOGO_3D = "150%"; 
+    // =========================================================================
 
     let imagens = [];
     let slideIndex = 0;
     let listaDeVideos = [];
     let indiceAtual = 0;
     let clapprPlayer;
-    let modoLoopAutoAtivo = true;
-    let ultimoElementoFocado = null;
-    let timeoutId;
-    let listaVisivel = false;
+    
+    // 🔥 Variável de controle: define se o app está no modo loop do AUTO ou no modo livre
+    let modoLoopAutoAtivo = true; 
 
-    // ⭐ LISTA PRIVADA DO USUÁRIO
-    let urlListaUsuario = "";
-    let canaisPorGrupoUser = {};
-
-    // ============================================================
-    // ⭐ DETECTA SERVIÇOS WEBVIEW (no app abre nativo, no navegador abre nova aba)
-    // ============================================================
-    function isServicoWebView(url) {
-        const servicos = ["pluto.tv", "watch.plex.tv", "vix.com", "instagram.com",
-            "google.com", "google.com.br", "bing.com", "duckduckgo.com",
-            "youtube.com", "youtu.be", "vimeo.com", "dailymotion.com"];
-        return servicos.some(s => url.includes(s));
+    const espacoSelo = document.getElementById("espaco-selo-3d");
+    if(espacoSelo) {
+        espacoSelo.innerHTML = `<img src="${LINK_LOGO_3D}" style="height: 100%; width: ${LARGURA_LOGO_3D}; object-fit: contain;">`;
     }
 
-    // ============================================================
-    // ⭐ LOGO
-    // ============================================================
-    function atualizarLogo(logoUrl) {
-        const espacoSelo = document.getElementById("espaco-selo-3d");
-        if (espacoSelo) {
-            if (logoUrl && logoUrl.trim() !== "") {
-                espacoSelo.innerHTML = `<img src="${logoUrl}" style="height: 100%; width: ${LARGURA_LOGO_3D}; object-fit: contain;" onerror="this.style.display='none'">`;
-                espacoSelo.style.display = "flex";
-            } else {
-                espacoSelo.style.display = "none";
-            }
-        }
-    }
-
-    // ============================================================
-    // ⭐ CONTROLE DA LISTA
-    // ============================================================
-    function toggleLista() {
-        const canais = document.getElementById("canais");
-        if (!canais) return;
-        if (listaVisivel) {
-            canais.classList.remove("visivel");
-            listaVisivel = false;
-        } else {
-            canais.classList.add("visivel");
-            listaVisivel = true;
-        }
-        clearTimeout(timeoutId);
-    }
-
-    function fecharLista() {
-        const canais = document.getElementById("canais");
-        if (!canais) return;
-        canais.classList.remove("visivel");
-        listaVisivel = false;
-        clearTimeout(timeoutId);
-    }
-
-    // ============================================================
-    // ⭐ PLAYER (CLAPPR)
-    // ============================================================
     function iniciarPlayer(link) {
-        const placeholder = document.getElementById("placeholder");
-        if (placeholder) {
-            placeholder.style.display = "flex";
-            placeholder.style.opacity = "1";
-        }
-
         if (clapprPlayer) clapprPlayer.destroy();
-        clapprPlayer = new Clappr.Player({
-            parentId: "#player", source: link,
-            width: "100%", height: "100%", autoPlay: true, mute: true
+        
+        clapprPlayer = new Clappr.Player({ 
+            parentId: "#player", source: link, width: '100%', height: '100%', autoPlay: true, mute: true 
         });
-        clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function () { avancarAuto(); });
-        clapprPlayer.on(Clappr.Events.PLAYER_READY, function () {
-            const videoTag = document.querySelector("#player video");
+
+        clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
+            avancarAuto();
+        });
+
+        clapprPlayer.on(Clappr.Events.PLAYER_READY, function() {
+            const videoTag = document.querySelector('#player video');
             if (videoTag) {
-                videoTag.onended = function () { avancarAuto(); };
+                videoTag.onended = function() {
+                    avancarAuto();
+                };
             }
-            setTimeout(function () {
-                const ph = document.getElementById("placeholder");
-                if (ph) {
-                    ph.style.opacity = "0";
-                    setTimeout(function () { ph.style.display = "none"; }, 600);
-                }
-            }, 2000);
         });
     }
 
     function avancarAuto() {
         if (listaDeVideos.length === 0) return;
+
+        // 🔥 INTELIGÊNCIA DO LOOP DO AUTO ACTIVADA:
         if (modoLoopAutoAtivo) {
+            // Cria uma lista contendo apenas os índices de canais que são AUTO
             let indicesAuto = [];
             listaDeVideos.forEach((v, idx) => {
-                if (v.nome.toUpperCase().includes("AUTO")) indicesAuto.push(idx);
+                if (v.nome.toUpperCase().includes("AUTO")) {
+                    indicesAuto.push(idx);
+                }
             });
+
             if (indicesAuto.length > 0) {
+                // Descobre a posição do AUTO atual dentro da sublista de AUTOS
                 let posicaoNaSublista = indicesAuto.indexOf(indiceAtual);
-                posicaoNaSublista++;
-                if (posicaoNaSublista >= indicesAuto.length || posicaoNaSublista < 0) posicaoNaSublista = 0;
+                posicaoNaSublista++; // Avança para o próximo AUTO
+                
+                // Se estourar a quantidade de canais AUTO, volta para o primeiro AUTO da lista
+                if (posicaoNaSublista >= indicesAuto.length || posicaoNaSublista < 0) {
+                    posicaoNaSublista = 0;
+                }
+                
                 indiceAtual = indicesAuto[posicaoNaSublista];
             } else {
+                // Caso não existam canais AUTO por erro na lista, avança normalmente
                 indiceAtual = (indiceAtual + 1) >= listaDeVideos.length ? 0 : indiceAtual + 1;
             }
         } else {
+            // Se o usuário já escolheu um canal, o loop desativa e avança de forma sequencial padrão
             indiceAtual++;
             if (indiceAtual >= listaDeVideos.length) indiceAtual = 0;
         }
+        
         if (!listaDeVideos[indiceAtual].link.includes("|")) {
-            toggleSmartFull(true);
+            toggleSmartFull(true); 
         }
         ejecutarCanal(listaDeVideos[indiceAtual]);
     }
 
-    function toggleSmartFull(forçarFechar = false) {
-        const p = document.getElementById("player");
-        const c = document.getElementById("cabecalho");
-        const lista = document.getElementById("canais");
-        if (forçarFechar) {
-            p.classList.remove("video-expandido");
-            c.style.display = "flex";
-            lista.style.display = "flex";
-        } else {
-            p.classList.add("video-expandido");
-            c.style.display = "none";
-            lista.style.display = "none";
-        }
+    function abrirYoutube() {
+        modoLoopAutoAtivo = false; // Desativa o loop automático ao abrir o YouTube geral
+        const playerDiv = document.getElementById("player");
+        const botaoAntigo = document.getElementById("btn-compra-shopee");
+        if (botaoAntigo) botaoAntigo.remove();
+
+        if (clapprPlayer) clapprPlayer.destroy();
+        
+        playerDiv.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/videoseries?list=PLrEnWoR732-BHrPp_Pm8_VleD68f9s14-&autoplay=1" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+        
+        const p = document.getElementById('player');
+        p.classList.add('video-expandido');
+        document.getElementById('cabecalho').style.display = 'none';
+        document.getElementById('canais').style.display = 'none';
     }
 
     function verificarSaidaTelaCheia() {
-        const p = document.getElementById("player");
-        if (p.classList.contains("video-expandido")) {
+        const p = document.getElementById('player');
+        if (p.classList.contains('video-expandido')) {
             toggleSmartFull(true);
         }
     }
 
-    // ============================================================
-    // ⭐ EXECUTA O CANAL
-    // ============================================================
+    function toggleSmartFull(forçarFechar = false) {
+        const p = document.getElementById('player');
+        const c = document.getElementById('cabecalho');
+        const lista = document.getElementById('canais');
+        
+        if (forçarFechar) {
+            p.classList.remove('video-expandido');
+            c.style.display = 'flex';
+            lista.style.display = 'flex';
+        } else {
+            p.classList.add('video-expandido');
+            c.style.display = 'none';
+            lista.style.display = 'none';
+        }
+    }
+
     function ejecutarCanal(canalObj, ampliarDireto = false) {
         const playerDiv = document.getElementById("player");
         const canaisDiv = document.getElementById("canais");
         const botaoAntigo = document.getElementById("btn-compra-shopee");
         if (botaoAntigo) botaoAntigo.remove();
 
-        // ⭐ Se tá no APP e é WebView → abre nativo
-        if (isServicoWebView(canalObj.link) && window.AndroidBridge) {
-            if (clapprPlayer) clapprPlayer.pause();
-            window.AndroidBridge.abrirWebView(canalObj.link);
-            return;
+        if (ampliarDireto) {
+            const p = document.getElementById('player');
+            p.classList.add('video-expandido');
+            document.getElementById('cabecalho').style.display = 'none';
+            canaisDiv.style.display = 'none';
         }
 
-        if (ampliarDireto && !isServicoWebView(canalObj.link)) {
-            playerDiv.classList.add("video-expandido");
-            document.getElementById("cabecalho").style.display = "none";
-            canaisDiv.style.display = "none";
-        }
-
-        // ⭐ Se tá no APP → manda pro PlayerActivity nativo
-        if (ampliarDireto && window.AndroidBridge && !isServicoWebView(canalObj.link)) {
-            if (clapprPlayer) {
-                clapprPlayer.pause();
-                playerDiv.style.display = "none";
-            }
-            window.AndroidBridge.abrirPlayerNativo(canalObj.link);
-            return;
-        }
-
-        // ⭐ No navegador → toca no Clappr
         if (canalObj.link.includes("youtube.com")) {
             if (clapprPlayer) clapprPlayer.destroy();
+            
             let urlEmbed = canalObj.link.replace("watch?v=", "embed/");
             let mudoParam = canalObj.nome.toUpperCase().includes("AUTO") ? "&mute=1" : "&mute=0";
+            
             playerDiv.innerHTML = `<iframe width="100%" height="100%" src="${urlEmbed}?autoplay=1${mudoParam}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
-        }
+        } 
         else if (canalObj.link.includes("|")) {
             if (clapprPlayer) clapprPlayer.destroy();
+            
             let partes = canalObj.link.split("|");
-            playerDiv.innerHTML = `<video id="video-propaganda" src="${partes[0].trim()}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
-            document.getElementById("video-propaganda").onended = function () {
-                toggleSmartFull(true);
+            let videoPropaganda = partes[0].trim();
+            let linkAfiliado = partes[1].trim();
+
+            playerDiv.innerHTML = `<video id="video-propaganda" src="${videoPropaganda}" width="100%" height="100%" autoplay muted controls style="object-fit: contain; background:#000;"></video>`;
+            
+            document.getElementById('video-propaganda').onended = function() {
+                toggleSmartFull(true); 
                 avancarAuto();
             };
-            canaisDiv.insertAdjacentHTML("afterbegin",
-                `<a id="btn-compra-shopee" href="${partes[1].trim()}" target="_blank">🚀 CLIQUE AQUI PARA APROVEITAR A OFERTA</a>`);
-        }
+            
+            canaisDiv.insertAdjacentHTML('afterbegin', `
+                <a id="btn-compra-shopee" href="${linkAfiliado}" target="_blank">
+                    🚀 CLIQUE AQUI PARA APROVEITAR A OFERTA
+                </a>
+            `);
+        } 
         else {
             if (playerDiv.querySelector("iframe") || playerDiv.querySelector("video")) playerDiv.innerHTML = "";
             if (!document.querySelector(".clappr-video")) {
                 iniciarPlayer(canalObj.link);
-            } else {
-                clapprPlayer.load(canalObj.link);
+            } else { 
+                clapprPlayer.load(canalObj.link); 
+                clapprPlayer.on(Clappr.Events.PLAYER_ENDED, function() {
+                    avancarAuto();
+                });
             }
-            if (clapprPlayer) {
-                if (!canalObj.nome.toUpperCase().includes("AUTO")) {
-                    clapprPlayer.unmute();
-                    clapprPlayer.setVolume(100);
-                } else {
-                    clapprPlayer.mute();
-                }
-                clapprPlayer.play();
+            
+            if (!canalObj.nome.toUpperCase().includes("AUTO")) {
+                clapprPlayer.unmute(); 
+                clapprPlayer.setVolume(100);
+            } else { 
+                clapprPlayer.mute(); 
             }
+            clapprPlayer.play();
         }
-
-        setTimeout(() => {
-            const canais = document.getElementById("canais");
-            if (canais) {
-                canais.classList.add("visivel");
-                listaVisivel = true;
-                canais.style.display = "flex";
-            }
-        }, 100);
-    }
-
-    // ============================================================
-    // ⭐ FUNÇÃO QUE MONTA OS GRUPOS
-    // ============================================================
-    function montarGruposNoMenu(objetoDeGrupos, abrirPrimeiro = true) {
-        const menu = document.getElementById("lista-canais");
-        let primeiroGrupo = abrirPrimeiro;
-
-        for (const [grupo, canais] of Object.entries(objetoDeGrupos)) {
-            if (canais.length === 0) continue;
-
-            const pastaDiv = document.createElement("div");
-            pastaDiv.className = "pasta-grupo";
-            pastaDiv.style.cssText = "margin-bottom: 10px; width: 100%;";
-
-            const header = document.createElement("div");
-            header.className = "pasta-header";
-            header.style.cssText = `
-                color: #ffffff; font-weight: bold; font-size: 14px;
-                padding: 10px 15px; background: rgba(255,255,255,0.05);
-                border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-                cursor: pointer; display: flex; justify-content: space-between;
-                align-items: center; transition: all 0.3s ease; user-select: none;
-            `;
-            header.innerHTML = `
-                <span>${grupo}</span>
-                <span style="font-size: 20px; transition: transform 0.3s ease;">▶</span>
-            `;
-
-            const conteudo = document.createElement("div");
-            conteudo.className = "pasta-conteudo";
-
-            canais.forEach((canal) => {
-                const div = document.createElement("div");
-                div.className = "canal";
-                div.setAttribute("tabindex", "0");
-                div.innerHTML = canal.logo
-                    ? `<img src="${canal.logo}" style="width: 56px; height: 56px; object-fit: contain; border-radius: 10px; background: rgba(0,0,0,0.4); padding: 4px; display: block;"><span style="display: block; font-size: 13px; font-weight: 500; color: #ffffff; word-break: break-word; max-width: 100%; text-shadow: 0 1px 4px rgba(0,0,0,0.8);">${canal.nome}</span>`
-                    : `<span style="display: block; font-size: 14px; font-weight: 600; color: #ddd;">▶️ ${canal.nome}</span>`;
-
-                const indiceCanal = listaDeVideos.indexOf(canal);
-                const acaoSelecao = (e) => {
-                    if (e) e.stopPropagation();
-                    modoLoopAutoAtivo = false;
-                    indiceAtual = indiceCanal;
-                    ultimoElementoFocado = div;
-                    ejecutarCanal(canal, true);
-                };
-
-                div.onclick = acaoSelecao;
-                div.onkeydown = (e) => { if (e.key === "Enter") acaoSelecao(e); };
-                conteudo.appendChild(div);
-            });
-
-            function alternarGrupo() {
-                const icone = header.querySelector("span:last-child");
-                const estaAberto = conteudo.classList.contains("aberto");
-                if (estaAberto) {
-                    conteudo.classList.remove("aberto");
-                    if (icone) icone.textContent = "▶";
-                } else {
-                    conteudo.classList.add("aberto");
-                    if (icone) icone.textContent = "▼";
-                }
-            }
-
-            header.addEventListener("click", function (e) {
-                e.preventDefault(); e.stopPropagation(); alternarGrupo();
-            });
-            header.addEventListener("keydown", function (e) {
-                if (e.key === "Enter") {
-                    e.preventDefault(); e.stopPropagation(); alternarGrupo();
-                }
-            });
-            header.setAttribute("tabindex", "0");
-
-            pastaDiv.appendChild(header);
-            pastaDiv.appendChild(conteudo);
-            menu.appendChild(pastaDiv);
-
-            if (primeiroGrupo) {
-                conteudo.classList.add("aberto");
-                const icone = header.querySelector("span:last-child");
-                if (icone) icone.textContent = "▼";
-                primeiroGrupo = false;
-            }
-        }
-    }
-
-    // ============================================================
-    // ⭐ CARREGAR TV
-    // ============================================================
-    async function baixarLista(url) {
-        return await new Promise((resolve) => {
-            if (window.AndroidBridge && window.AndroidBridge.baixarURL) {
-                const cb = "__receberLista_" + Date.now();
-                window[cb] = function (texto) { resolve(texto); delete window[cb]; };
-                window.AndroidBridge.baixarURL(url, cb);
-                setTimeout(() => resolve("ERRO: tempo esgotado"), 20000);
-            } else {
-                fetch(url + "?t=" + new Date().getTime())
-                    .then(r => r.text())
-                    .then(t => resolve(t))
-                    .catch(e => resolve("ERRO: " + e.message));
-            }
-        });
     }
 
     async function carregarTV() {
         try {
-            // ⭐ Lista padrão
-            let data = await baixarLista(urlLista);
-
-            // ⭐ Lista do usuário (se tiver)
-            let dadosUsuario = null;
-            if (urlListaUsuario && urlListaUsuario.trim() !== "") {
-                dadosUsuario = await baixarLista(urlListaUsuario);
-                if (dadosUsuario && dadosUsuario.startsWith("ERRO:")) {
-                    dadosUsuario = null;
-                }
-            }
-
-            if (!data || data.startsWith("ERRO:")) {
-                console.error("Falha ao baixar a lista:", data);
-            }
-
-            const linhas = data.split("\n");
-            const menu = document.getElementById("lista-canais");
-            const container = document.getElementById("banner-container");
-            let nomeTemp = "Canal", logoTemp = "", grupoAtual = "";
-            let canaisPorGrupo = {};
-
-            menu.innerHTML = "";
-            listaDeVideos = [];
-            imagens = [];
+            const res = await fetch(urlLista + "?t=" + new Date().getTime());
+            const data = await res.text();
+            const linhas = data.split('\n');
+            const menu = document.getElementById('lista-canais');
+            const container = document.getElementById('banner-container');
+            let nomeTemp = "Canal";
+            let logoTemp = "";
 
             linhas.forEach(l => {
                 const inline = l.trim();
                 if (!inline) return;
 
-                if (inline.startsWith("LOGO=")) {
-                    const logoUrl = inline.replace("LOGO=", "").trim();
-                    if (logoUrl) atualizarLogo(logoUrl);
-                    return;
-                }
-
-                if (inline.startsWith("IMG=")) {
-                    let dadosImg = inline.replace("IMG=", "");
-                    const img = document.createElement("img");
-                    img.className = "promo-slide";
-                    if (dadosImg.includes("|")) {
-                        img.src = dadosImg.split("|")[0].trim();
-                        img.onclick = () => window.open(dadosImg.split("|")[1].trim(), "_blank");
+                if(inline.startsWith('IMG=')) {
+                    let dadosImg = inline.replace('IMG=', '');
+                    const img = document.createElement('img');
+                    img.className = 'promo-slide';
+                    
+                    if (dadosImg.includes('|')) {
+                        let partesImg = dadosImg.split('|');
+                        img.src = partesImg[0].trim();
+                        let linkDestino = partesImg[1].trim();
+                        img.onclick = () => window.open(linkDestino, '_blank');
                     } else {
                         img.src = dadosImg;
                     }
+                    
                     container.appendChild(img);
                     imagens.push(img);
-                    return;
                 }
-
-                if (inline.includes("#EXTINF")) {
-                    nomeTemp = inline.split(",")[1] || "Canal";
-                    logoTemp = inline.includes('tvg-logo="')
-                        ? inline.split('tvg-logo="')[1].split('"')[0]
-                        : (inline.includes('logo="') ? inline.split('logo="')[1].split('"')[0] : "");
-                    grupoAtual = inline.includes('group-title="')
-                        ? inline.split('group-title="')[1].split('"')[0]
-                        : "📺 Geral";
-                    if (!canaisPorGrupo[grupoAtual]) canaisPorGrupo[grupoAtual] = [];
-                    return;
+                
+                if(inline.includes("#EXTINF")) { 
+                    nomeTemp = inline.split(',')[1] || "Canal"; 
+                    
+                    if (inline.includes('tvg-logo="')) {
+                        logoTemp = inline.split('tvg-logo="')[1].split('"')[0].trim();
+                    } else if (inline.includes('logo="')) {
+                        logoTemp = inline.split('logo="')[1].split('"')[0].trim();
+                    } else {
+                        logoTemp = "";
+                    }
                 }
-
-                if (inline.startsWith("http")) {
+                else if(inline.startsWith("http")) {
                     let infoCanal = { nome: nomeTemp, link: inline, logo: logoTemp };
                     listaDeVideos.push(infoCanal);
-                    if (canaisPorGrupo[grupoAtual]) {
-                        canaisPorGrupo[grupoAtual].push(infoCanal);
+                    let meuIndice = listaDeVideos.length - 1;
+                    
+                    const div = document.createElement('div');
+                    div.className = 'canal'; 
+                    
+                    if (infoCanal.logo) {
+                        div.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <img src="${infoCanal.logo}" style="width: 28px; height: 28px; object-fit: contain; border-radius: 4px; background: rgba(0,0,0,0.5);" onerror="this.style.display='none'">
+                                <span style="font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nomeTemp}</span>
+                            </div>
+                        `;
                     } else {
-                        canaisPorGrupo["📺 Geral"] = canaisPorGrupo["📺 Geral"] || [];
-                        canaisPorGrupo["📺 Geral"].push(infoCanal);
+                        div.innerHTML = "▶️ " + nomeTemp;
                     }
+                    
+                    div.onclick = (e) => { 
+                        e.stopPropagation();
+                        const p = document.getElementById('player');
+                        
+                        modoLoopAutoAtivo = false; 
+                        indiceAtual = meuIndice; 
+                        
+                        if (p.classList.contains('video-expandido')) {
+                            toggleSmartFull(true);
+                            ejecutarCanal(infoCanal, false); 
+                        } else {
+                            if (infoCanal.nome.toUpperCase().includes("AUTO")) {
+                                modoLoopAutoAtivo = true;
+                                toggleSmartFull(true); 
+                                ejecutarCanal(infoCanal, false);
+                            } else {
+                                ejecutarCanal(infoCanal, true); 
+                            }
+                        }
+                    };
+                    
+                    menu.appendChild(div);
                 }
             });
 
-            // ⭐ Processa lista do usuário
-            if (dadosUsuario) {
-                let nomeUser = "Canal", logoUser = "", grupoUser = "";
-                const linhasUser = dadosUsuario.split("\n");
-                linhasUser.forEach(l => {
-                    const inline = l.trim();
-                    if (!inline) return;
-                    if (inline.includes("#EXTINF")) {
-                        nomeUser = inline.split(",")[1] || "Canal";
-                        logoUser = inline.includes('tvg-logo="')
-                            ? inline.split('tvg-logo="')[1].split('"')[0] : "";
-                        grupoUser = inline.includes('group-title="')
-                            ? inline.split('group-title="')[1].split('"')[0] : "Outros";
-                        return;
-                    }
-                    if (inline.startsWith("http")) {
-                        const infoCanal = { nome: nomeUser, link: inline, logo: logoUser };
-                        listaDeVideos.push(infoCanal);
-                        if (!canaisPorGrupoUser[grupoUser]) canaisPorGrupoUser[grupoUser] = [];
-                        canaisPorGrupoUser[grupoUser].push(infoCanal);
-                    }
-                });
-            }
-
-            // ⭐ Monta os grupos do app
-            montarGruposNoMenu(canaisPorGrupo);
-
-            // ⭐ Monta divisória + grupos do usuário
-            if (Object.keys(canaisPorGrupoUser).length > 0) {
-                const divisor = document.createElement("div");
-                divisor.style.cssText = `
-                    grid-column: 1 / -1; margin: 25px 0 15px 0;
-                    padding: 14px 15px;
-                    background: linear-gradient(90deg, transparent 0%, rgba(255,87,34,0.2) 50%, transparent 100%);
-                    border-top: 2px solid rgba(255,87,34,0.6);
-                    border-bottom: 2px solid rgba(255,87,34,0.6);
-                    text-align: center; color: #ff5722;
-                    font-weight: bold; font-size: 16px;
-                    letter-spacing: 4px; border-radius: 4px;
-                    text-shadow: 0 0 15px rgba(255,87,34,0.6);
-                `;
-                divisor.textContent = "📋 MINHA LISTA";
-                menu.appendChild(divisor);
-                montarGruposNoMenu(canaisPorGrupoUser, false);
-            }
-
-            if (imagens.length > 0) showSlides();
-
-            // ⭐ Inicia o primeiro canal (AUTO)
             if (listaDeVideos.length > 0) {
                 let idxAuto = listaDeVideos.findIndex(c => c.nome.toUpperCase().includes("AUTO"));
                 indiceAtual = idxAuto !== -1 ? idxAuto : 0;
-                if (idxAuto !== -1) modoLoopAutoAtivo = true;
-                ejecutarCanal(listaDeVideos[indiceAtual], false);
+                
+                if(idxAuto !== -1) { modoLoopAutoAtivo = true; }
+                
+                ejecutarCanal(listaDeVideos[indiceAtual], false); 
             }
 
-            // ⭐ Listener do player
-            const player = document.getElementById("player");
-            player.addEventListener("click", function () { toggleLista(); });
-            player.addEventListener("keydown", function (e) {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    toggleLista();
-                }
-            });
-
-        } catch (e) {
-            console.error("Erro na bússola ou na lista:", e);
-        }
+            if(imagens.length > 0) showSlides();
+        } catch(e) { console.error(e); }
     }
 
     function showSlides() {
         imagens.forEach(img => img.style.display = "none");
-        slideIndex = (slideIndex >= imagens.length) ? 0 : slideIndex;
-        imagens[slideIndex].style.display = "block";
         slideIndex++;
-        setTimeout(showSlides, 10000);
+        if (slideIndex > imagens.length) slideIndex = 1;
+        imagens[slideIndex-1].style.display = "block";
+        setTimeout(showSlides, 10000); 
     }
+    carregarTV();
 
-    // ============================================================
-    // ⭐ NAVEGAÇÃO D-PAD
-    // ============================================================
-    document.addEventListener("keydown", function (event) {
-        const player = document.getElementById("player");
-        const isExpanded = player.classList.contains("video-expandido");
-        const ativo = document.activeElement;
-
-        if (event.key === "Enter" && ativo && ativo.id === "player") {
-            if (!isExpanded) {
-                event.preventDefault();
-                toggleLista();
-            }
-            return;
-        }
-
-        if (isExpanded && event.key === "Enter") {
-            if (!ativo || !ativo.classList.contains("canal")) {
-                event.preventDefault();
-                toggleSmartFull(true);
-            }
-            return;
-        }
-
-        if (event.key === "Back" || event.key === "Escape") {
-            if (isExpanded) {
-                event.preventDefault();
-                toggleSmartFull(true);
-            } else if (listaVisivel) {
-                fecharLista();
-            }
-            return;
-        }
-
-        if (["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) {
-            if (ativo && ativo.id === "player") {
-                event.preventDefault();
-                if (!listaVisivel) toggleLista();
-                return;
-            }
-            if (ativo === document.body || ativo.tagName === "IFRAME" || ativo.tagName === "VIDEO") {
-                event.preventDefault();
-                if (player) player.focus();
-            }
+    document.addEventListener('keydown', function(event) {
+        const p = document.getElementById('player');
+        if (p.classList.contains('video-expandido') && (event.keyCode === 13 || event.key === 'Enter')) {
+            event.preventDefault();
+            toggleSmartFull(true);
         }
     });
-
-    // ============================================================
-    // ⭐ FEATURE "MINHA LISTA"
-    // ============================================================
-    (function () {
-        const CHAVE_URL = "minhaListaURL";
-        const modal = document.getElementById("modal-minha-lista");
-        const btnAbrir = document.getElementById("btn-minha-lista");
-        const btnSalvar = document.getElementById("btn-salvar-lista");
-        const btnRemover = document.getElementById("btn-remover-lista");
-        const btnCancelar = document.getElementById("btn-cancelar-lista");
-        const input = document.getElementById("input-url-lista");
-        const status = document.getElementById("modal-status");
-
-        function carregarURLEscolhida() {
-            const salva = localStorage.getItem(CHAVE_URL);
-            if (salva) {
-                urlListaUsuario = salva;
-                input.value = salva;
-            }
-        }
-
-        function mostrarStatus(msg, tipo) {
-            status.textContent = msg;
-            status.className = tipo;
-            setTimeout(() => {
-                status.className = "";
-                status.style.display = "none";
-            }, 4000);
-        }
-
-        function abrirModal() {
-            carregarURLEscolhida();
-            modal.classList.add("aberto");
-            setTimeout(() => input.focus(), 100);
-        }
-
-        function fecharModal() {
-            modal.classList.remove("aberto");
-            status.className = "";
-        }
-
-        function salvarURL() {
-            const url = input.value.trim();
-            if (!url || url.length < 10) {
-                mostrarStatus("⚠️ Cole uma URL válida", "erro");
-                return;
-            }
-            if (!url.startsWith("http")) {
-                mostrarStatus("⚠️ A URL precisa começar com http:// ou https://", "erro");
-                return;
-            }
-            localStorage.setItem(CHAVE_URL, url);
-            urlListaUsuario = url;
-            mostrarStatus("✅ URL salva! Baixando sua lista...", "ok");
-            setTimeout(() => {
-                fecharModal();
-                window.location.reload();
-            }, 1500);
-        }
-
-        function removerURL() {
-            if (!confirm("Remover sua lista?")) return;
-            localStorage.removeItem(CHAVE_URL);
-            urlListaUsuario = "";
-            input.value = "";
-            mostrarStatus("🗑️ Lista removida", "ok");
-            setTimeout(() => {
-                fecharModal();
-                window.location.reload();
-            }, 1500);
-        }
-
-        btnAbrir.addEventListener("click", abrirModal);
-        btnSalvar.addEventListener("click", salvarURL);
-        btnRemover.addEventListener("click", removerURL);
-        btnCancelar.addEventListener("click", fecharModal);
-        input.addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                salvarURL();
-            }
-        });
-
-        carregarURLEscolhida();
-    })();
-
-    // ⭐ INICIA
-    carregarTV();
 </script>
 </body>
 </html>
